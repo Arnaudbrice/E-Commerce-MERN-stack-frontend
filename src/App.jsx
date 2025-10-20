@@ -18,8 +18,7 @@ function App() {
   return (
     <div
       className="min-h-screen w-full grid grid-rows-[auto_1fr_auto]
-        font-['Outfit']  "
-    >
+        font-['Outfit']  ">
       <ProductProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
