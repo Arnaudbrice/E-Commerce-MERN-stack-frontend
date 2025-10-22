@@ -11,7 +11,7 @@ const Category = () => {
   const { products, setProducts, isLoading } = useProducts();
   const { category } = useParams();
   const filteredProductsByCategory = products.filter(
-    product => product.category === category
+    (product) => product.category === category
   );
 
   if (isLoading) {
@@ -34,11 +34,13 @@ const Category = () => {
   console.log(category);
   return (
     <div>
-      <h1 className="my-6 text-3xl font-bold text-center ">
-        Category {category}
-      </h1>
-      <div className="grid min-h-full grid-cols-2 gap-6 mx-0 my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
-        {filteredProductsByCategory.map(product => {
+      <div className="divider divider-secondary my-8 ">
+        {" "}
+        <h1 className="text-3xl font-bold text-center ">Category {category}</h1>
+      </div>
+
+      <div className="grid min-h-full grid-cols-2 gap-6 mx-0 my-8 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
+        {filteredProductsByCategory.map((product) => {
           return <Card key={product.id} {...product} />;
         })}
       </div>

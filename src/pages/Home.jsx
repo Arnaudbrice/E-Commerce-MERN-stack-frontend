@@ -32,14 +32,12 @@ const Home = () => {
     return (
       <div
         role="alert"
-        className="w-2/3 mx-auto mt-8 text-xl alert alert-error"
-      >
+        className="w-2/3 mx-auto mt-8 text-xl alert alert-error">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="w-6 h-6 stroke-current shrink-0"
           fill="none"
-          viewBox="0 0 24 24"
-        >
+          viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -54,21 +52,21 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div role="status" class="max-w-sm animate-pulse">
-        <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
-        <span class="sr-only">Loading...</span>
+      <div role="status" className="max-w-sm animate-pulse">
+        <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+        <span className="sr-only">Loading...</span>
       </div>
     );
   }
   return (
     <main>
       <div className=" flex flex-col sm:flex-row flex-center w-[max-content] sm:flex-start gap-6 mx-auto  sm:mx-16 my-6 ">
-        {categories.map(category => {
+        {categories.map((category) => {
           return <Button key={nanoid()} category={category} />;
         })}
       </div>
