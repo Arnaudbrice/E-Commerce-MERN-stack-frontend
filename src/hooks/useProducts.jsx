@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React, { use } from "react";
 
 import ProductContext from "../context/ProductContext.jsx";
 const useProducts = () => {
-  const context = useContext(ProductContext);
+  const context = use(ProductContext);
 
   if (!context) {
     throw new Error("useTodos must be used within a TodoProvider");
