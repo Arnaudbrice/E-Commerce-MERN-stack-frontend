@@ -2,14 +2,24 @@ import "react-toastify/dist/ReactToastify.css";
 import { NavLink } from "react-router";
 import useProducts from "../hooks/useProducts.jsx";
 import { useState } from "react";
+import useAuth from "../hooks/useAuth.jsx";
 
 const UserMenu = () => {
+  const { logout, setIsLoading } = useAuth();
   const { cartProductsQuantity } = useProducts();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLinkClicked = () => {
     setIsOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // NavLink from react-router gives us the isActive prop
@@ -48,6 +58,17 @@ const UserMenu = () => {
                   to="/"
                   onClick={handleLinkClicked}>
                   Home
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  className={({
+                    isActive,
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+        ${isActive ? "bg-black text-white" : "text-white "}`}
+                  to="/add-product">
+                  Add Product
                 </NavLink>
               </li>
 
@@ -131,6 +152,17 @@ const UserMenu = () => {
                 isActive,
               }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
         ${isActive ? "bg-black text-white" : "text-white "}`}
+              to="/add-product">
+              Add Product
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              className={({
+                isActive,
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+        ${isActive ? "bg-black text-white" : "text-white "}`}
               to="/admin-products">
               Admin Products
             </NavLink>
@@ -175,7 +207,9 @@ const UserMenu = () => {
           </li>
 
           <li className="text-lg  block px-4 py-2  rounded text-white hover:bg-fuchsia-400">
-            <button className=" h-full p-0 bg-none">Logout</button>
+            <button onClick={handleLogout} className=" h-full p-0 bg-none">
+              Logout
+            </button>
           </li>
         </ul>
       </div>

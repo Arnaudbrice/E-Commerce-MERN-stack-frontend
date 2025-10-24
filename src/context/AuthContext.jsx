@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createContext } from "react";
-import axios from "axios";
+
 import { useNavigate } from "react-router";
 
 import { toast } from "react-toastify";
@@ -21,34 +21,39 @@ export const AuthContextProvider = ({ children }) => {
 
   const register = async (formState) => {
     try {
-      /* Axios automatically converts your object to JSON and parses the response for you. */
-      const response = await axios.post(`${baseUrl}/auth/register`, formState, {
+      /* Use JSON.stringify to converts the formState object to JSON string and send it as the request body */
+      const response = await fetch(`${baseUrl}/auth/register`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
         },
-        withCredentials: true,
+        body: JSON.stringify(formState),
+        credentials: "include",
       });
 
+      if (!response.ok) {
+        const { message } = await response.json();
+        console.log("error", error);
+
+        await customErrorMessage(message, 8000);
+
+        return;
+      }
+
       //Axios automatically parses JSON — no need for response.json()
-      const userData = response.data;
+      const userData = await response.json();
       console.log("====================================");
       console.log(userData);
       console.log("====================================");
 
       setUser(userData);
 
+      toast.success("User registered successfully");
+
       navigate("/login");
     } catch (error) {
-      // If server returned a validation error (like from Zod)
-      if (error.response) {
-        const { error: validationError } = error.response.data;
-        console.log("Validation error:", validationError);
-        await customErrorMessage(validationError, 5000);
-      } else {
-        // Network or unknown error
-        toast.error(error);
-      }
+      // Network or unknown error
+      toast.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -57,15 +62,23 @@ export const AuthContextProvider = ({ children }) => {
   //********** login **********
   const login = async (formState) => {
     try {
-      const response = await axios.post(`${baseUrl}/auth/login`, formState, {
+      const response = await fetch(`${baseUrl}/auth/login`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
         },
-        withCredentials: true,
+        body: JSON.stringify(formState),
+        credentials: "include",
       });
+      console.log("response", response);
 
-      const userData = response.data;
+      if (!response.ok) {
+        const { message: validationError } = await response.json();
+        await customErrorMessage(validationError, 7000);
+        return;
+      }
+
+      const userData = await response.json();
 
       setUser(userData);
 
@@ -73,24 +86,27 @@ export const AuthContextProvider = ({ children }) => {
       navigate("/");
     } catch (error) {
       // server validation error
-      if (error.response) {
-        const { error: validationError } = error.response.data;
-        await customErrorMessage(validationError, 5000);
-      } else {
-        // Network or unknown error
-        toast.error(error);
-      }
+      toast.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   //********** logout **********
   const logout = async () => {
     try {
-      const response = await axios.delete(`${baseUrl}/auth/logout`, {
-        withCredentials: true,
+      const response = await fetch(`${baseUrl}/auth/logout`, {
+        method: "Delete",
+        credentials: "include",
       });
 
       setUser(null);
+
+      if (!response.ok) {
+        const { error: validationError } = await response.json();
+        await customErrorMessage(validationError, 5000);
+        return;
+      }
 
       toast.success("Logged out successfully");
       navigate("/login");
@@ -103,14 +119,17 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/auth/me`, {
-          headers: {
-            Accept: "application/json",
-          },
-          withCredentials: true,
+        const response = await fetch(`${baseUrl}/auth/me`, {
+          method: "GET",
+          credentials: "include",
         });
 
-        const userData = response.data;
+        if (!response.ok) {
+          const { error: validationError } = await response.json();
+          await customErrorMessage(validationError, 5000);
+          return;
+        }
+        const userData = await response.json();
 
         console.log("Fetched user data:", userData);
         setUser(userData);

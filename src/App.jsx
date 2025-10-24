@@ -11,6 +11,7 @@ import { ProductProvider } from "./context/ProductContext.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
 import ProtectedLayout from "./layouts/ProtectedLayout.jsx";
+import AddProduct from "./components/AddProduct.jsx";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
 
             <Route element={<ProtectedLayout />}>
               <Route path="/cart" element={<Cart />} />
+              <Route path="/add-product" element={<AddProduct />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

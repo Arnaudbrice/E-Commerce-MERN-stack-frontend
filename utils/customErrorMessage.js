@@ -5,7 +5,7 @@ export const customErrorMessage = async (error, closeAfter) => {
     .split("✖")
     .map((error) => "✖" + error)
     .filter((error) => error !== "✖");
-  console.log("error", errorArray);
+  console.log("error array", errorArray);
 
   toast.error(errorArray.join("\n"), {
     autoClose: closeAfter,
