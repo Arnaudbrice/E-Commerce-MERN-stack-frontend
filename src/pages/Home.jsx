@@ -65,7 +65,7 @@ const Home = () => {
   }
   return (
     <main>
-      <div className=" flex flex-col sm:flex-row flex-center w-[max-content] sm:flex-start gap-6 mx-auto  sm:mx-16 my-6 ">
+      <div className=" flex flex-col sm:flex-row flex-center w-[max-content] sm:flex-start gap-6 mx-auto  sm:mx-16 my-6  ">
         {categories.map((category) => {
           return <Button key={nanoid()} category={category} />;
         })}

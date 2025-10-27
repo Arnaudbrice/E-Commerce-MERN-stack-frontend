@@ -103,7 +103,7 @@ export const AuthContextProvider = ({ children }) => {
       setUser(null);
 
       if (!response.ok) {
-        const { error: validationError } = await response.json();
+        const { message: validationError } = await response.json();
         await customErrorMessage(validationError, 5000);
         return;
       }
