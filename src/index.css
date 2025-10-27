@@ -3,6 +3,12 @@
 @plugin "daisyui" {
   themes: dark --default;
 }
+
+@plugin "daisyui/theme" {
+  name: dark;
+  default: true;
+  --color-secondary: oklch(0.591 0.293 322.896);
+}
 .Toastify__toast {
   font-family: "Outfit", sans-serif !important;
 }

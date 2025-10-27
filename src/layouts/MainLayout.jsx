@@ -12,11 +12,11 @@ const MainLayout = () => {
   return (
     <div
       className="min-h-screen w-full grid grid-rows-[auto_1fr_auto]
-        font-['Outfit']  ">
+        font-['Outfit'] ">
       <div>
         <NavBar />
         <ToastContainer
-          className="mt-16 text-lg"
+          className="mt-16 text-lg "
           position="top-right"
           autoClose={5000}
           hideProgressBar={false}
@@ -26,7 +26,7 @@ const MainLayout = () => {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="dark"
+          theme="light"
           limit={2}
           transition={Bounce}
         />
