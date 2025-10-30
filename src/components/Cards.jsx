@@ -26,8 +26,8 @@ const Cards = () => {
   }, []); */
   return (
     <div className="grid min-h-full grid-cols-2 gap-6 mx-0 my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
-      {products.map(product => {
-        return <Card key={product.id} {...product} />;
+      {products.map((product) => {
+        return <Card key={product._id} {...product} />;
       })}
     </div>
   );

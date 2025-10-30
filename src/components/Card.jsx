@@ -1,111 +1,190 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import useProducts from "../hooks/useProducts.jsx";
 import ButtonGroup from "./ButtonGroup.jsx";
 import useAuth from "../hooks/useAuth.jsx";
+import useCart from "../hooks/useCart.jsx";
 
-const Card = ({
-  id,
-  image,
-  title,
-  price,
-  category,
-  description,
-  productQuantity,
-}) => {
-  const {
+const Card = ({ _id, title, price, description, category, image, stock }) => {
+  /*  const {
     cartProductsQuantity,
     setCartProductsQuantity,
     cartList,
     setCartList,
-  } = useProducts();
+  } = useProducts(); */
+
+  console.log("_id", _id);
+
+  const { cartList, setCartList, addProductToCart, removeProductFromCart } =
+    useCart();
+
+  console.log("cartList", cartList);
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const navigate = useNavigate();
 
   const { user } = useAuth();
   const [isClicked, setIsClicked] = useState(false);
+
+  const [quantity, setQuantity] = useState(0);
   // const [productQuantity, setProductQuantity] = useState(0);
 
-  console.log("productQuantity", productQuantity);
-  const handleAddToCartListClick = (id) => {
+  const handleAddToCartListClick = async (e, id) => {
+    e.stopPropagation(); // <--- Stop event propagation here
+
     if (!user) {
       toast.error("You need to be logged in to add products to the cart", {
         autoClose: 10000,
       });
       return;
     }
-    addCart(id);
+    if (quantity === stock) {
+      toast.error("Product is out of stock");
+      return;
+    }
+    setQuantity(quantity + 1);
+    await addProductToCart(id, quantity + 1);
 
     setIsClicked(!isClicked);
   };
 
-  const handleAddToCartList = (id) => {
-    addCart(id);
-  };
-
-  const handleRemoveFromCartList = (id) => {
-    // const newProductQuantity = productQuantity - 1;
-    const existingItem = cartList.find((item) => item.id === id);
-    if (existingItem && existingItem.productQuantity > 0) {
-      const updatedCartList = cartList.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            productQuantity: item.productQuantity - 1,
-          };
-        } else {
-          return item;
-        }
-      });
-      setCartList(updatedCartList);
-      // update the  quantity of the products added in the cart
-      setCartProductsQuantity((prevQuantity) => prevQuantity - 1);
-      // setProductQuantity(newProductQuantity);
-    } else {
+  const handleAddToCartList = async (e, id) => {
+    e.stopPropagation(); // <--- Stop event propagation here
+    if (quantity === stock) {
+      toast.error("Product is out of stock");
       return;
     }
+
+    setQuantity(quantity + 1);
+    await addProductToCart(id, quantity + 1);
   };
 
-  const addCart = (id) => {
-    // const newProductQuantity = productQuantity + 1;
-    const existingItem = cartList.find((item) => item.id === id);
-    if (existingItem) {
-      const updatedCartList = cartList.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            productQuantity: item.productQuantity + 1,
-          };
+  const handleRemoveFromCartList = async (e, id) => {
+    e.stopPropagation(); // <--- Stop event propagation here
+    if (quantity === 0) {
+      return;
+    }
+
+    if (quantity === 1) {
+      setQuantity(quantity - 1);
+
+      setIsClicked(!isClicked);
+
+      await removeProductFromCart(id);
+      return;
+    }
+
+    setQuantity((prevQuantity) => prevQuantity - 1);
+
+    await addProductToCart(id, quantity - 1);
+
+    /*     // const newProductQuantity = productQuantity - 1;
+        const existingItem = cartList.find((item) => item.id === id);
+        if (existingItem && existingItem.productQuantity > 0) {
+          const updatedCartList = cartList.map((item) => {
+            if (item.id === id) {
+              return {
+                ...item,
+                productQuantity: item.productQuantity - 1,
+              };
+            } else {
+              return item;
+            }
+          });
+          setCartList(updatedCartList);
+          // update the  quantity of the products added in the cart
+          setCartProductsQuantity((prevQuantity) => prevQuantity - 1);
+          // setProductQuantity(newProductQuantity);
         } else {
-          return item;
-        }
-      });
-      setCartList(updatedCartList);
-      // update the  quantity of the products added in the cart
-      setCartProductsQuantity((prevQuantity) => prevQuantity + 1);
-      toast.success("Product Added to Cart Successfully!");
-    } else {
-      const newCartItem = {
-        id,
-        title,
-        price,
-        category,
-        image,
-        productQuantity: 1,
-        description,
+          return;
+        } */
+  };
+
+  // todo: add product to cart
+
+  /*  const addCart = async (id) => {
+    try {
+      const requestBody = {
+        productId: id,
+        quantity: quantity,
       };
 
-      //  we use useEffect with cart as a dependency to update the localstorage whenever cart changes (no need to update localstorage here)
-      setCartList([...cartList, newCartItem]);
+      const response = await fetch(`${baseUrl}/users/cart`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+        credentials: "include",
+      });
 
-      // update the  quantity of the products added in the cart
-      setCartProductsQuantity((prevQuantity) => prevQuantity + 1);
-      // setProductQuantity(newProductQuantity);
+      if (!response.ok) {
+        const { message: validationError } = await response.json();
+        customErrorMessage(validationError, 5000);
+        return;
+      }
+
+      const cartData = await response.json();
+
+      console.log("cartData", cartData);
+
+      setCartList([...cartList, cartData]);
 
       toast.success("Product Added to Cart Successfully!");
+    } catch (error) {
+      toast.error(error);
     }
+  }; */
+
+  // const newProductQuantity = productQuantity + 1;
+  /*   const existingItem = cartList.find( ( item ) => item.id === id );
+  if ( existingItem ) {
+    const updatedCartList = cartList.map( ( item ) => {
+      if ( item.id === id ) {
+        return {
+          ...item,
+          productQuantity: item.productQuantity + 1,
+        };
+      } else {
+        return item;
+      }
+    } );
+    setCartList( updatedCartList );
+    // update the  quantity of the products added in the cart
+    setCartProductsQuantity( ( prevQuantity ) => prevQuantity + 1 );
+    toast.success( "Product Added to Cart Successfully!" );
+  } else {
+    const newCartItem = {
+      id,
+      title,
+      price,
+      category,
+      image,
+      productQuantity: 1,
+      description,
+    };
+
+    //  we use useEffect with cart as a dependency to update the localstorage whenever cart changes (no need to update localstorage here)
+    setCartList( [ ...cartList, newCartItem ] );
+
+    // update the  quantity of the products added in the cart
+    setCartProductsQuantity( ( prevQuantity ) => prevQuantity + 1 );
+    // setProductQuantity(newProductQuantity);
+
+    toast.success( "Product Added to Cart Successfully!" );
+  }
+}; */
+
+  const handleClick = (id) => {
+    navigate(`/product/${id}`);
   };
+
   return (
-    <div className="card card-lg sm:card-xl  bg-base-100 h-full shadow-sm  transition-transform duration-200 hover:scale-105 hover:drop-shadow-[0_0_10px_gray]  border rounded-lg  ">
+    <div
+      onClick={() => handleClick(_id)}
+      className="card card-lg sm:card-xl  bg-base-100 h-full shadow-sm  transition-transform duration-200 hover:scale-105 hover:drop-shadow-[0_0_10px_gray]  border rounded-lg  ">
       <figure>
         <img
           className="block object-contain w-full bg-white h-52 aspect-square"
@@ -125,27 +204,22 @@ const Card = ({
         </p>
 
         <div className="items-center justify-between w-full card-actions ">
-          {/* TODO:
-          -on click on more from category show a page with all articles from this category
-          -add href to the page to be called */}
-
           <Link
             className="my-4 p-2 text-xs hover:link sm:my-none"
-            to={`/category/${category}`}>
+            to={`/category/${category}`}
+            onClick={(e) => e.stopPropagation()}>
             More from {category}
           </Link>
           {!isClicked ?
             <button
-              onClick={() => handleAddToCartListClick(id)}
+              onClick={(e) => handleAddToCartListClick(e, _id)}
               className="btn btn-primary ">
               Add To Cart
             </button>
           : <ButtonGroup
-              quantity={
-                cartList.find((item) => item.id === id)?.productQuantity || 0
-              }
-              handleAdd={() => handleAddToCartList(id)}
-              handleRemove={() => handleRemoveFromCartList(id)}
+              quantity={quantity}
+              handleAdd={(e) => handleAddToCartList(e, _id)}
+              handleRemove={(e) => handleRemoveFromCartList(e, _id)}
             />
           }
         </div>

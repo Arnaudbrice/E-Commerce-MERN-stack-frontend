@@ -1,12 +1,26 @@
 import "react-toastify/dist/ReactToastify.css";
 import { NavLink } from "react-router";
 import useProducts from "../hooks/useProducts.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth.jsx";
+import useCart from "../hooks/useCart.jsx";
 
 const UserMenu = () => {
   const { logout, setIsLoading } = useAuth();
-  const { cartProductsQuantity } = useProducts();
+  // const { cartQuantity } = useProducts();
+
+  const { cartList, setCartList, addProductToCart, removeProductFromCart } =
+    useCart();
+
+  const [cartQuantity, setCartQuantity] = useState(0);
+
+  useEffect(() => {
+    const quantity = cartList.products?.reduce((acc, item) => {
+      return acc + item.quantity;
+    }, 0);
+
+    setCartQuantity(quantity);
+  }, [cartList]);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -116,7 +130,7 @@ const UserMenu = () => {
                       />{" "}
                     </svg>
                     <span className="badge badge-sm indicator-item bg-fuchsia-400 lg:bg-black">
-                      {cartProductsQuantity}
+                      {cartQuantity > 0 ? cartQuantity : 0}
                     </span>
                   </div>
                 </NavLink>
@@ -200,7 +214,7 @@ const UserMenu = () => {
                   />{" "}
                 </svg>
                 <span className="badge badge-sm indicator-item">
-                  {cartProductsQuantity}
+                  {cartQuantity > 0 ? cartQuantity : 0}
                 </span>
               </div>
             </NavLink>

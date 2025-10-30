@@ -4,17 +4,21 @@ import { toast } from "react-toastify";
 import Card from "../components/Card";
 import ButtonGroup from "../components/ButtonGroup";
 import useProducts from "../hooks/useProducts.jsx";
+import useCart from "../hooks/useCart.jsx";
 
 const Cart = () => {
   const {
     products,
     setProducts,
-    cartList,
-    setCartList,
+    // cartList,
+    // setCartList,
     cartProductsQuantity,
     setCartProductsQuantity,
     isLoading,
   } = useProducts();
+
+  const { cartList, setCartList, addProductToCart, removeProductFromCart } =
+    useCart();
 
   console.log("cartList", cartList);
 
@@ -26,8 +30,9 @@ const Cart = () => {
     const calculateCartTotalAmount = () => {
       console.log("cartList", cartList);
 
-      const cartTotalAmount = cartList.reduce((acc, item) => {
-        const itemPrice = Number(item.price) * Number(item.productQuantity);
+      const cartTotalAmount = cartList.products.reduce((acc, item) => {
+        // Convert Decimal128 to string, then parse to float for calculation
+        const itemPrice = parseFloat(item.price.toString()) * item.quantity;
         return acc + itemPrice;
       }, 0);
 
@@ -140,49 +145,71 @@ const Cart = () => {
                 </tr>
               </thead>
               <tbody className="min-h-full ">
-                {cartList.map(
-                  (product) =>
-                    product.productQuantity > 0 && (
-                      <tr
-                        key={product.id}
-                        className="grid grid-cols-[1fr] md:grid-cols-[2fr_3fr_1fr_1fr] border-b-2 gap-2 md:gap-8 border-gray-700 place-items-center h-full space-y-4 ">
-                        <td className="flex flex-col items-center justify-center gap-4 ">
-                          <div className=" avatar  size-40  ">
-                            <img
-                              className="object-fill  bg-white mask mask-circle "
-                              src={product.image}
-                              alt={product.title}
+                {/* Ensure cartList.products exists before mapping */}
+                {cartList.products &&
+                  cartList.products.map(
+                    (product) =>
+                      product.quantity > 0 && (
+                        <tr
+                          key={product.productId._id || product.productId}
+                          className="grid grid-cols-[1fr] md:grid-cols-[2fr_3fr_1fr_1fr] border-b-2 gap-2 md:gap-8 border-gray-700 place-items-center h-full space-y-4 ">
+                          <td className="flex flex-col items-center justify-center gap-4 ">
+                            <div className=" avatar  size-40  ">
+                              <img
+                                className="object-fill  bg-white mask mask-circle "
+                                src={
+                                  product.productId ?
+                                    product.productId.image
+                                  : product.image
+                                }
+                                alt={
+                                  product.productId ?
+                                    product.productId.title
+                                  : product.title
+                                }
+                              />
+                            </div>
+                            <div className="px-0 text-center">
+                              <h2 className="text-white">
+                                {product.productId ?
+                                  product.productId.title
+                                : product.title}
+                              </h2>
+                              <p className="text-gray-400">
+                                <span>Unit Price: </span>
+                                {parseFloat(
+                                  product.productId ?
+                                    product.productId.price.toString()
+                                  : product.price.toString()
+                                ).toFixed(2)}{" "}
+                                {" €"}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="px-4 text-gray-400">
+                            {product.description}
+                          </td>
+                          <td>
+                            <ButtonGroup
+                              quantity={product.quantity}
+                              handleAdd={() =>
+                                addCart(product.productId, product.quantity + 1)
+                              } // Pass correct ID and updated quantity
+                              handleRemove={() =>
+                                handleRemoveFromCartList(product.id)
+                              }
                             />
-                          </div>
-                          <div className="px-0 text-center">
-                            <h2 className="text-white">{product.title}</h2>
-                            <p className="text-gray-400">
-                              <span>Unit Price: </span>
-                              {product.price.toFixed(2)} {" €"}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="px-4 text-gray-400">
-                          {product.description}
-                        </td>
-                        <td>
-                          <ButtonGroup
-                            quantity={product.productQuantity}
-                            handleAdd={() => addCart(product.id)}
-                            handleRemove={() =>
-                              handleRemoveFromCartList(product.id)
-                            }
-                          />
-                        </td>
-                        <td className="px-4 ">
-                          {(
-                            Number(product.productQuantity) * product.price
-                          ).toFixed(2)}
-                          {" €"}
-                        </td>
-                      </tr>
-                    )
-                )}
+                          </td>
+                          <td className="px-4 ">
+                            {(
+                              parseFloat(product.price.toString()) *
+                              product.quantity
+                            ).toFixed(2)}{" "}
+                            {" €"}
+                          </td>
+                        </tr>
+                      )
+                  )}
               </tbody>
             </table>
             <div className="flex items-center justify-center gap-4 my-4">
