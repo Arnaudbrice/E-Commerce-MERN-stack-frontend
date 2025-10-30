@@ -12,26 +12,32 @@ import NotFound from "./pages/NotFound.jsx";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
 import ProtectedLayout from "./layouts/ProtectedLayout.jsx";
 import AddProduct from "./components/AddProduct.jsx";
+import { CategoryContextProvider } from "./context/CategoryContext.jsx";
+import ProductDetail from "./pages/ProductDetail.jsx";
+import { CartContextProvider } from "./context/CartContext.jsx";
 
 function App() {
   return (
     <AuthContextProvider>
       <ProductProvider>
-        <Routes>
-          <Route element={<MainLayout />}>
-            <Route index element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/category/:category" element={<Category />} />
-
-            <Route element={<ProtectedLayout />}>
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/add-product" element={<AddProduct />} />
-            </Route>
-
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
+        <CartContextProvider>
+          <CategoryContextProvider>
+            <Routes>
+              <Route element={<MainLayout />}>
+                <Route index element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/category/:category" element={<Category />} />
+                <Route element={<ProtectedLayout />}>
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/add-product" element={<AddProduct />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+          </CategoryContextProvider>
+        </CartContextProvider>
       </ProductProvider>
     </AuthContextProvider>
   );

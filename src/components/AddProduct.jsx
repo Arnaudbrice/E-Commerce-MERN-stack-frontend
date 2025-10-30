@@ -3,11 +3,14 @@ import { toast } from "react-toastify";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import { useNavigate } from "react-router";
 import useProducts from "../hooks/useProducts.jsx";
+import useCategories from "../hooks/useCategories.jsx";
 
 const AddProduct = () => {
   const navigate = useNavigate();
 
   const { products, setProducts } = useProducts();
+
+  const { categories, setCategories } = useCategories();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [imageFile, setImageFile] = useState(null);
   const [formState, setFormState] = useState({
@@ -84,7 +87,7 @@ const AddProduct = () => {
         // Debugging: Log FormData
         console.log(`${pair[0]}: ${pair[1]}`);
       } */
-      const response = await fetch(`${baseUrl}/user/products`, {
+      const response = await fetch(`${baseUrl}/users/products`, {
         method: "POST",
         body: formData, //pass the form data as the request body (stringify not needed, browser will also set content type automatically)
         credentials: "include",
@@ -141,24 +144,6 @@ const AddProduct = () => {
           />
         </div>
 
-        {/* Stock */}
-
-        <div>
-          <label className="label" htmlFor="stock">
-            Stock
-          </label>
-          <input
-            className="input input-border input-lg w-full  inset-ring rounded-lg"
-            type="number"
-            id="stock"
-            name="stock"
-            value={formState.stock}
-            onChange={handleChange}
-            placeholder="Stock"
-            min="0"
-          />
-        </div>
-
         {/* Title */}
 
         <div>
@@ -174,6 +159,20 @@ const AddProduct = () => {
             onChange={handleChange}
             placeholder="Title"
           />
+        </div>
+
+        {/* Description */}
+        <div>
+          <label className="label" htmlFor="description">
+            Description
+          </label>
+          <textarea
+            className="textarea textarea-lg textarea-border  w-full  inset-ring rounded-lg overflow-y-scroll  "
+            id="description"
+            name="description"
+            value={formState.description}
+            onChange={handleChange}
+            placeholder="Description"></textarea>
         </div>
 
         {/* Price */}
@@ -193,18 +192,22 @@ const AddProduct = () => {
           />
         </div>
 
-        {/* Description */}
+        {/* Stock */}
+
         <div>
-          <label className="label" htmlFor="description">
-            Description
+          <label className="label" htmlFor="stock">
+            Stock
           </label>
-          <textarea
-            className="textarea textarea-lg textarea-border  w-full  inset-ring rounded-lg overflow-y-scroll  "
-            id="description"
-            name="description"
-            value={formState.description}
+          <input
+            className="input input-border input-lg w-full  inset-ring rounded-lg"
+            type="number"
+            id="stock"
+            name="stock"
+            value={formState.stock}
             onChange={handleChange}
-            placeholder="Description"></textarea>
+            placeholder="Stock"
+            min="0"
+          />
         </div>
 
         {/* Category */}
@@ -217,16 +220,12 @@ const AddProduct = () => {
             onChange={handleChange}
             id="category">
             <option value="">Select a category</option>
-            <option value="electronics">Electronics</option>
-            <option value="jewerly">Jewerly</option>
-            <option value="men'sclothing">Men's Clothing</option>
-            <option value="women's clothing">Women's Clothing</option>
-            <option value="kids's clothing">Women's Clothing</option>
-            <option value="books">Books</option>
-            <option value="home">Home</option>
-            <option value="beauty">Beauty</option>
-            <option value="sports">Sports</option>
-            <option value="other">Other</option>
+
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
 

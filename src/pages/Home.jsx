@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 
 import { nanoid } from "nanoid";
-import Cards from "../components/Cards";
-import Button from "../components/Button";
-import useProducts from "../hooks/useProducts";
+import Cards from "../components/Cards.jsx";
+import Button from "../components/Button.jsx";
+import useProducts from "../hooks/useProducts.jsx";
+import useCategories from "../hooks/useCategories.jsx";
 
 const Home = () => {
   const { isLoading, error } = useProducts();
-  const [categories, setCategories] = useState([]);
+  /*  const [categories, setCategories] = useState([]);
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -26,7 +27,9 @@ const Home = () => {
     };
 
     fetchCategories();
-  }, []);
+  }, []); */
+
+  const { categories, setCategories } = useCategories();
 
   if (error) {
     return (
@@ -65,7 +68,7 @@ const Home = () => {
   }
   return (
     <main>
-      <div className=" flex flex-col sm:flex-row flex-center w-[max-content] sm:flex-start gap-6 mx-auto  sm:mx-16 my-6  ">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full max-w-xl   my-2 gap-2  mr-auto p-2">
         {categories.map((category) => {
           return <Button key={nanoid()} category={category} />;
         })}
