@@ -1,21 +1,24 @@
 import React, { useState, useEffect, createContext } from "react";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
+import useAuth from "../hooks/useAuth.jsx";
 
 const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const { user, setUser } = useAuth();
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   useEffect(() => {
     const fetchProducts = async () => {
+      if (!user) {
+        return;
+      }
       try {
         const response = await fetch(`${baseUrl}/users/products`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
           credentials: "include",
         });
         if (!response.ok) {
@@ -24,7 +27,7 @@ export const ProductProvider = ({ children }) => {
           return;
         }
         const data = await response.json();
-        console.log("data", data);
+        console.log("data fetch products", data);
         setProducts(data);
       } catch (error) {
         console.error(error);
@@ -36,13 +39,13 @@ export const ProductProvider = ({ children }) => {
     };
 
     fetchProducts();
-  }, [baseUrl]);
+  }, [baseUrl, user]);
 
-  const [cartList, setCartList] = useState(() => {
+  /*   const [cartList, setCartList] = useState(() => {
     return localStorage.getItem("cart") ?
         JSON.parse(localStorage.getItem("cart"))
       : [];
-  });
+  }); */
 
   /* useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartList));
@@ -60,8 +63,8 @@ export const ProductProvider = ({ children }) => {
       value={{
         products,
         setProducts,
-        cartList,
-        setCartList,
+        // cartList,
+        // setCartList,
         /*   cartProductsQuantity,
         setCartProductsQuantity, */
         isLoading,

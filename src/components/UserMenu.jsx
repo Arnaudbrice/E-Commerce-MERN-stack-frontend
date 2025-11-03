@@ -9,18 +9,26 @@ const UserMenu = () => {
   const { logout, setIsLoading } = useAuth();
   // const { cartQuantity } = useProducts();
 
-  const { cartList, setCartList, addProductToCart, removeProductFromCart } =
-    useCart();
+  const {
+    cartList,
+    setCartList,
+    addProductToCart,
+    removeProductFromCart,
+    cartQuantity,
+    setCartQuantity,
+    cartProductsQuantity,
+    setCartProductsQuantity,
+  } = useCart();
 
-  const [cartQuantity, setCartQuantity] = useState(0);
+  // const [cartQuantity, setCartQuantity] = useState(0);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     const quantity = cartList.products?.reduce((acc, item) => {
       return acc + item.quantity;
     }, 0);
 
     setCartQuantity(quantity);
-  }, [cartList]);
+  }, [cartList, setCartQuantity]); */
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -130,7 +138,7 @@ const UserMenu = () => {
                       />{" "}
                     </svg>
                     <span className="badge badge-sm indicator-item bg-fuchsia-400 lg:bg-black">
-                      {cartQuantity > 0 ? cartQuantity : 0}
+                      {cartProductsQuantity > 0 ? cartProductsQuantity : 0}
                     </span>
                   </div>
                 </NavLink>
@@ -214,7 +222,7 @@ const UserMenu = () => {
                   />{" "}
                 </svg>
                 <span className="badge badge-sm indicator-item">
-                  {cartQuantity > 0 ? cartQuantity : 0}
+                  {cartProductsQuantity > 0 ? cartProductsQuantity : 0}
                 </span>
               </div>
             </NavLink>

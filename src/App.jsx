@@ -19,8 +19,8 @@ import { CartContextProvider } from "./context/CartContext.jsx";
 function App() {
   return (
     <AuthContextProvider>
-      <ProductProvider>
-        <CartContextProvider>
+      <CartContextProvider>
+        <ProductProvider>
           <CategoryContextProvider>
             <Routes>
               <Route element={<MainLayout />}>
@@ -37,8 +37,8 @@ function App() {
               </Route>
             </Routes>
           </CategoryContextProvider>
-        </CartContextProvider>
-      </ProductProvider>
+        </ProductProvider>
+      </CartContextProvider>
     </AuthContextProvider>
   );
 }
