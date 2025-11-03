@@ -6,7 +6,6 @@ import GuestMenu from "./GuestMenu.jsx";
 
 const NavBar = () => {
   const { user, isLoading } = useAuth();
-  console.log("user in NavBar:", user);
 
   if (isLoading) {
     return (

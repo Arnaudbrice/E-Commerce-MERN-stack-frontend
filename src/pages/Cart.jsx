@@ -12,75 +12,58 @@ const Cart = () => {
     setProducts,
     // cartList,
     // setCartList,
-    cartProductsQuantity,
-    setCartProductsQuantity,
+
     isLoading,
   } = useProducts();
 
-  const { cartList, setCartList, addProductToCart, removeProductFromCart } =
-    useCart();
+  const {
+    cartList,
+    setCartList,
+    addProductToCart,
+    decreaseProductQuantity,
+    removeProductFromCart,
 
-  console.log("cartList", cartList);
+    cartProductsQuantity,
+    setCartProductsQuantity,
+  } = useCart();
+
+  // const [cartQuantity, setCartQuantity] = useState(0);
 
   const [cartAmount, setCartAmount] = useState(0);
 
-  console.log("cardQuantity", cartProductsQuantity);
-
   useEffect(() => {
     const calculateCartTotalAmount = () => {
-      console.log("cartList", cartList);
-
-      const cartTotalAmount = cartList.products.reduce((acc, item) => {
+      const cartTotalAmount = cartList.products?.reduce((acc, item) => {
         // Convert Decimal128 to string, then parse to float for calculation
-        const itemPrice = parseFloat(item.price.toString()) * item.quantity;
+        const itemPrice = parseFloat(item.productId?.price) * item.quantity;
+
         return acc + itemPrice;
       }, 0);
 
       setCartAmount(cartTotalAmount);
-
-      console.log("cartTotalAmount:", cartTotalAmount);
     };
 
     calculateCartTotalAmount();
   }, [cartList]);
 
-  const handleRemoveFromCartList = (id) => {
-    // const newQuantity = cardQuantity - 1;
-    const existingItem = cartList.find((item) => item.id === id);
-    if (existingItem && existingItem.productQuantity > 0) {
-      const updatedCartList = cartList.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            productQuantity: item.productQuantity - 1,
-          };
-        } else {
-          return item;
-        }
-      });
-      setCartList(updatedCartList);
-      // update the  quantity of the products added in the cart
-      setCartProductsQuantity((prevQuantity) => prevQuantity - 1);
-      // setCardQuantity(newQuantity);
-    } else {
+  const handleRemoveFromCartList = async (id, quantity) => {
+    if (quantity === 1) {
+      console.log("quantity cart", quantity);
+      await removeProductFromCart(id);
+
       return;
     }
+    await decreaseProductQuantity(id, quantity - 1);
   };
 
-  const addCart = (id) => {
-    const updatedCartList = cartList.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          productQuantity: item.productQuantity + 1,
-        };
-      } else {
-        return item;
-      }
-    });
-    setCartList(updatedCartList);
-    // update the  quantity of the products added in the cart
-    setCartProductsQuantity((prevQuantity) => prevQuantity + 1);
+  const addCart = async (id, stock, quantity) => {
+    if (quantity === stock) {
+      toast.error("Product is out of stock");
+      return;
+    }
+
+    await addProductToCart(id, quantity + 1);
+    // await getProductFromCart(id);
   };
 
   const handleReset = () => {
@@ -99,20 +82,20 @@ const Cart = () => {
 
   if (isLoading) {
     return (
-      <div role="status" class="max-w-sm animate-pulse">
-        <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
-        <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
-        <span class="sr-only">Loading...</span>
+      <div role="status" className="max-w-sm animate-pulse">
+        <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+        <span className="sr-only">Loading...</span>
       </div>
     );
   }
   return (
     <div>
-      {cartAmount === 0 ?
+      {!cartProductsQuantity ?
         <div
           role="alert"
           className="w-2/3 mx-auto mt-8 text-xl alert alert-info">
@@ -151,58 +134,53 @@ const Cart = () => {
                     (product) =>
                       product.quantity > 0 && (
                         <tr
-                          key={product.productId._id || product.productId}
+                          key={product.productId?._id}
                           className="grid grid-cols-[1fr] md:grid-cols-[2fr_3fr_1fr_1fr] border-b-2 gap-2 md:gap-8 border-gray-700 place-items-center h-full space-y-4 ">
                           <td className="flex flex-col items-center justify-center gap-4 ">
                             <div className=" avatar  size-40  ">
                               <img
                                 className="object-fill  bg-white mask mask-circle "
-                                src={
-                                  product.productId ?
-                                    product.productId.image
-                                  : product.image
-                                }
-                                alt={
-                                  product.productId ?
-                                    product.productId.title
-                                  : product.title
-                                }
+                                src={product.productId?.image}
+                                alt={product.productId?.title}
                               />
                             </div>
                             <div className="px-0 text-center">
                               <h2 className="text-white">
-                                {product.productId ?
-                                  product.productId.title
-                                : product.title}
+                                {product.productId?.title}
                               </h2>
                               <p className="text-gray-400">
                                 <span>Unit Price: </span>
-                                {parseFloat(
-                                  product.productId ?
-                                    product.productId.price.toString()
-                                  : product.price.toString()
-                                ).toFixed(2)}{" "}
+                                {parseFloat(product.productId?.price).toFixed(
+                                  2
+                                )}{" "}
                                 {" €"}
                               </p>
                             </div>
                           </td>
                           <td className="px-4 text-gray-400">
-                            {product.description}
+                            {product.productId?.description}
                           </td>
                           <td>
                             <ButtonGroup
                               quantity={product.quantity}
                               handleAdd={() =>
-                                addCart(product.productId, product.quantity + 1)
+                                addCart(
+                                  product.productId._id,
+                                  product.productId.stock,
+                                  product.quantity
+                                )
                               } // Pass correct ID and updated quantity
                               handleRemove={() =>
-                                handleRemoveFromCartList(product.id)
+                                handleRemoveFromCartList(
+                                  product.productId._id,
+                                  product.quantity
+                                )
                               }
                             />
                           </td>
                           <td className="px-4 ">
                             {(
-                              parseFloat(product.price.toString()) *
+                              parseFloat(product.productId.price) *
                               product.quantity
                             ).toFixed(2)}{" "}
                             {" €"}

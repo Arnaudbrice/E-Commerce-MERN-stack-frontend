@@ -1,12 +1,13 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAuth from "../hooks/useAuth.jsx";
 import { useState } from "react";
 
 import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
-  const { login } = useAuth();
+  const navigate = useNavigate();
+  const { login, user } = useAuth();
   const [isClicked, setIsClicked] = useState(false);
 
   const [formState, setFormState] = useState({
@@ -34,6 +35,10 @@ const Login = () => {
       setIsClicked(false);
     }
   };
+
+  if (user) {
+    navigate("/");
+  }
   return (
     <form
       onSubmit={handleSubmit}

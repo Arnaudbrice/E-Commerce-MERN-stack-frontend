@@ -75,6 +75,7 @@ export const AuthContextProvider = ({ children }) => {
       if (!response.ok) {
         const { message: validationError } = await response.json();
         await customErrorMessage(validationError, 7000);
+        // setUser(null);
         return;
       }
 
@@ -108,7 +109,7 @@ export const AuthContextProvider = ({ children }) => {
         return;
       }
 
-      toast.success("Logged out successfully");
+      toast.info("Logged out successfully");
       navigate("/login");
     } catch (error) {
       // Network or unknown error
@@ -131,7 +132,7 @@ export const AuthContextProvider = ({ children }) => {
         }
         const userData = await response.json();
 
-        console.log("Fetched user data:", userData);
+        // console.log("Fetched user data:", userData);
         setUser(userData);
       } catch (error) {
         // Network or unknown error

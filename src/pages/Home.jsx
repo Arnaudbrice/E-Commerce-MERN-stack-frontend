@@ -8,26 +8,6 @@ import useCategories from "../hooks/useCategories.jsx";
 
 const Home = () => {
   const { isLoading, error } = useProducts();
-  /*  const [categories, setCategories] = useState([]);
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(
-          "https://fakestoreapi.com/products/categories"
-        );
-        if (!response.ok) {
-          throw new Error("Error fetching data from the api");
-        }
-        const data = await response.json();
-        console.log("data", data);
-        setCategories(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchCategories();
-  }, []); */
 
   const { categories, setCategories } = useCategories();
 
@@ -69,8 +49,8 @@ const Home = () => {
   return (
     <main>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full max-w-xl   my-2 gap-2  mr-auto p-2">
-        {categories.map((category) => {
-          return <Button key={nanoid()} category={category} />;
+        {categories?.map((category) => {
+          return <Button key={category} category={category} />;
         })}
       </div>
       <Cards />
