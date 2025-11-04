@@ -36,10 +36,6 @@ const Login = () => {
     }
   };
 
-  if (!user) {
-    return;
-  }
-
   if (user) {
     navigate("/");
   }
