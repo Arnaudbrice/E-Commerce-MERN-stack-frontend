@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import ProductContext from "../context/ProductContext.jsx";
 
 import useProducts from "../hooks/useProducts.jsx";
@@ -8,6 +8,8 @@ import NotFound from "./NotFound.jsx";
 const Category = () => {
   /* const { products, setProducts } = useContext(ProductContext);
    */
+
+  const navigate = useNavigate();
   const { products, setProducts, isLoading } = useProducts();
   const { category } = useParams();
   const filteredProductsByCategory = products.filter(
@@ -27,10 +29,23 @@ const Category = () => {
       </div>
     );
   }
-  if (!filteredProductsByCategory || filteredProductsByCategory.length === 0) {
-    return <NotFound />;
-  }
 
+  // FIX 1: Simplified condition
+  if (!filteredProductsByCategory || !filteredProductsByCategory.length) {
+    return (
+      <div className="text-center text-xl my-8 flex flex-col items-center justify-center h-full  space-y-8 ">
+        <div>
+          No products found for the category
+          <span className="text-secondary">{category} </span>
+        </div>
+        <button
+          className="btn btn-secondary btn-lg"
+          onClick={() => navigate("/")}>
+          Back To Home
+        </button>
+      </div>
+    );
+  }
   console.log(category);
   return (
     <div>

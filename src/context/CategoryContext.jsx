@@ -10,9 +10,9 @@ export const CategoryContextProvider = ({ children }) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     const fetchCategories = async () => {
-      if (!user) {
+      /*  if (!user) {
         return;
-      }
+      } */
       try {
         const response = await fetch(`${baseUrl}/users/products/categories`, {
           method: "GET",

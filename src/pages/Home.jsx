@@ -5,6 +5,7 @@ import Cards from "../components/Cards.jsx";
 import Button from "../components/Button.jsx";
 import useProducts from "../hooks/useProducts.jsx";
 import useCategories from "../hooks/useCategories.jsx";
+import useAuth from "../hooks/useAuth.jsx";
 
 const Home = () => {
   const { isLoading, error } = useProducts();

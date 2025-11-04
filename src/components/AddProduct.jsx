@@ -214,12 +214,12 @@ const AddProduct = () => {
         <div>
           <label htmlFor="category">Category</label>
           <select
-            className="select select-lg  w-full inset-ring rounded-lg"
+            className="select select-lg  w-full inset-ring rounded-lg "
             name="category"
             value={formState.category}
             onChange={handleChange}
             id="category">
-            <option value="">Select a category</option>
+            <option value="">-- Select a category --</option>
 
             {categories.map((cat) => (
               <option key={cat} value={cat}>
