@@ -22,7 +22,6 @@ const Cart = () => {
     addProductToCart,
     decreaseProductQuantity,
     removeProductFromCart,
-
     cartProductsQuantity,
     setCartProductsQuantity,
   } = useCart();
@@ -31,6 +30,7 @@ const Cart = () => {
 
   const [cartAmount, setCartAmount] = useState(0);
 
+  // console.log("cartList", cartList);
   useEffect(() => {
     const calculateCartTotalAmount = () => {
       const cartTotalAmount = cartList.products?.reduce((acc, item) => {
@@ -46,6 +46,7 @@ const Cart = () => {
     calculateCartTotalAmount();
   }, [cartList]);
 
+  //**decrease product quantity or remove it from  **
   const handleRemoveFromCartList = async (id, quantity) => {
     if (quantity === 1) {
       console.log("quantity cart", quantity);
@@ -66,9 +67,11 @@ const Cart = () => {
     // await getProductFromCart(id);
   };
 
-  const handleReset = () => {
-    setCartList([]);
-    setCartProductsQuantity(0);
+  //********** reset cart **********
+  const handleReset = async () => {
+    for (const product of cartList.products) {
+      await removeProductFromCart(product.productId._id);
+    }
   };
 
   const handleCheckout = () => {

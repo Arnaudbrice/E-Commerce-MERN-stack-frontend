@@ -13,9 +13,9 @@ export const ProductProvider = ({ children }) => {
   const [error, setError] = useState(false);
   useEffect(() => {
     const fetchProducts = async () => {
-      if (!user) {
+      /*    if (!user) {
         return;
-      }
+      } */
       try {
         const response = await fetch(`${baseUrl}/users/products`, {
           method: "GET",
