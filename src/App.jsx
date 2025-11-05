@@ -15,6 +15,8 @@ import AddProduct from "./components/AddProduct.jsx";
 import { CategoryContextProvider } from "./context/CategoryContext.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
 import { CartContextProvider } from "./context/CartContext.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
+import MailResetPassword from "./pages/MailResetPassword.jsx";
 
 function App() {
   return (
@@ -27,6 +29,14 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route
+                  path="/mail-reset-password"
+                  element={<MailResetPassword />}
+                />
+                <Route
+                  path="/reset-password/:token"
+                  element={<ResetPassword />}
+                />
                 <Route path="/category/:category" element={<Category />} />
                 <Route element={<ProtectedLayout />}>
                   <Route path="/cart" element={<Cart />} />

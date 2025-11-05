@@ -99,6 +99,13 @@ const Login = () => {
             Sign Up
           </Link>
         </p>
+
+        <p className="text-lg text-center text-base-content/70 mt-4">
+          Forget your password?{" "}
+          <Link className="link link-primary" to={"/mail-reset-password"}>
+            Reset Password
+          </Link>
+        </p>
       </fieldset>
     </form>
   );

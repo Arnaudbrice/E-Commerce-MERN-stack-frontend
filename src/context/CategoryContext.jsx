@@ -17,9 +17,9 @@ export const CategoryContextProvider = ({ children }) => {
         const response = await fetch(`${baseUrl}/users/products/categories`, {
           method: "GET",
           credentials: "include",
-          headers: {
+          /*  headers: {
             "Content-Type": "application/json",
-          },
+          }, */
         });
 
         if (!response.ok) {
