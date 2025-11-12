@@ -2,9 +2,11 @@ import React, { createContext, useEffect, useState } from "react";
 import { customErrorMessage } from "../../utils/customErrorMessage";
 import { toast } from "react-toastify";
 import useAuth from "../hooks/useAuth.jsx";
+import { useNavigate } from "react-router";
 const CartContext = createContext();
 
 export const CartContextProvider = ({ children }) => {
+  const navigate = useNavigate();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const { user, setUser } = useAuth();
   const [cartList, setCartList] = useState({ products: [] });
@@ -19,6 +21,7 @@ export const CartContextProvider = ({ children }) => {
       if (!user) {
         return;
       }
+
       try {
         const response = await fetch(`${baseUrl}/users/cart`, {
           method: "GET",
@@ -31,7 +34,11 @@ export const CartContextProvider = ({ children }) => {
           return;
         }
         const cartData = await response.json();
-
+        console.log("cartData", cartData);
+        console.log(
+          "cartData after redirection",
+          new URLSearchParams(window.location.search).get("success")
+        );
         setCartList(cartData);
       } catch (error) {
         toast.error(error);
@@ -169,6 +176,39 @@ export const CartContextProvider = ({ children }) => {
     }
   }; */
 
+  // New function to clear the entire cart
+  const clearCart = async () => {
+    if (!user) {
+      toast.error("You need to be logged in to clear the cart", {
+        autoClose: 10000,
+      });
+      return;
+    }
+    try {
+      const response = await fetch(`${baseUrl}/users/cart/clear`, {
+        // Assuming this new endpoint
+        method: "DELETE", // Or POST, depending on your backend implementation
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const { message: errorMessage } = await response.json();
+        customErrorMessage(errorMessage, 5000);
+        return;
+      }
+
+      const { cart } = await response.json();
+      console.log("cart", cart);
+      // On successful clear, update local state
+      setCartList(cart);
+      setCartProductsQuantity(0);
+      toast.success("Cart cleared successfully!");
+    } catch (error) {
+      toast.error(error.message || "Failed to clear cart.");
+      console.error("Error clearing cart:", error);
+    }
+  };
+
   return (
     <CartContext
       value={{
@@ -182,6 +222,7 @@ export const CartContextProvider = ({ children }) => {
         decreaseProductQuantity,
         cartProductsQuantity,
         setCartProductsQuantity,
+        clearCart,
       }}>
       {children}
     </CartContext>

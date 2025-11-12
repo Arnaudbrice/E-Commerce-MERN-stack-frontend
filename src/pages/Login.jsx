@@ -36,9 +36,9 @@ const Login = () => {
     }
   };
 
-  if (user) {
-    navigate("/");
-  }
+  // if (user) {
+  //   navigate("/");
+  // }
   return (
     <form
       onSubmit={handleSubmit}

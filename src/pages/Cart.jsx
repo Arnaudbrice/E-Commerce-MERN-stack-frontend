@@ -1,12 +1,15 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, use, useCallback } from "react";
 
 import { toast } from "react-toastify";
 import Card from "../components/Card";
 import ButtonGroup from "../components/ButtonGroup";
 import useProducts from "../hooks/useProducts.jsx";
 import useCart from "../hooks/useCart.jsx";
+import { customErrorMessage } from "../../utils/customErrorMessage.js";
+import { useNavigate } from "react-router";
 
 const Cart = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
   const {
     products,
     setProducts,
@@ -24,11 +27,23 @@ const Cart = () => {
     removeProductFromCart,
     cartProductsQuantity,
     setCartProductsQuantity,
+    clearCart,
   } = useCart();
 
   // const [cartQuantity, setCartQuantity] = useState(0);
 
   const [cartAmount, setCartAmount] = useState(0);
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  //********** reset cart **********
+  const handleReset = useCallback(async () => {
+    /* for (const product of cartList.products) {
+      console.log("product removed");
+      await removeProductFromCart(product.productId._id);
+    } */
+    clearCart();
+  }, [clearCart]);
 
   // console.log("cartList", cartList);
   useEffect(() => {
@@ -45,6 +60,34 @@ const Cart = () => {
 
     calculateCartTotalAmount();
   }, [cartList]);
+  console.log("cartList", cartList);
+
+  // After the payment process, if we want to inform the user that payment was successful, we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment.
+  useEffect(() => {
+    const handleRedirect = async () => {
+      const queryParams = new URLSearchParams(window.location.search);
+      const success = queryParams.get("success");
+      const canceled = queryParams.get("canceled");
+
+      if (success === "true") {
+        alert("hallo");
+        toast.success("Payment has been successfully made!");
+        await handleReset(); // This will now call the efficient clearCart
+        navigate(window.location.pathname, { replace: true });
+      } else if (canceled) {
+        toast.error("Payment was canceled.");
+        navigate(window.location.pathname, { replace: true });
+      }
+    };
+
+    const currentQueryParams = new URLSearchParams(window.location.search);
+    if (
+      currentQueryParams.get("success") ||
+      currentQueryParams.get("canceled")
+    ) {
+      handleRedirect();
+    }
+  }, [handleReset, navigate]);
 
   //**decrease product quantity or remove it from  **
   const handleRemoveFromCartList = async (id, quantity) => {
@@ -67,20 +110,37 @@ const Cart = () => {
     // await getProductFromCart(id);
   };
 
-  //********** reset cart **********
-  const handleReset = async () => {
-    for (const product of cartList.products) {
-      await removeProductFromCart(product.productId._id);
-    }
-  };
+  // After the payment process, if we want to inform the user that payment was successful, we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment.
 
-  const handleCheckout = () => {
-    toast.success(
-      <div className="mx-auto text-center">
-        Checkout Successfully <br />
-        We Will implement the logic later
-      </div>
-    );
+  //********** payment **********
+  const handleCheckout = async () => {
+    try {
+      const response = await fetch(
+        `${baseUrl}/users/cart/create-checkout-session`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cartList }),
+          credentials: "include",
+        }
+      );
+      if (!response.ok) {
+        const { message: errorMessage } = await response.json();
+        customErrorMessage(errorMessage, 5000);
+        return;
+      }
+
+      const { url } = await response.json();
+
+      console.log("url", url);
+      toast.info("Redirecting to payment...");
+      //! Redirect to Stripe checkout
+      window.location.href = url;
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   if (isLoading) {

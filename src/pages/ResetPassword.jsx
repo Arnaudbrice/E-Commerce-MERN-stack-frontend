@@ -5,40 +5,16 @@ import { customErrorMessage } from "../../utils/customErrorMessage";
 import { toast } from "react-toastify";
 
 const ResetPassword = () => {
+  // grab the token from the url params
   const { token } = useParams();
 
   const navigate = useNavigate();
-  const [passwordResetToken, setPasswordResetToken] = useState("");
+
   const [password, setPassword] = useState("");
   const [isClicked, setIsClicked] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  useEffect(() => {
-    const getResetPassword = async () => {
-      try {
-        const response = await fetch(
-          `${baseUrl}/auth/reset-password/${token}`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-
-        if (!response.ok) {
-          const { message: errorMessage } = await response.json();
-          customErrorMessage(errorMessage, 5000);
-          return;
-        }
-        const token = await response.json();
-        setPasswordResetToken(token);
-      } catch (error) {
-        toast.error(error);
-      }
-    };
-
-    getResetPassword();
-  }, [baseUrl, token]);
 
   const handleChange = (event) => {
     setPassword(event.target.value);
@@ -48,18 +24,16 @@ const ResetPassword = () => {
     event.preventDefault();
     setIsClicked(true);
 
+    // console.log("passwordResetToken", token);
     try {
-      const response = await fetch(
-        `${baseUrl}/auth/reset-password/${passwordResetToken}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ password }),
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${baseUrl}/auth/reset-password/${token}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+        credentials: "include",
+      });
 
       if (!response.ok) {
         const { message: errorMessage } = await response.json();
