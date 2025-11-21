@@ -12,52 +12,9 @@ import { useNavigate } from "react-router";
 import useCart from "../hooks/useCart.jsx";
 
 const Home = () => {
-  const { isLoading, error } = useProducts();
+  const { isLoading, error, updateProductStockAfterPayment } = useProducts();
 
   const { categories, setCategories } = useCategories();
-
-  const { clearCart } = useCart();
-
-  const navigate = useNavigate();
-
-  const handleReset = useCallback(async () => {
-    clearCart();
-  }, [clearCart]);
-
-  // After the payment process, if we want to inform the user that payment was successful, we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment.
-  useEffect(() => {
-    const handleRedirect = async () => {
-      const queryParams = new URLSearchParams(window.location.search);
-      const success = queryParams.get("success");
-      const canceled = queryParams.get("canceled");
-
-      if (success) {
-        toast.success("Payment has been successfully made!");
-        await handleReset(); // This will now call the efficient clearCart
-
-        //! if the URL is http://localhost:5173/cart?success=true, window.location.pathname would be /cart for instance
-        /* replaces the ?success=true entry in the browser history with the window location pathname(so the URL would not remain http://localhost:5173/cart?success=true:
-        -If the user then refreshed the page
-        -If the user clicked the browser's back button */
-
-        navigate(window.location.pathname, { replace: true });
-      } else if (canceled) {
-        toast.error("Payment was canceled.");
-
-        //! if the URL is http://localhost:5173/?canceled=true, window.location.pathname would be /for instance
-        //! replaces the ?success=true entry in the browser history with /
-        navigate(window.location.pathname, { replace: true });
-      }
-    };
-
-    const currentQueryParams = new URLSearchParams(window.location.search);
-    if (
-      currentQueryParams.get("success") ||
-      currentQueryParams.get("canceled")
-    ) {
-      handleRedirect();
-    }
-  }, [handleReset, navigate]);
 
   if (error) {
     return (
@@ -96,7 +53,7 @@ const Home = () => {
   }
   return (
     <main>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full max-w-xl   my-2 gap-2  mr-auto p-2">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full sm:max-w-xl   my-2 gap-2  mr-auto p-2">
         {categories?.map((category) => {
           return <Button key={category} category={category} />;
         })}

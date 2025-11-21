@@ -7,7 +7,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, user } = useAuth();
+  const { login, user, isLoadingAuth } = useAuth();
   const [isClicked, setIsClicked] = useState(false);
 
   const [formState, setFormState] = useState({
@@ -39,6 +39,14 @@ const Login = () => {
   // if (user) {
   //   navigate("/");
   // }
+
+  if (isLoadingAuth) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-2xl">Loading...</div>
+      </div>
+    );
+  }
   return (
     <form
       onSubmit={handleSubmit}

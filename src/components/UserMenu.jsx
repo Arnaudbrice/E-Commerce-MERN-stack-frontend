@@ -6,7 +6,7 @@ import useAuth from "../hooks/useAuth.jsx";
 import useCart from "../hooks/useCart.jsx";
 
 const UserMenu = () => {
-  const { logout, setIsLoading } = useAuth();
+  const { logout, setIsLoadingAuth } = useAuth();
   // const { cartQuantity } = useProducts();
 
   const {
@@ -40,7 +40,7 @@ const UserMenu = () => {
     try {
       await logout();
     } finally {
-      setIsLoading(false);
+      setIsLoadingAuth(false);
     }
   };
 

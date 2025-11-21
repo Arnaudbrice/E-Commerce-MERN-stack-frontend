@@ -4,19 +4,19 @@ import { Outlet, useNavigate } from "react-router";
 import { useEffect } from "react";
 
 const ProtectedLayout = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoadingAuth } = useAuth();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoadingAuth) {
       return;
     }
 
     if (!user) {
       navigate("/login");
     }
-  }, [user, isLoading, navigate]);
+  }, [user, isLoadingAuth, navigate]);
 
   /*  (This prevents a page to be display for a small amount of time before the page to be displayed is ready */
   if (!user) {

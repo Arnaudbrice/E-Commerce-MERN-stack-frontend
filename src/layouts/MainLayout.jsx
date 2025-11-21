@@ -12,7 +12,7 @@ const MainLayout = () => {
   return (
     <div
       className="min-h-screen w-full grid grid-rows-[auto_1fr_auto]
-        font-['Outfit'] ">
+        font-['Outfit'] overflow-x-hidden ">
       <div>
         <NavBar />
         <ToastContainer

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use, useCallback } from "react";
+import React, { useState, useEffect, use, useCallback, useRef } from "react";
 
 import { toast } from "react-toastify";
 import Card from "../components/Card";
@@ -7,6 +7,7 @@ import useProducts from "../hooks/useProducts.jsx";
 import useCart from "../hooks/useCart.jsx";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import { useNavigate } from "react-router";
+import useAuth from "../hooks/useAuth.jsx";
 
 const Cart = () => {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -17,9 +18,12 @@ const Cart = () => {
     // setCartList,
 
     isLoading,
+    updateProductStockAfterPayment,
   } = useProducts();
 
   const {
+    isLoadingCart,
+    setIsLoadingCart,
     cartList,
     setCartList,
     addProductToCart,
@@ -30,20 +34,54 @@ const Cart = () => {
     clearCart,
   } = useCart();
 
-  // const [cartQuantity, setCartQuantity] = useState(0);
+  const { user, isLoadingAuth } = useAuth();
 
+  console.log("user from cart", user);
+
+  // const [cartQuantity, setCartQuantity] = useState(0);
+  const [order, setOrder] = useState({});
   const [cartAmount, setCartAmount] = useState(0);
+
+  const [redirecting, setRedirecting] = useState(false);
+  const redirectHandledRef = useRef(false);
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
+  const fetchOrder = useCallback(async () => {
+    try {
+      const response = await fetch(`${baseUrl}/users/orders`, {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!response.ok) {
+        const { message: errorMessage } = await response.json();
+        customErrorMessage(errorMessage, 5000);
+        return;
+      }
+      const orderMade = await response.json();
+
+      console.log("orderMade fetched", orderMade);
+
+      setOrder(orderMade);
+
+      console.log("orderMade", orderMade);
+    } catch (error) {
+      toast.error(error);
+    }
+  }, [baseUrl]);
+
   //********** reset cart **********
   const handleReset = useCallback(async () => {
-    /* for (const product of cartList.products) {
-      console.log("product removed");
-      await removeProductFromCart(product.productId._id);
-    } */
     clearCart();
   }, [clearCart]);
+
+  //********** decrease product stock after payment **********
+  const updateProductStock = useCallback(
+    async (id, quantity) => {
+      await updateProductStockAfterPayment(id, quantity);
+    },
+    [updateProductStockAfterPayment]
+  );
 
   // console.log("cartList", cartList);
   useEffect(() => {
@@ -65,29 +103,66 @@ const Cart = () => {
   // After the payment process, if we want to inform the user that payment was successful, we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment.
   useEffect(() => {
     const handleRedirect = async () => {
+      if (redirectHandledRef.current) return; // prevent duplicate handling (e.g., StrictMode double effect)
       const queryParams = new URLSearchParams(window.location.search);
       const success = queryParams.get("success");
       const canceled = queryParams.get("canceled");
 
       if (success === "true") {
-        alert("hallo");
+        /*  navigate(window.location.pathname, { replace: true }); // Clean URL regardless */
+
+        setRedirecting(true); // Hide cart and show spinner
+        redirectHandledRef.current = true; //! Prevent duplicate handling (e.g., StrictMode double effect liek toast showing 2 times)
+
+        console.log("Cart products to update stock:", cartList.products);
+
+        /* if (user && !isLoadingCart) {
+          // Check for 'user' instead of 'isAuthenticated' if 'user' is null/object
+
+          // todo:use createOrder request here
+
+           console.log("cartList product after payment", cartList?.products);
+          for (const item of cartList.products) {
+            await updateProductStock(item.productId._id, item.quantity);
+          }
+          await handleReset(); // This will now call the efficient clearCart
+
+
+        } */
         toast.success("Payment has been successfully made!");
-        await handleReset(); // This will now call the efficient clearCart
-        navigate(window.location.pathname, { replace: true });
+
+        await fetchOrder();
+
+        // todo: navigate to order details page with order to be added to the orders array
+
+        navigate("/orders", { replace: true }); // This replaces the current history entry and removes query params
       } else if (canceled) {
-        toast.error("Payment was canceled.");
         navigate(window.location.pathname, { replace: true });
+        toast.error("Payment was canceled.");
       }
     };
 
     const currentQueryParams = new URLSearchParams(window.location.search);
+
+    const hasPaymentParams =
+      currentQueryParams.get("success") || currentQueryParams.get("canceled");
     if (
-      currentQueryParams.get("success") ||
-      currentQueryParams.get("canceled")
+      hasPaymentParams &&
+      !isLoadingAuth &&
+      !isLoadingCart // FIX: Only proceed if auth state is known AND cart is loaded
     ) {
       handleRedirect();
     }
-  }, [handleReset, navigate]);
+  }, [
+    handleReset,
+    navigate,
+    updateProductStock,
+    cartList,
+    user,
+    isLoadingAuth,
+    isLoadingCart,
+    fetchOrder,
+  ]);
 
   //**decrease product quantity or remove it from  **
   const handleRemoveFromCartList = async (id, quantity) => {
@@ -143,37 +218,36 @@ const Cart = () => {
     }
   };
 
-  if (isLoading) {
+  if (!cartProductsQuantity && !isLoadingCart) {
     return (
-      <div role="status" className="max-w-sm animate-pulse">
-        <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
-        <span className="sr-only">Loading...</span>
+      <div role="alert" className="w-2/3 mx-auto mt-8 text-xl alert alert-info">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          className="w-6 h-6 stroke-current shrink-0">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span>Your Cart is empty 😕</span>
       </div>
     );
   }
+
   return (
     <div>
-      {!cartProductsQuantity ?
-        <div
-          role="alert"
-          className="w-2/3 mx-auto mt-8 text-xl alert alert-info">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="w-6 h-6 stroke-current shrink-0">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span>Your Cart is empty 😕</span>
+      {redirecting || isLoadingCart ?
+        <div role="status" className="max-w-sm animate-pulse">
+          <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+          <span className="sr-only">Loading...</span>
         </div>
       : <>
           <div className="w-2/3 mx-auto my-6 text-3xl font-bold text-center divider divider-secondary">
@@ -226,6 +300,7 @@ const Cart = () => {
                           <td>
                             <ButtonGroup
                               quantity={product.quantity}
+                              stock={product.productId?.stock}
                               handleAdd={() =>
                                 addCart(
                                   product.productId._id,
