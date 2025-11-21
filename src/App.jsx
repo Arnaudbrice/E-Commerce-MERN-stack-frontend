@@ -17,6 +17,7 @@ import ProductDetail from "./pages/ProductDetail.jsx";
 import { CartContextProvider } from "./context/CartContext.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import MailResetPassword from "./pages/MailResetPassword.jsx";
+import Order from "./pages/Order.jsx";
 
 function App() {
   return (
@@ -43,6 +44,8 @@ function App() {
                   <Route path="/add-product" element={<AddProduct />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
                 </Route>
+
+                <Route path="/orders" element={<Order />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>

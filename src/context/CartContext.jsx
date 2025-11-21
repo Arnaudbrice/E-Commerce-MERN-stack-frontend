@@ -15,13 +15,15 @@ export const CartContextProvider = ({ children }) => {
 
   const [cartProductsQuantity, setCartProductsQuantity] = useState(0);
 
-  const [isLoadingCart, setIsLoadingCart] = useState(false);
+  const [isLoadingCart, setIsLoadingCart] = useState(true);
   useEffect(() => {
     const fetchCart = async () => {
       if (!user) {
+        setIsLoadingCart(true);
         return;
       }
 
+      setIsLoadingCart(true);
       try {
         const response = await fetch(`${baseUrl}/users/cart`, {
           method: "GET",
@@ -35,13 +37,15 @@ export const CartContextProvider = ({ children }) => {
         }
         const cartData = await response.json();
         console.log("cartData", cartData);
-        console.log(
+        /*      console.log(
           "cartData after redirection",
           new URLSearchParams(window.location.search).get("success")
-        );
+        ); */
         setCartList(cartData);
       } catch (error) {
         toast.error(error);
+      } finally {
+        setIsLoadingCart(false);
       }
     };
     fetchCart();
@@ -156,34 +160,14 @@ export const CartContextProvider = ({ children }) => {
     }
   };
 
-  /*   const getProductQuantityFromCart = async (id) => {
-    try {
-      const response = await fetch(`${baseUrl}/users/cart/products/${id}`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        const { message: validationError } = await response.json();
-        customErrorMessage(validationError, 5000);
-        return;
-      }
-      const product = await response.json();
-      console.log("product quantity found", product.quantity);
-      setCartProductQuantity(product.quantity || 0);
-    } catch (error) {
-      toast.error(error);
-    }
-  }; */
-
   // New function to clear the entire cart
   const clearCart = async () => {
-    if (!user) {
+    /*  if (!user) {
       toast.error("You need to be logged in to clear the cart", {
         autoClose: 10000,
       });
       return;
-    }
+    } */
     try {
       const response = await fetch(`${baseUrl}/users/cart/clear`, {
         // Assuming this new endpoint
@@ -209,9 +193,39 @@ export const CartContextProvider = ({ children }) => {
     }
   };
 
+  const updateProductStockAfterPayment = async (id, quantity) => {
+    if (!user) {
+      console.warn("Attempted to update stock without authentication.");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `${baseUrl}/users/products/${id}/reduce-stock`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ quantity }),
+        }
+      );
+
+      if (!response.ok) {
+        const { message: validationError } = await response.json();
+        customErrorMessage(validationError, 5000);
+        return;
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   return (
     <CartContext
       value={{
+        isLoadingCart,
+        setIsLoadingCart,
         cartList,
         setCartList,
         addProductToCart,
@@ -223,6 +237,7 @@ export const CartContextProvider = ({ children }) => {
         cartProductsQuantity,
         setCartProductsQuantity,
         clearCart,
+        updateProductStockAfterPayment,
       }}>
       {children}
     </CartContext>

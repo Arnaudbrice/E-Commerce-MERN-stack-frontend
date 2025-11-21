@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext } from "react";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import useAuth from "../hooks/useAuth.jsx";
+import { toast } from "react-toastify";
 
 const ProductContext = createContext();
 
@@ -9,13 +10,14 @@ export const ProductProvider = ({ children }) => {
 
   const { user, setUser } = useAuth();
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   useEffect(() => {
     const fetchProducts = async () => {
       /*    if (!user) {
         return;
       } */
+      setIsLoading(true);
       try {
         const response = await fetch(`${baseUrl}/users/products`, {
           method: "GET",
@@ -58,6 +60,37 @@ export const ProductProvider = ({ children }) => {
 
   const [cartProductsQuantity, setCartProductsQuantity] = useState(0); */
 
+  const updateProductStockAfterPayment = async (id, quantity) => {
+    if (!user) {
+      console.warn("Attempted to update stock without authentication.");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `${baseUrl}/users/products/${id}/reduce-stock`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ quantity }),
+        }
+      );
+
+      if (!response.ok) {
+        const { message: validationError } = await response.json();
+        customErrorMessage(validationError, 5000);
+        return;
+      }
+
+      const product = await response.json();
+      console.log("product", product);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   return (
     <ProductContext.Provider
       value={{
@@ -69,6 +102,7 @@ export const ProductProvider = ({ children }) => {
         setCartProductsQuantity, */
         isLoading,
         error,
+        updateProductStockAfterPayment,
       }}>
       {children}
     </ProductContext.Provider>

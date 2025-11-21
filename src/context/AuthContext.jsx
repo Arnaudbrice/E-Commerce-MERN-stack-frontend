@@ -13,13 +13,14 @@ export const AuthContextProvider = ({ children }) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [user, setUser] = useState(null);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
   const [error, setError] = useState(null);
 
   //********** register **********
 
   const register = async (formState) => {
+    setIsLoadingAuth(true);
     try {
       /* Use JSON.stringify to converts the formState object to JSON string and send it as the request body */
       const response = await fetch(`${baseUrl}/auth/register`, {
@@ -55,12 +56,13 @@ export const AuthContextProvider = ({ children }) => {
       // Network or unknown error
       toast.error(error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingAuth(false);
     }
   };
 
   //********** login **********
   const login = async (formState) => {
+    setIsLoadingAuth(true);
     try {
       const response = await fetch(`${baseUrl}/auth/login`, {
         method: "POST",
@@ -89,7 +91,7 @@ export const AuthContextProvider = ({ children }) => {
       // server validation error
       toast.error(error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingAuth(false);
     }
   };
 
@@ -141,14 +143,15 @@ export const AuthContextProvider = ({ children }) => {
         setUser(null);
         // navigate("/login");
       } finally {
-        setIsLoading(false);
+        setIsLoadingAuth(false);
       }
     };
     getUser();
   }, [navigate, baseUrl]);
 
   return (
-    <AuthContext value={{ user, setUser, isLoading, register, login, logout }}>
+    <AuthContext
+      value={{ user, setUser, isLoadingAuth, register, login, logout }}>
       {children}
     </AuthContext>
   );

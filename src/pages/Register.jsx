@@ -8,7 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 import useAuth from "../hooks/useAuth.jsx";
 const Register = () => {
-  const { register } = useAuth();
+  const { register, isLoadingAuth } = useAuth();
 
   const [formState, setFormState] = useState({
     email: "",
@@ -47,6 +47,13 @@ const Register = () => {
     }
   };
 
+  if (isLoadingAuth) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-2xl">Loading...</div>
+      </div>
+    );
+  }
   return (
     <form
       onSubmit={handleSubmit}
