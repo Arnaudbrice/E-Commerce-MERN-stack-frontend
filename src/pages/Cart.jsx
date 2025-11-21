@@ -43,11 +43,12 @@ const Cart = () => {
   const [cartAmount, setCartAmount] = useState(0);
 
   const [redirecting, setRedirecting] = useState(false);
+  // used to prevent duplicate handling of redirect (e.g., StrictMode double effect)
   const redirectHandledRef = useRef(false);
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-  const fetchOrder = useCallback(async () => {
+  const createOrder = useCallback(async () => {
     try {
       const response = await fetch(`${baseUrl}/users/orders`, {
         method: "POST",
@@ -62,7 +63,7 @@ const Cart = () => {
 
       console.log("orderMade fetched", orderMade);
 
-      setOrder(orderMade);
+      setOrder({ ...orderMade });
 
       console.log("orderMade", orderMade);
     } catch (error) {
@@ -103,7 +104,7 @@ const Cart = () => {
   // After the payment process, if we want to inform the user that payment was successful, we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment.
   useEffect(() => {
     const handleRedirect = async () => {
-      if (redirectHandledRef.current) return; // prevent duplicate handling (e.g., StrictMode double effect)
+      if (redirectHandledRef.current) return; //!prevent duplicate handling (e.g., StrictMode double effect)
       const queryParams = new URLSearchParams(window.location.search);
       const success = queryParams.get("success");
       const canceled = queryParams.get("canceled");
@@ -131,11 +132,18 @@ const Cart = () => {
         } */
         toast.success("Payment has been successfully made!");
 
-        await fetchOrder();
+        await createOrder();
 
         // todo: navigate to order details page with order to be added to the orders array
 
-        navigate("/orders", { replace: true }); // This replaces the current history entry and removes query params
+        // console.log("order after payment", order);
+
+        navigate("/orders", {
+          replace: true,
+          /*    state: {
+            order: order, //pass the order details to the orders page
+          }, */
+        }); //! This replaces the current history entry /cart/?success=true in the back stack with the new one /orders( /cart/?success=true becomes -> /orders in the history back stack)
       } else if (canceled) {
         navigate(window.location.pathname, { replace: true });
         toast.error("Payment was canceled.");
@@ -161,7 +169,7 @@ const Cart = () => {
     user,
     isLoadingAuth,
     isLoadingCart,
-    fetchOrder,
+    createOrder,
   ]);
 
   //**decrease product quantity or remove it from  **
