@@ -14,16 +14,16 @@ export const CartContextProvider = ({ children }) => {
   const [cartQuantity, setCartQuantity] = useState(0);
 
   const [cartProductsQuantity, setCartProductsQuantity] = useState(0);
-
+  //! loading state set it to true initially
   const [isLoadingCart, setIsLoadingCart] = useState(true);
   useEffect(() => {
     const fetchCart = async () => {
-      if (!user) {
+      /* if (!user) {
         setIsLoadingCart(true);
         return;
-      }
+      } */
 
-      setIsLoadingCart(true);
+      // setIsLoadingCart(true);
       try {
         const response = await fetch(`${baseUrl}/users/cart`, {
           method: "GET",
@@ -41,7 +41,11 @@ export const CartContextProvider = ({ children }) => {
           "cartData after redirection",
           new URLSearchParams(window.location.search).get("success")
         ); */
+
+        const qty =
+          cartData.products?.reduce((acc, item) => acc + item.quantity, 0) || 0;
         setCartList(cartData);
+        setCartProductsQuantity(qty);
       } catch (error) {
         toast.error(error);
       } finally {
@@ -54,13 +58,13 @@ export const CartContextProvider = ({ children }) => {
   //********** cart product quantity **********
 
   /* calculate cart product quantity if cartList changes */
-  useEffect(() => {
+  /*   useEffect(() => {
     const quantity = cartList.products?.reduce((acc, item) => {
       return acc + item.quantity;
     }, 0);
 
     setCartProductsQuantity(quantity || 0);
-  }, [cartList]);
+  }, [cartList]); */
 
   //********** Add product to cart **********
 
@@ -90,7 +94,11 @@ export const CartContextProvider = ({ children }) => {
 
       console.log("cartData", cartData);
 
+      const qty =
+        cartData.products?.reduce((acc, item) => acc + item.quantity, 0) || 0;
       setCartList(cartData);
+      setCartProductsQuantity(qty);
+      // setCartList(cartData);
 
       // await getProductQuantityFromCart(id);
 
@@ -126,7 +134,12 @@ export const CartContextProvider = ({ children }) => {
 
       console.log("cartData", cartData);
 
+      // setCartList(cartData);
+
+      const qty =
+        cartData.products?.reduce((acc, item) => acc + item.quantity, 0) || 0;
       setCartList(cartData);
+      setCartProductsQuantity(qty);
 
       toast.success("Product quantity decreased successfully!");
     } catch (error) {
@@ -149,6 +162,11 @@ export const CartContextProvider = ({ children }) => {
       }
 
       const cartData = await response.json();
+
+      const qty =
+        cartData.products?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+      // setCartList(cartData);
+      setCartProductsQuantity(qty);
 
       setCartList(cartData || { products: [] });
       console.log("cartData_now after remove", cartData);

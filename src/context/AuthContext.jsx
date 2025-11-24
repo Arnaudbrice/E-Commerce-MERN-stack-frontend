@@ -13,6 +13,7 @@ export const AuthContextProvider = ({ children }) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [user, setUser] = useState(null);
 
+  //! loading state set it to true initially
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
   const [error, setError] = useState(null);
