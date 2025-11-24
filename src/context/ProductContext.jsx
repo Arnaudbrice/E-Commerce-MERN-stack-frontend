@@ -10,14 +10,15 @@ export const ProductProvider = ({ children }) => {
 
   const { user, setUser } = useAuth();
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  //! loading state set it to true initially
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   useEffect(() => {
     const fetchProducts = async () => {
       /*    if (!user) {
         return;
       } */
-      setIsLoading(true);
+      // setIsLoading(true);
       try {
         const response = await fetch(`${baseUrl}/users/products`, {
           method: "GET",

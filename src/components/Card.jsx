@@ -20,6 +20,8 @@ const Card = ({ _id, title, price, description, category, image, stock }) => {
     addProductToCart,
     removeProductFromCart,
     isLoadingCart,
+    cartProductsQuantity,
+    setCartProductsQuantity,
 
     decreaseProductQuantity,
   } = useCart();
@@ -84,8 +86,6 @@ const Card = ({ _id, title, price, description, category, image, stock }) => {
       await removeProductFromCart(id);
 
       setQuantity(0);
-
-      // await decreaseProductQuantity(id, quantity - 1);
 
       return;
     }

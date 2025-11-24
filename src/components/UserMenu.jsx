@@ -222,7 +222,7 @@ const UserMenu = () => {
                   />{" "}
                 </svg>
                 <span className="badge badge-sm indicator-item">
-                  {cartProductsQuantity > 0 ? cartProductsQuantity : 0}
+                  {cartProductsQuantity || 0}
                 </span>
               </div>
             </NavLink>
