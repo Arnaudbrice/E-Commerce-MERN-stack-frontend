@@ -57,7 +57,34 @@ const Order = () => {
     };
     fetchOrders();
   }, [baseUrl]);
-  /*  */
+
+  const handleInvoicePDF = async (id) => {
+    try {
+      const response = await fetch(`${baseUrl}/users/orders/${id}/invoice`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const { message: errorMessage } = await response.json();
+        customErrorMessage(errorMessage, 5000);
+        return;
+      }
+
+      // to download the pdf directly instead of opening it in a new tab
+      const blobUrl = URL.createObjectURL(await response.blob());
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `invoice-${id}.pdf`;
+      a.rel = "noopener";
+      document.body.append(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -125,7 +152,9 @@ const Order = () => {
                     Totals: {totals[index] + " €"}
                   </p>
                   <div className="justify-end flex ">
-                    <button className="btn btn-lg btn-primary">
+                    <button
+                      onClick={() => handleInvoicePDF(order.id)}
+                      className="btn btn-lg btn-primary">
                       Invoice PDF
                     </button>
                   </div>
