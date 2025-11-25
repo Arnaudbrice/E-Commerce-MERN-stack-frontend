@@ -63,7 +63,6 @@ export const AuthContextProvider = ({ children }) => {
 
   //********** login **********
   const login = async (formState) => {
-    setIsLoadingAuth(true);
     try {
       const response = await fetch(`${baseUrl}/auth/login`, {
         method: "POST",
