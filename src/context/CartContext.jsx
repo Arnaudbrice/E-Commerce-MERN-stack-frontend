@@ -23,6 +23,10 @@ export const CartContextProvider = ({ children }) => {
         return;
       } */
 
+      if (!user) {
+        return;
+      }
+
       // setIsLoadingCart(true);
       try {
         const response = await fetch(`${baseUrl}/users/cart`, {
