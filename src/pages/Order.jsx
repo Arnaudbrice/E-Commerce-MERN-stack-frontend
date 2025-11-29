@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { customErrorMessage } from "../../utils/customErrorMessage";
 import { toast } from "react-toastify";
+import useCart from "../hooks/useCart.jsx";
 
 const Order = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
+
+  const { addProductToCart, decreaseProductQuantity, removeProductFromCart } =
+    useCart();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -15,6 +20,7 @@ const Order = () => {
   const { order } = location.state || {}; // Access the order object from the location state */
 
   // console.log("order", order);
+  const { cartProductsQuantity, cartList } = useCart();
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -58,6 +64,31 @@ const Order = () => {
     fetchOrders();
   }, [baseUrl]);
 
+  const handleBuyAgain = async (id) => {
+    console.log("product id", id);
+
+    await addProductToCart(id, 1);
+  };
+
+  const handleImageClick = (id, e, product) => {
+    e.stopPropagation();
+    navigate(`/product/${id}`, {
+      state: {
+        quantityInCart: product.quantity,
+        stock: product.productId.stock,
+        title: product.productId.title,
+        price: product.productId.price,
+        description: product.productId.description,
+        category: product.productId.category,
+        image: product.productId.image,
+      },
+    });
+  };
+
+  /****************************************
+   *           Download Invoice as pdf
+   ****************************************/
+
   const handleInvoicePDF = async (id) => {
     try {
       const response = await fetch(`${baseUrl}/users/orders/${id}/invoice`, {
@@ -71,15 +102,23 @@ const Order = () => {
         return;
       }
 
-      // to download the pdf directly instead of opening it in a new tab
+      // !when fetching a PDF from the server, the response is a blob, converting it to a blob URL ALLOWS  the browser to hanlde it as a downloadable file
+
       const blobUrl = URL.createObjectURL(await response.blob());
+
+      console.log("blobUrl", blobUrl);
       const a = document.createElement("a");
       a.href = blobUrl;
+      //  forces file download rather than browser preview
       a.download = `invoice-${id}.pdf`;
+      // best practice to prevent clickjacking
       a.rel = "noopener";
       document.body.append(a);
+      // download the file immediately after the click event is triggered on the anchor element
       a.click();
+      // removes the anchor element from the DOM
       a.remove();
+      // Immediately releases memory after download starts->Prevents memory leaks from accumulated blob URLs
       URL.revokeObjectURL(blobUrl);
     } catch (error) {
       toast.error(error);
@@ -125,27 +164,51 @@ const Order = () => {
                 <p className=" text-secondary text-center">
                   Order({index + 1}) - ({order.id})
                 </p>
-                {order.products.map((product) => (
-                  <div
-                    key={product.productId._id}
-                    className="grid grid-cols-2  h-full place-items-center p-2 rounded-lg border border-gray-100/20">
-                    <div className="avatar size-30 mr-auto">
-                      <img
-                        className="object-fill  bg-white mask mask-circle "
-                        src={product.productId.image}
-                        alt={product.productId.title}
-                      />
+                {order.products.map((product) => {
+                  //! Check if the product is already in the cart
+                  const inCart = cartList.products?.some(
+                    (item) => item.productId._id === product.productId._id
+                  );
+                  return (
+                    <div
+                      key={product.productId._id}
+                      className="grid grid-cols-3  h-full place-items-center p-2 rounded-lg border border-gray-100/20">
+                      <div className="avatar size-30 mr-auto">
+                        <img
+                          onClick={(e) =>
+                            handleImageClick(product.productId._id, e, product)
+                          }
+                          className="object-fill  bg-white mask mask-circle "
+                          src={product.productId.image}
+                          alt={product.productId.title}
+                        />
+                      </div>
+                      <div className="w-full ">
+                        <h2>{product.productId.title}</h2>
+                        <p>
+                          Price:{" "}
+                          {parseFloat(product.productId.price).toFixed(2) +
+                            " €"}
+                        </p>
+                        <p>Quantity: {product.quantity}</p>
+                      </div>
+
+                      {/* display the buy again button only if the product is not in the cart */}
+
+                      <div>
+                        {!inCart && (
+                          <button
+                            className="btn  btn-secondary"
+                            onClick={() =>
+                              handleBuyAgain(product.productId._id)
+                            }>
+                            Buy Again
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <div className="w-full ">
-                      <h2>{product.productId.title}</h2>
-                      <p>
-                        Price:{" "}
-                        {parseFloat(product.productId.price).toFixed(2) + " €"}
-                      </p>
-                      <p>Quantity: {product.quantity}</p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <>
                   {/* Display totals for each order */}
                   <p className="text-lg text-center text-secondary font-bold underline">
