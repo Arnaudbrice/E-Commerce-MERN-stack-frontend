@@ -16,7 +16,12 @@ export const AuthContextProvider = ({ children }) => {
   //! loading state set it to true initially
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
+  const [isLoadingFavoriteProducts, setIsLoadingFavoriteProducts] =
+    useState(true);
+
   const [error, setError] = useState(null);
+  const [favoriteProducts, setFavoriteProducts] = useState([]);
+  const [numberOfFavoriteProducts, setNumberOfFavoriteProducts] = useState(0);
 
   //********** register **********
 
@@ -149,11 +154,56 @@ export const AuthContextProvider = ({ children }) => {
     getUser();
   }, [navigate, baseUrl]);
 
+  useEffect(() => {
+    const fetchFavoriteProducts = async () => {
+      /* if (!user) {
+        setFavoriteProducts([]);
+        setNumberOfFavoriteProducts(0);
+        return;
+      } */
+
+      try {
+        const response = await fetch(`${baseUrl}/users/products/favorite`, {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) {
+          const { message: errorMessage } = await response.json();
+          customErrorMessage(errorMessage, 5000);
+          return;
+        }
+        const allFavoriteProducts = await response.json();
+        setFavoriteProducts(allFavoriteProducts.favoriteProducts || []);
+        setNumberOfFavoriteProducts(
+          allFavoriteProducts.numberOfFavoriteProducts || 0
+        );
+      } catch (error) {
+        toast.error(error);
+      } finally {
+        setIsLoadingFavoriteProducts(false);
+      }
+    };
+
+    fetchFavoriteProducts();
+  }, [baseUrl, user]);
+
   return (
-    <AuthContext
-      value={{ user, setUser, isLoadingAuth, register, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        isLoadingAuth,
+        setIsLoadingAuth,
+        register,
+        login,
+        logout,
+        favoriteProducts,
+        setFavoriteProducts,
+        numberOfFavoriteProducts,
+        setNumberOfFavoriteProducts,
+      }}>
       {children}
-    </AuthContext>
+    </AuthContext.Provider>
   );
 };
 
