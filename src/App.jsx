@@ -18,6 +18,7 @@ import { CartContextProvider } from "./context/CartContext.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import MailResetPassword from "./pages/MailResetPassword.jsx";
 import Order from "./pages/Order.jsx";
+import Favorite from "./pages/Favorite.jsx";
 
 function App() {
   return (
@@ -41,6 +42,8 @@ function App() {
                 <Route path="/category/:category" element={<Category />} />
                 <Route element={<ProtectedLayout />}>
                   <Route path="/cart" element={<Cart />} />
+
+                  <Route path="/wishlist" element={<Favorite />} />
                   <Route path="/add-product" element={<AddProduct />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
                 </Route>

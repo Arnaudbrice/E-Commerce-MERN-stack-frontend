@@ -5,8 +5,20 @@ import useProducts from "../hooks/useProducts.jsx";
 import ButtonGroup from "./ButtonGroup.jsx";
 import useAuth from "../hooks/useAuth.jsx";
 import useCart from "../hooks/useCart.jsx";
+import { MdFavorite } from "react-icons/md";
+import { MdFavoriteBorder } from "react-icons/md";
+import { customErrorMessage } from "../../utils/customErrorMessage.js";
 
-const Card = ({ _id, title, price, description, category, image, stock }) => {
+const Card = ({
+  _id,
+  title,
+  price,
+  description,
+  category,
+  image,
+  stock,
+  isFavorite,
+}) => {
   /*  const {
     cartProductsQuantity,
     setCartProductsQuantity,
@@ -34,10 +46,12 @@ const Card = ({ _id, title, price, description, category, image, stock }) => {
 
   const navigate = useNavigate();
 
-  const { user } = useAuth();
+  const { user, setNumberOfFavoriteProducts } = useAuth();
 
   const [quantity, setQuantity] = useState(0);
   // const [productQuantity, setProductQuantity] = useState(0);
+
+  const [isFavoriteClicked, setIsFavoriteClicked] = useState(isFavorite);
   useEffect(() => {
     // console.log("cartList products 2", cartList.products);
 
@@ -107,6 +121,54 @@ const Card = ({ _id, title, price, description, category, image, stock }) => {
     });
   };
 
+  const handleFavoriteClick = async (e) => {
+    e.stopPropagation();
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/users/products/${_id}/favorite`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            isFavorite: !isFavoriteClicked,
+          }),
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        const { message: errorMessage } = await response.json();
+        customErrorMessage(errorMessage, 5000);
+        return;
+      }
+
+      const updatedProduct = await response.json();
+      setIsFavoriteClicked(updatedProduct.isFavorite);
+
+      /*  setNumberOfFavoriteProducts((prev) =>
+        updatedProduct.isFavorite ?
+          (prev || 0) + 1
+        : Math.max(0, (prev || 0) - 1)
+      ); */
+
+      setNumberOfFavoriteProducts((prev) => {
+        return updatedProduct.isFavorite ? prev + 1 : prev - 1;
+      });
+
+      if (updatedProduct.isFavorite) {
+        toast.info("Product Successfully Added To Your Favorite List");
+      } else {
+        toast.info("Product Successfully Deleted From Your Favorite List");
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex w-52 flex-col gap-4">
@@ -122,13 +184,33 @@ const Card = ({ _id, title, price, description, category, image, stock }) => {
     <div
       onClick={() => handleClick(_id)}
       className="card card-sm sm:card-lg bg-base-100 h-full shadow-sm  transition-transform duration-200 hover:scale-105 hover:drop-shadow-[0_0_10px_gray]  border rounded-lg ">
-      <figure>
-        <img
-          className="block object-contain h-48 w-full bg-white aspect-square  "
-          src={image}
-          alt={title}
-        />
-      </figure>
+      <div>
+        <figure className="flex-col relative ">
+          <img
+            className="block object-contain h-48 w-full bg-white aspect-square rounded-t-lg "
+            src={image}
+            alt={title}
+          />
+
+          {/* Favourite icon */}
+
+          {isFavoriteClicked && user ?
+            <MdFavorite
+              onClick={(e) => handleFavoriteClick(e)}
+              className="  size-10 object-cover absolute top-0 right-0 text-secondary "
+            />
+          : <MdFavoriteBorder
+              onClick={(e) => handleFavoriteClick(e)}
+              className=" size-10 object-cover absolute top-0 right-0  text-secondary "
+            />
+          }
+
+          {/* <img
+            src={isFavoriteClicked ? <MdFavorite /> : <MdFavoriteBorder />}
+
+          /> */}
+        </figure>
+      </div>
 
       <div className=" card-body p-2 sm:p-4 text-center ">
         <h2 className=" line-clamp-2 min-h-[4rem] text-balance text-center  card-title justify-center px-2  w-full flex-none">

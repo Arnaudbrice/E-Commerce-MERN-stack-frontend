@@ -1,13 +1,13 @@
 import "react-toastify/dist/ReactToastify.css";
 import { NavLink } from "react-router";
-import useProducts from "../hooks/useProducts.jsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useAuth from "../hooks/useAuth.jsx";
 import useCart from "../hooks/useCart.jsx";
+import { MdFavoriteBorder } from "react-icons/md";
 
 const UserMenu = () => {
-  const { logout, setIsLoadingAuth } = useAuth();
-  // const { cartQuantity } = useProducts();
+  const { logout, setIsLoadingAuth, user, numberOfFavoriteProducts } =
+    useAuth();
 
   const {
     cartList,
@@ -21,14 +21,6 @@ const UserMenu = () => {
   } = useCart();
 
   // const [cartQuantity, setCartQuantity] = useState(0);
-
-  /*  useEffect(() => {
-    const quantity = cartList.products?.reduce((acc, item) => {
-      return acc + item.quantity;
-    }, 0);
-
-    setCartQuantity(quantity);
-  }, [cartList, setCartQuantity]); */
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -189,6 +181,24 @@ const UserMenu = () => {
               Admin Products
             </NavLink>
           </li>
+
+          {/* wishlist */}
+          <li>
+            <NavLink
+              className={({
+                isActive,
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+        ${isActive ? "bg-black text-white " : "text-white "}`}
+              to="/wishlist">
+              <div className="flex  top-1.5 indicator ">
+                <MdFavoriteBorder className="size-5 " />
+                <span className="badge badge-sm left-[1rem] indicator-item ">
+                  {numberOfFavoriteProducts || 0}
+                </span>
+              </div>
+            </NavLink>
+          </li>
+
           <li>
             <NavLink
               className={({
@@ -199,6 +209,8 @@ const UserMenu = () => {
               Orders
             </NavLink>
           </li>
+
+          {/* cart */}
           <li>
             <NavLink
               className={({
@@ -221,7 +233,7 @@ const UserMenu = () => {
                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                   />{" "}
                 </svg>
-                <span className="badge badge-sm indicator-item">
+                <span className="badge badge-sm indicator-item left-[1rem]">
                   {cartProductsQuantity || 0}
                 </span>
               </div>

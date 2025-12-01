@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
-import { Link, useLocation, useParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import useCart from "../hooks/useCart.jsx";
 import ButtonGroup from "../components/ButtonGroup.jsx";
@@ -15,6 +15,8 @@ const ProductDetail = () => {
 
   // retrieve the id of the product from the url params
   const { id } = useParams();
+
+  const navigate = useNavigate();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [product, setProduct] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -145,7 +147,7 @@ const ProductDetail = () => {
         />
       </figure>
 
-      <div className="p-2 card-body  flex-none">
+      <div className="p-4  card-body  flex-none">
         <h2 className="  text-balance text-center  card-title justify-center p-2  w-full ">
           {title}
         </h2>
@@ -177,6 +179,14 @@ const ProductDetail = () => {
             />
           }
         </div>
+        <button
+          className="btn btn-secondary  w-5/6 mx-auto"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("/cart");
+          }}>
+          Go to Cart
+        </button>
       </div>
     </div>
   );

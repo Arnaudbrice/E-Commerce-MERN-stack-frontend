@@ -13,6 +13,7 @@ export const ProductProvider = ({ children }) => {
   //! loading state set it to true initially
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
+
   useEffect(() => {
     const fetchProducts = async () => {
       /*    if (!user) {
@@ -31,6 +32,7 @@ export const ProductProvider = ({ children }) => {
         }
         const data = await response.json();
         console.log("data fetch products", data);
+
         setProducts(data);
       } catch (error) {
         console.error(error);
@@ -43,23 +45,6 @@ export const ProductProvider = ({ children }) => {
 
     fetchProducts();
   }, [baseUrl, user]);
-
-  /*   const [cartList, setCartList] = useState(() => {
-    return localStorage.getItem("cart") ?
-        JSON.parse(localStorage.getItem("cart"))
-      : [];
-  }); */
-
-  /* useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartList));
-
-    const newCartProductsQuantity = cartList.reduce((acc, item) => {
-      return acc + item.productQuantity;
-    }, 0);
-    setCartProductsQuantity(newCartProductsQuantity);
-  }, [cartList]);
-
-  const [cartProductsQuantity, setCartProductsQuantity] = useState(0); */
 
   const updateProductStockAfterPayment = async (id, quantity) => {
     if (!user) {
