@@ -10,6 +10,7 @@ export const ProductProvider = ({ children }) => {
 
   const { user, setUser } = useAuth();
   const [products, setProducts] = useState([]);
+
   //! loading state set it to true initially
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);

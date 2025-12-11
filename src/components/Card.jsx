@@ -8,6 +8,7 @@ import useCart from "../hooks/useCart.jsx";
 import { MdFavorite } from "react-icons/md";
 import { MdFavoriteBorder } from "react-icons/md";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
+import Rating from "./Rating.jsx";
 
 const Card = ({
   _id,
@@ -18,6 +19,9 @@ const Card = ({
   image,
   stock,
   isFavorite,
+  averageRating,
+  reviews,
+  children,
 }) => {
   /*  const {
     cartProductsQuantity,
@@ -183,7 +187,16 @@ const Card = ({
   return (
     <div
       onClick={() => handleClick(_id)}
-      className="card card-sm sm:card-lg bg-base-100 h-full shadow-sm  transition-transform duration-200 hover:scale-105 hover:drop-shadow-[0_0_10px_gray]  border rounded-lg ">
+      className="
+    card card-xs
+    w-full max-w-xs mx-auto
+    sm:card-sm sm:max-w-sm
+    lg:card-lg
+    bg-base-100
+    shadow-sm border rounded-lg
+    transition-transform duration-200
+    hover:scale-105 hover:drop-shadow-[0_0_10px_gray]
+  ">
       <div>
         <figure className="flex-col relative ">
           <img
@@ -217,7 +230,19 @@ const Card = ({
           {title}
         </h2>
 
-        <p className=" badge badge-lg badge-outline badge-primary w-[100px] flex-none">
+        <div className="flex justify-start items-center w-full ">
+          <Rating productRating={averageRating} readOnly={true} />
+          {/*  <span className=" text-secondary px-2 "> ({numberOfRatings})</span> */}
+
+          <span
+            onClick={() => navigate(`/product/${_id}`)}
+            className=" text-secondary text-lg px-2 hover:cursor-pointer hover:underline ">
+            ( {reviews.length})
+          </span>
+        </div>
+
+        {/* glass should be the last class to make it work */}
+        <p className=" badge badge-lg badge-outline badge-primary text-white w-[100px] flex-none glass">
           {Number(price).toFixed(2)}
           {" €"}
         </p>
@@ -252,6 +277,8 @@ const Card = ({
           Go to Cart
         </button>
       </div>
+
+      {children}
     </div>
   );
 };

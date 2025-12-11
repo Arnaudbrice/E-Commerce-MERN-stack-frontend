@@ -19,6 +19,7 @@ import ResetPassword from "./pages/ResetPassword.jsx";
 import MailResetPassword from "./pages/MailResetPassword.jsx";
 import Order from "./pages/Order.jsx";
 import Favorite from "./pages/Favorite.jsx";
+import AdminProducts from "./pages/AdminProducts.jsx";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
                   <Route path="/wishlist" element={<Favorite />} />
                   <Route path="/add-product" element={<AddProduct />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/admin/products" element={<AdminProducts />} />
                 </Route>
 
                 <Route path="/orders" element={<Order />} />

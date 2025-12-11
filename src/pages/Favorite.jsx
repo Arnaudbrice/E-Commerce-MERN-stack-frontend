@@ -97,9 +97,9 @@ const Favorite = () => {
 
   return (
     <div>
-      <div className="w-2/3 mx-auto my-10 text-lg sm:text-xl font-bold text-center divider divider-secondary ">
+      <div className="w-2/3 mx-auto my-16 text-lg sm:text-xl font-bold text-center divider divider-secondary ">
         <div class="mask mask-heart size-40 flex items-center justify-center font-bold  bg-secondary text-white p-2">
-          Wishlist
+          My Wishlist
         </div>
       </div>
 

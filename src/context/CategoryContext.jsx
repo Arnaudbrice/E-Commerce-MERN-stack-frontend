@@ -28,6 +28,8 @@ export const CategoryContextProvider = ({ children }) => {
         }
         const categoriesData = await response.json();
 
+        console.log("categoriesData", categoriesData);
+
         setCategories(categoriesData);
       } catch (error) {
         toast.error(error);

@@ -92,7 +92,7 @@ const UserMenu = () => {
                     isActive,
                   }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
         ${isActive ? "bg-black text-white" : "text-white "}`}
-                  to="/admin-products">
+                  to="/admin/products">
                   Admin Products
                 </NavLink>
               </li>
@@ -177,7 +177,7 @@ const UserMenu = () => {
                 isActive,
               }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
         ${isActive ? "bg-black text-white" : "text-white "}`}
-              to="/admin-products">
+              to="/admin/products">
               Admin Products
             </NavLink>
           </li>
