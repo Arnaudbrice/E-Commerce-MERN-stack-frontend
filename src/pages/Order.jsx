@@ -64,9 +64,10 @@ const Order = () => {
     fetchOrders();
   }, [baseUrl]);
 
-  const handleBuyAgain = async (id) => {
+  const handleBuyAgain = async (e, id) => {
     console.log("product id", id);
 
+    e.stopPropagation();
     await addProductToCart(id, 1);
   };
 
@@ -172,12 +173,15 @@ const Order = () => {
                   return (
                     <div
                       key={product.productId._id}
-                      className="grid grid-cols-3  h-full place-items-center p-2 rounded-lg border border-gray-100/20">
+                      className="grid grid-cols-3  h-full place-items-center p-2 rounded-lg border border-gray-100/20"
+                      onClick={(e) =>
+                        handleImageClick(product.productId._id, e, product)
+                      }>
                       <div className="avatar size-30 mr-auto">
                         <img
-                          onClick={(e) =>
-                            handleImageClick(product.productId._id, e, product)
-                          }
+                          // onClick={(e) =>
+                          //   handleImageClick(product.productId._id, e, product)
+                          // }
                           className="object-fill  bg-white mask mask-circle "
                           src={product.productId.image}
                           alt={product.productId.title}
@@ -199,8 +203,8 @@ const Order = () => {
                         {!inCart && (
                           <button
                             className="btn  btn-secondary"
-                            onClick={() =>
-                              handleBuyAgain(product.productId._id)
+                            onClick={(e) =>
+                              handleBuyAgain(e, product.productId._id)
                             }>
                             Buy Again
                           </button>
