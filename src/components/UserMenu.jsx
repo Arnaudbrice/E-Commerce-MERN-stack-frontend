@@ -25,6 +25,9 @@ const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLinkClicked = () => {
+    // to close the menu when a link is clicked (on mobile screens)
+    document.activeElement.blur();
+
     setIsOpen(false);
   };
 
@@ -38,11 +41,11 @@ const UserMenu = () => {
 
   // NavLink from react-router gives us the isActive prop
   return (
-    <div className="text-lg shadow-sm navbar sm:text-xl bg-fuchsia-600 ">
+    <div className="text-lg shadow-sm navbar sm:text-xl bg-secondary lg:w-full ">
       {/* hamburger menu */}
-      <div className="navbar-start ">
+      <div className="navbar-start lg:text-center ">
         {/* Hidden on middle screens with md:hidden */}
-        <div className="dropdown md:hidden" onClick={() => setIsOpen(!isOpen)}>
+        <div className="dropdown lg:hidden" onClick={() => setIsOpen(!isOpen)}>
           <div tabIndex={0} role="button" className="mx-2 btn btn-ghost ">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -59,101 +62,129 @@ const UserMenu = () => {
               />{" "}
             </svg>
           </div>
-          {isOpen && (
-            <ul
-              tabIndex={0}
-              className="py-4 my-4 mt-3 space-y-8 text-white border rounded-lg shadow w-3xs bg-fuchsia-600 menu menu-sm dropdown-content z-1 border-amber-50 ">
-              <li>
-                <NavLink
-                  className={({
-                    isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
-        ${isActive ? "bg-black text-white" : "text-white "}`}
-                  to="/"
-                  onClick={handleLinkClicked}>
-                  Home
-                </NavLink>
-              </li>
 
-              <li>
-                <NavLink
-                  className={({
-                    isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+          <ul
+            tabIndex={0}
+            className="py-4 my-4 mt-3 space-y-8 text-white border rounded-lg shadow w-3xs bg-secondary menu menu-sm dropdown-content z-1 border-amber-50 ">
+            <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
-                  to="/add-product">
-                  Add Product
-                </NavLink>
-              </li>
+                to="/"
+                onClick={handleLinkClicked}>
+                Home
+              </NavLink>
+            </li>
 
-              <li>
-                <NavLink
-                  className={({
-                    isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+            <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
-                  to="/admin/products">
-                  Admin Products
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  className={({
-                    isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
-        ${isActive ? "bg-black text-white" : "text-white "}`}
-                  to="/orders">
-                  Orders
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  className={({
-                    isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
-        ${isActive ? "bg-black text-white" : "text-white "}`}
-                  to="/cart"
-                  onClick={handleLinkClicked}>
-                  <div className="flex indicator">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      {" "}
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                      />{" "}
-                    </svg>
-                    <span className="badge badge-sm indicator-item bg-fuchsia-400 lg:bg-black">
-                      {cartProductsQuantity > 0 ? cartProductsQuantity : 0}
-                    </span>
-                  </div>
-                </NavLink>
-              </li>
+                to="/add-product"
+                onClick={handleLinkClicked}>
+                Add Product
+              </NavLink>
+            </li>
 
-              <li className="text-lg  block px-4 py-2  rounded text-white hover:bg-fuchsia-400">
-                <button className=" h-full p-0 bg-none">Logout</button>
-              </li>
-            </ul>
-          )}
+            <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+        ${isActive ? "bg-black text-white" : "text-white "}`}
+                to="/admin/products"
+                onClick={handleLinkClicked}>
+                Admin Products
+              </NavLink>
+            </li>
+
+            {/* wishlist */}
+            <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+        ${isActive ? "bg-black text-white " : "text-white "}`}
+                to="/wishlist"
+                onClick={handleLinkClicked}>
+                <div className="flex  top-1.5 indicator ">
+                  <MdFavoriteBorder className="size-5 " />
+                  <span className="badge badge-sm left-[1rem] indicator-item ">
+                    {numberOfFavoriteProducts || 0}
+                  </span>
+                </div>
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+        ${isActive ? "bg-black text-white" : "text-white "}`}
+                to="/orders"
+                onClick={handleLinkClicked}>
+                Orders
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+        ${isActive ? "bg-black text-white" : "text-white "}`}
+                to="/cart"
+                onClick={handleLinkClicked}>
+                <div className="flex indicator">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    {" "}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />{" "}
+                  </svg>
+                  <span className="badge badge-sm indicator-item">
+                    {cartProductsQuantity > 0 ? cartProductsQuantity : 0}
+                  </span>
+                </div>
+              </NavLink>
+            </li>
+
+            <li className=" text-lg block px-4 py-2  rounded text-white hover:bg-orange-500">
+              <button
+                className=" h-full p-0 bg-none text-lg"
+                onClick={() => {
+                  handleLinkClicked();
+                  handleLogout();
+                }}>
+                Logout
+              </button>
+            </li>
+          </ul>
         </div>
 
-        <NavLink to="/">E-Commerce</NavLink>
+        <NavLink to="/">Bon Marché</NavLink>
       </div>
 
       {/* shown on middle screens with md:flex */}
-      <div className="hidden navbar-center justify-between  md:flex">
+      <div className="hidden navbar-center justify-between  lg:flex">
         <ul className="justify-around gap-6 px-4 text-xl menu menu-horizontal">
           <li>
             <NavLink
               className={({
                 isActive,
-              }) => `  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+              }) => `  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
               to="/">
               Home
@@ -164,7 +195,7 @@ const UserMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
               to="/add-product">
               Add Product
@@ -175,7 +206,7 @@ const UserMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
               to="/admin/products">
               Admin Products
@@ -187,7 +218,7 @@ const UserMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white " : "text-white "}`}
               to="/wishlist">
               <div className="flex  top-1.5 indicator ">
@@ -203,7 +234,7 @@ const UserMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
               to="/orders">
               Orders
@@ -215,7 +246,7 @@ const UserMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white " : "text-white "}`}
               to="/cart">
               <div className="flex  top-1.5 indicator ">
@@ -240,8 +271,10 @@ const UserMenu = () => {
             </NavLink>
           </li>
 
-          <li className="text-lg  block px-4 py-2  rounded text-white hover:bg-fuchsia-400">
-            <button onClick={handleLogout} className=" h-full p-0 bg-none">
+          <li className="text-lg  block px-4 py-2  rounded text-white hover:bg-orange-500">
+            <button
+              onClick={handleLogout}
+              className=" h-full p-0 bg-none text-lg">
               Logout
             </button>
           </li>

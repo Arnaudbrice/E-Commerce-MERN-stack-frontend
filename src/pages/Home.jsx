@@ -52,7 +52,7 @@ const Home = () => {
   }
   return (
     <main>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full sm:max-w-xl   my-2 gap-2  mr-auto p-2">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full sm:max-w-xl  my-2 gap-2  mr-auto p-2">
         {categories?.map((category) => {
           return <Button key={category} category={category} />;
         })}

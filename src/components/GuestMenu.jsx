@@ -11,7 +11,7 @@ const GuestMenu = () => {
 
   // NavLink from react-router gives us the isActive prop
   return (
-    <div className="text-lg shadow-sm navbar sm:text-xl bg-fuchsia-600 ">
+    <div className="text-lg shadow-sm navbar sm:text-xl bg-secondary ">
       {/* hamburger menu */}
       <div className="navbar-start">
         <div className="dropdown" onClick={() => setIsOpen(!isOpen)}>
@@ -37,12 +37,12 @@ const GuestMenu = () => {
           {isOpen && (
             <ul
               tabIndex={0}
-              className="py-4 my-4 mt-3 space-y-8 text-white border rounded-lg shadow w-3xs bg-fuchsia-600 menu menu-sm dropdown-content z-1 border-amber-50">
+              className="py-4 my-4 mt-3 space-y-8 text-white border rounded-lg shadow w-3xs bg-secondary menu menu-sm dropdown-content z-1 border-amber-50">
               <li>
                 <NavLink
                   className={({
                     isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
                   to="/"
                   onClick={handleLinkClicked}>
@@ -54,7 +54,7 @@ const GuestMenu = () => {
                 <NavLink
                   className={({
                     isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
                   to="/login">
                   Login
@@ -65,7 +65,7 @@ const GuestMenu = () => {
                 <NavLink
                   className={({
                     isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
                   to="/signup">
                   Sign Up
@@ -83,7 +83,7 @@ const GuestMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
               to="/">
               Home
@@ -94,7 +94,7 @@ const GuestMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
               to="/login">
               Login
@@ -105,7 +105,7 @@ const GuestMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-fuchsia-400
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
               to="/register">
               Register

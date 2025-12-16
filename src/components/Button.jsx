@@ -6,7 +6,7 @@ const Button = ({ category }) => {
   return (
     <button
       onClick={() => navigate(`/category/${category}`)}
-      className="btn btn-outline btn-primary p-6">
+      className="btn btn-outline  hover:btn-outline hover:btn-secondary p-6 outline-white">
       {category}
     </button>
   );

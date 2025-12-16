@@ -226,7 +226,7 @@ const Card = ({
       </div>
 
       <div className=" card-body p-2 sm:p-4 text-center ">
-        <h2 className=" line-clamp-2 min-h-[4rem] text-balance text-center  card-title justify-center px-2  w-full flex-none">
+        <h2 className=" line-clamp-2 min-h-[4rem] text-balance text-white text-center  card-title justify-center px-2  w-full flex-none">
           {title}
         </h2>
 
@@ -236,20 +236,20 @@ const Card = ({
 
           <span
             onClick={() => navigate(`/product/${_id}`)}
-            className=" text-secondary text-lg px-2 hover:cursor-pointer hover:underline ">
+            className=" text-secondary text-lg px-2 hover:cursor-pointer hover:underline font-bold ">
             ( {reviews.length})
           </span>
         </div>
 
         {/* glass should be the last class to make it work */}
-        <p className=" badge badge-lg badge-outline badge-primary text-white w-[100px] flex-none glass">
+        <p className=" badge badge-lg badge-outline badge-primary text-white w-[100px] flex-none px-12 text-xl glass">
           {Number(price).toFixed(2)}
           {" €"}
         </p>
 
         <div className="items-center justify-between w-full card-actions  flex-col  h-full ">
           <Link
-            className="  text-xs hover:link ml-auto"
+            className="  text-xs hover:link ml-auto text-gray-300 "
             to={`/category/${category}`}
             onClick={(e) => e.stopPropagation()}>
             More from {category}
@@ -257,7 +257,7 @@ const Card = ({
           {!quantity ?
             <button
               onClick={(e) => handleAddToCartButtonClick(e, _id)}
-              className="btn btn-primary mb-8">
+              className="btn btn-secondary mb-8">
               Add To Cart
             </button>
           : <ButtonGroup
@@ -269,7 +269,7 @@ const Card = ({
           }
         </div>
         <button
-          className="btn btn-secondary  w-5/6 mx-auto"
+          className="btn btn-outline btn-secondary  w-5/6 mx-auto"
           onClick={(e) => {
             e.stopPropagation();
             navigate("/cart");

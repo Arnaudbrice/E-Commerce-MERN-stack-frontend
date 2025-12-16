@@ -215,13 +215,13 @@ const Order = () => {
                 })}
                 <>
                   {/* Display totals for each order */}
-                  <p className="text-lg text-center text-secondary font-bold underline">
+                  <p className="text-lg text-center text-secondary font-bold ">
                     Totals: {totals[index] + " €"}
                   </p>
                   <div className="justify-end flex ">
                     <button
                       onClick={() => handleInvoicePDF(order.id)}
-                      className="btn btn-lg btn-primary">
+                      className="btn btn-lg btn-outline btn-secondary">
                       Invoice PDF
                     </button>
                   </div>

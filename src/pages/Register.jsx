@@ -59,12 +59,12 @@ const Register = () => {
       onSubmit={handleSubmit}
       className="  h-full flex items-center justify-center bg-base-200 px-4">
       <fieldset className="fieldset w-full max-w-xl text-lg p-8 bg-base-100 border border-white rounded-2xl shadow-lg">
-        <legend className="fieldset-legend text-2xl font-semibold text-center mb-4 border-4 border-double  border-fuchsia-400  text-base-content rounded-lg p-4">
+        <legend className="fieldset-legend text-2xl font-semibold text-center mb-4 border-4 border-double  border-secondary text-base-content rounded-lg p-4">
           Register
         </legend>
 
         <label className="label">
-          <span className="label-text">Email</span>
+          <span className="label-text text-gray-100">Email</span>
         </label>
         <input
           type="email"
@@ -76,7 +76,7 @@ const Register = () => {
         />
 
         <label className="label">
-          <span className="label-text">Password</span>
+          <span className="label-text text-gray-100">Password</span>
         </label>
         <div className="relative mb-6">
           <input
@@ -102,7 +102,7 @@ const Register = () => {
         </div>
 
         <label className="label">
-          <span className="label-text">Confirm Password</span>
+          <span className="label-text text-gray-100">Confirm Password</span>
         </label>
         <div className="relative mb-6">
           <input
@@ -130,13 +130,13 @@ const Register = () => {
 
         <button
           disabled={isClicked}
-          className={`btn btn-primary btn-lg w-full rounded-lg ${isClicked ? "btn-secondary" : "btn-primary"}`}>
+          className={`btn btn-secondary btn-lg w-full rounded-lg ${isClicked ? "btn-secondary btn-orange-500" : "btn-secondary"}`}>
           {isClicked ? "Registering..." : "Register"}
         </button>
 
         <p className="text-lg text-center text-base-content/70 mt-4">
           Already have an account?{" "}
-          <Link className="link link-primary" to={"/login"}>
+          <Link className="link link-secondary" to={"/login"}>
             Sign In
           </Link>
         </p>
