@@ -149,9 +149,13 @@ const ProductDetail = () => {
   };
 
   const handleShowDialog = () => {
-    setIsDialogOpen(true);
-    // document.getElementById("my_modal_5").showModal();
-    document.getElementById("my_modal_5")?.showModal();
+    if (product?.userId.toString() === user?._id.toString()) {
+      toast.error("You Cannot Give A Review For Your Own Product");
+    } else {
+      setIsDialogOpen(true);
+      // document.getElementById("my_modal_5").showModal();
+      document.getElementById("my_modal_5")?.showModal();
+    }
   };
 
   if (isLoading) {
@@ -201,12 +205,12 @@ const ProductDetail = () => {
           <div>
             {isUserRatingExists ?
               <button
-                className="btn btn-primary btn-sm"
+                className="btn btn-outline btn-secondary btn-sm"
                 onClick={handleShowDialog}>
                 ☆ Update Your Review
               </button>
             : <button
-                className="btn btn-primary btn-sm"
+                className="btn btn-outline btn-secondary btn-sm"
                 onClick={handleShowDialog}>
                 ☆ Rate Article
               </button>
@@ -221,7 +225,7 @@ const ProductDetail = () => {
           {/* description */}
           <p>{description}</p>
           {/* glass should be the last class to make it work */}
-          <p className=" badge badge-lg badge-outline badge-primary w-[100px] text-white flex-none glass">
+          <p className=" badge badge-lg badge-outline badge-primary w-[100px] text-white flex-none px-12 text-xl glass">
             {Number(price).toFixed(2)}
             {" €"}
           </p>
@@ -234,7 +238,7 @@ const ProductDetail = () => {
             {!quantity ?
               <button
                 onClick={(e) => handleAddToCartButtonClick(e, id)}
-                className="btn btn-primary ">
+                className="btn btn-secondary ">
                 Add To Cart
               </button>
             : <ButtonGroup
@@ -246,7 +250,7 @@ const ProductDetail = () => {
             }
           </div>
           <button
-            className="btn btn-secondary  w-5/6 mx-auto"
+            className="btn btn-outline btn-secondary  w-5/6 mx-auto"
             onClick={(e) => {
               e.stopPropagation();
               navigate("/cart");

@@ -228,7 +228,9 @@ const Cart = () => {
 
   if (!cartProductsQuantity && !isLoadingCart) {
     return (
-      <div role="alert" className="w-2/3 mx-auto mt-8 text-xl alert alert-info">
+      <div
+        role="alert"
+        className="w-2/3 mx-auto mt-8 text-xl alert  alert-info">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -338,12 +340,12 @@ const Cart = () => {
             </table>
             <div className="flex items-center justify-center gap-4 my-4">
               <button
-                className="btn btn-lg bg-fuchsia-600 hover:bg-fuchsia-700 "
+                className="btn btn-lg btn-outline btn-secondary"
                 onClick={handleReset}>
                 Reset Cart
               </button>
               <button
-                className="btn btn-lg btn-success"
+                className="btn btn-lg btn-secondary"
                 onClick={handleCheckout}>
                 Checkout: {cartAmount.toFixed(2)} {" €"}
               </button>

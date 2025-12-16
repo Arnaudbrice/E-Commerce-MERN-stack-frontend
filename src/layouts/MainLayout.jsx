@@ -16,7 +16,7 @@ const MainLayout = () => {
       <div>
         <NavBar />
         <ToastContainer
-          className="mt-16 text-lg "
+          className="mt-16  text-lg "
           position="top-right"
           autoClose={5000}
           hideProgressBar={false}

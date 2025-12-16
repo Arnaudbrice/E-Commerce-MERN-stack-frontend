@@ -7,7 +7,8 @@
 @plugin "daisyui/theme" {
   name: dark;
   default: true;
-  --color-secondary: oklch(0.591 0.293 322.896);
+  /* --color-secondary: oklch(0.591 0.293 322.896); */
+  --color-secondary: #ea580c;
 }
 .Toastify__toast {
   font-family: "Outfit", sans-serif !important;

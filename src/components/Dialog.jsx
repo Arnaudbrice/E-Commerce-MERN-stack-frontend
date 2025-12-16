@@ -29,7 +29,7 @@ const Dialog = ({
     console.log("rating.....", rating);
 
     try {
-      const response = await fetch(`${baseUrl}/users/products/${id}`, {
+      const response = await fetch(`${baseUrl}/users/products/${id}/rating`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

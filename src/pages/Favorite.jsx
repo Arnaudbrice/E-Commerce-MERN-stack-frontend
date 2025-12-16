@@ -125,18 +125,18 @@ const Favorite = () => {
               </div>
 
               <div className=" card-body p-2 sm:p-4 text-center ">
-                <h2 className=" line-clamp-2 min-h-[4rem] text-balance text-center  card-title justify-center px-2  w-full flex-none">
+                <h2 className=" line-clamp-2 min-h-[4rem] text-balance text-center  card-title justify-center px-2  w-full flex-none text-gray-100 ">
                   {product.title}
                 </h2>
 
-                <p className=" badge badge-lg badge-outline badge-primary w-[100px] flex-none">
+                <p className=" badge badge-lg badge-outline badge-primary w-[100px] flex-none text-white glass">
                   {Number(product.price).toFixed(2)}
                   {" €"}
                 </p>
 
                 <div className="items-center justify-between w-full card-actions  flex-col  h-full ">
                   <Link
-                    className="  text-xs hover:link ml-auto"
+                    className="  text-xs text-gray-300  hover:link ml-auto"
                     to={`/category/${product.category}`}
                     onClick={(e) => e.stopPropagation()}>
                     More from {product.category}
@@ -154,7 +154,7 @@ const Favorite = () => {
                           productFromCart?.quantity || 0
                         )
                       }
-                      className="btn btn-primary mb-8">
+                      className="btn btn-secondary mb-8">
                       Add To Cart
                     </button>
                   : <ButtonGroup
@@ -179,7 +179,7 @@ const Favorite = () => {
                   }
                 </div>
                 <button
-                  className="btn btn-secondary  w-5/6 mx-auto"
+                  className="btn btn-outline btn-secondary  w-5/6 mx-auto"
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate("/cart");

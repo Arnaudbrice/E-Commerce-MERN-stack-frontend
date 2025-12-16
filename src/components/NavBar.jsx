@@ -9,7 +9,7 @@ const NavBar = () => {
 
   if (isLoadingAuth) {
     return (
-      <div className="text-lg shadow-sm navbar sm:text-xl bg-fuchsia-600/50 animate-pulse ">
+      <div className="text-lg shadow-sm navbar sm:text-xl bg-secondary animate-pulse ">
         {/* Navbar Start - Logo Area */}
         <div className="navbar-start">
           <div className="w-32 h-8 bg-white/20 rounded"></div>
