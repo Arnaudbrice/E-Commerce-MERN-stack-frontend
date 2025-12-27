@@ -27,7 +27,7 @@ const EditDialog = ({ product }) => {
 
   const [isClicked, setIsClicked] = useState(false);
 
-  const [productId, setProductId] = useState(product._id);
+  // const [productId, setProductId] = useState(product._id);
 
   useEffect(() => {
     document.getElementById("editModal").showModal();
@@ -46,7 +46,7 @@ const EditDialog = ({ product }) => {
     setImageFile(product.image || null);
 
     // update the productId state
-    setProductId(product._id);
+    // setProductId(product._id);
   }, [product]);
 
   const handleChange = (event) => {
@@ -122,7 +122,7 @@ const EditDialog = ({ product }) => {
           console.log(`${pair[0]}: ${pair[1]}`);
         } */
 
-      const response = await fetch(`${baseUrl}/users/products/${productId}`, {
+      const response = await fetch(`${baseUrl}/users/products/${product._id}`, {
         method: "PUT",
         body: formData, //pass the form data as the request body (stringify not needed, browser will also set content type automatically)
         credentials: "include",
@@ -134,11 +134,11 @@ const EditDialog = ({ product }) => {
         return;
       }
 
-      const product = await response.json();
-      console.log("updated product", product);
+      const updateProduct = await response.json();
+      console.log("updated product", updateProduct);
 
       const updatedProducts = products.map((p) =>
-        p._id === product._id ? product : p
+        p._id === updateProduct._id ? updateProduct : p
       );
 
       console.log("updatedProducts", updatedProducts);

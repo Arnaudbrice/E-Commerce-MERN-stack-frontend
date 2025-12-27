@@ -162,13 +162,13 @@ const ProductDetail = () => {
     return (
       <div className="flex w-5/6 flex-col gap-4 justify-center items-center mx-auto">
         <div className="flex items-center gap-4">
-          <div className="skeleton h-16 w-16 bg-emerald-100 shrink-0 rounded-full"></div>
+          <div className="skeleton h-16 w-16 bg-gray-200  dark:bg-gray-700 shrink-0 rounded-full"></div>
           <div className="flex flex-col gap-4">
-            <div className="skeleton h-4 w-20 bg-emerald-100"></div>
-            <div className="skeleton h-4 w-28 bg-emerald-100"></div>
+            <div className="skeleton h-4 w-20 bg-gray-200  dark:bg-gray-700"></div>
+            <div className="skeleton h-4 w-28 bg-gray-200  dark:bg-gray-700"></div>
           </div>
         </div>
-        <div className="skeleton h-32 w-full bg-emerald-100"></div>
+        <div className="skeleton h-32 w-full bg-gray-200  dark:bg-gray-700"></div>
       </div>
     );
   }
