@@ -5,7 +5,13 @@ import useProducts from "../hooks/useProducts.jsx";
 const Cards = () => {
   /*   const { products, setProducts } = useContext(ProductContext); */
 
-  const { products, setProducts } = useProducts();
+  const {
+    products,
+    setProducts,
+    paginationArray,
+    currentPage,
+    setCurrentPage,
+  } = useProducts();
   /*   const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,11 +31,38 @@ const Cards = () => {
     fetchProducts();
   }, []); */
 
+  /*  const handleClick = (pageNumber) => {
+    console.log("pageNumber", pageNumber);
+    setCurrentPage(pageNumber);
+  }; */
+
   return (
-    <div className="grid min-h-full grid-cols-1 sm:grid-cols-2 gap-6 mx-auto my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
-      {products.map((product) => {
-        return <Card key={product._id} {...product} />;
-      })}
+    <div>
+      <div className="grid min-h-full grid-cols-1 sm:grid-cols-2 gap-6 mx-auto my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
+        {products.map((product) => {
+          return <Card key={product._id} {...product} />;
+        })}
+      </div>
+
+      {/* pagination */}
+
+      <div className="flex justify-center items-center gap-2 my-6">
+        {paginationArray.map((pageNumber, index) =>
+          pageNumber === currentPage ?
+            <a
+              className="btn btn-secondary"
+              key={index}
+              href={`?page=${pageNumber}`}>
+              {pageNumber}
+            </a>
+          : <a
+              className="btn btn-outline btn-secondary"
+              href={`?page=${pageNumber}`}
+              key={index}>
+              {pageNumber}
+            </a>
+        )}
+      </div>
     </div>
   );
 };

@@ -15,6 +15,9 @@ export const ProductProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationArray, setPaginationArray] = useState([]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       /*    if (!user) {
@@ -22,7 +25,9 @@ export const ProductProvider = ({ children }) => {
       } */
       // setIsLoading(true);
       try {
-        const response = await fetch(`${baseUrl}/users/products`, {
+        // window.location.search is an empty string when there’s no query, so ${baseUrl}/users/products${qs} resolves to just /users/products
+        const qs = window.location.search; // e.g. ?page=2
+        const response = await fetch(`${baseUrl}/users/products${qs}`, {
           method: "GET",
           credentials: "include",
         });
@@ -32,9 +37,12 @@ export const ProductProvider = ({ children }) => {
           return;
         }
         const data = await response.json();
-        console.log("data fetch products", data);
+        console.log("data fetch products", data.products);
 
-        setProducts(data);
+        setProducts(data.products);
+
+        setPaginationArray(data.paginationArray);
+        setCurrentPage(data.currentPageNumber);
       } catch (error) {
         console.error(error);
         // setIsLoading(false);
@@ -83,6 +91,10 @@ export const ProductProvider = ({ children }) => {
       value={{
         products,
         setProducts,
+        paginationArray,
+        currentPage,
+        setCurrentPage,
+        baseUrl,
         // cartList,
         // setCartList,
         /*   cartProductsQuantity,

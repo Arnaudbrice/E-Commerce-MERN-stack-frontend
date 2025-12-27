@@ -39,14 +39,36 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div role="status" className="max-w-sm animate-pulse">
-        <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
-        <span className="sr-only">Loading...</span>
+      <div>
+        <div role="status" className="max-w-sm animate-pulse">
+          <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
+          <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+          <span className="sr-only">Loading...</span>
+        </div>
+
+        <div className="grid min-h-full grid-cols-1 sm:grid-cols-2 gap-6 mx-auto my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
+          {Array(12)
+            .keys()
+            .toArray()
+            .map(() => (
+              <div
+                className="flex w-5/6 flex-col gap-4 justify-center items-center mx-auto"
+                key={nanoid()}>
+                <div className="flex items-center gap-4">
+                  <div className="skeleton h-16 w-16 bg-gray-200  dark:bg-gray-700 shrink-0 rounded-full"></div>
+                  <div className="flex flex-col gap-4">
+                    <div className="skeleton h-4 w-20 bg-gray-200  dark:bg-gray-700"></div>
+                    <div className="skeleton h-4 w-28 bg-gray-200  dark:bg-gray-700"></div>
+                  </div>
+                </div>
+                <div className="skeleton h-32 w-full bg-gray-200  dark:bg-gray-700"></div>
+              </div>
+            ))}
+        </div>
       </div>
     );
   }
