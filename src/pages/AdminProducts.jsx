@@ -3,9 +3,11 @@ import useProducts from "../hooks/useProducts.jsx";
 import useAuth from "../hooks/useAuth";
 import Card from "../components/Card";
 import EditDialog from "../components/EditDialog.jsx";
+import { customErrorMessage } from "../../utils/customErrorMessage.js";
+import { toast } from "react-toastify";
 
 const AdminProducts = () => {
-  const { products, isLoading } = useProducts();
+  const { products, setProducts, isLoading } = useProducts();
 
   const { user } = useAuth();
   const [userProducts, setUserProducts] = useState([]);
@@ -26,11 +28,46 @@ const AdminProducts = () => {
     setClickedProduct(product);
   };
 
+  const handleDeleteClick = async (e, product) => {
+    e.stopPropagation();
+
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      const response = await fetch(`${baseUrl}/users/products/${product._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const { message } = await response.json();
+        customErrorMessage(message, 5000);
+        return;
+      }
+
+      const { deletedProduct } = await response.json();
+      console.log("deletedProduct", deletedProduct);
+
+      // update the products array
+      const updatedProducts = products.filter(
+        (p) => p._id !== deletedProduct._id
+      );
+      setProducts(updatedProducts);
+      toast.success("Product deleted successfully");
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   useEffect(() => {
     const getUserProducts = () => {
       const userProducts = products.filter(
         (product) => product.userId === user._id
       );
+
+      console.log("userProducts", userProducts);
       setUserProducts(userProducts);
 
       setHasFinishedGettingUserProducts(true);
@@ -74,7 +111,9 @@ const AdminProducts = () => {
                   className="btn  btn-secondary rounded-lg">
                   Edit
                 </button>
-                <button className="btn btn-outline btn-secondary rounded-lg">
+                <button
+                  onClick={(e) => handleDeleteClick(e, product)}
+                  className="btn btn-outline btn-secondary rounded-lg">
                   Delete
                 </button>
               </div>

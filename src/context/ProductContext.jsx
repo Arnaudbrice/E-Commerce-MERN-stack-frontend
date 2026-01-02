@@ -9,7 +9,10 @@ export const ProductProvider = ({ children }) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const { user, setUser } = useAuth();
+
   const [products, setProducts] = useState([]);
+
+  const [productsPerPage, setProductsPerPage] = useState([]);
 
   //! loading state set it to true initially
   const [isLoading, setIsLoading] = useState(true);
@@ -40,6 +43,8 @@ export const ProductProvider = ({ children }) => {
         console.log("data fetch products", data.products);
 
         setProducts(data.products);
+
+        setProductsPerPage(data.productsPerPage);
 
         setPaginationArray(data.paginationArray);
         setCurrentPage(data.currentPageNumber);
@@ -91,6 +96,8 @@ export const ProductProvider = ({ children }) => {
       value={{
         products,
         setProducts,
+        productsPerPage,
+        setProductsPerPage,
         paginationArray,
         currentPage,
         setCurrentPage,
