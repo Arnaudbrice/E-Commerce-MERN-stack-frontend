@@ -242,7 +242,7 @@ const Card = ({
         </div>
 
         {/* glass should be the last class to make it work */}
-        <p className=" badge badge-lg badge-outline badge-primary text-white w-[100px] flex-none px-12 text-xl glass">
+        <p className=" badge badge-lg badge-outline badge-primary text-white w-[100px] flex-none px-12 text-xl glass rounded-lg">
           {Number(price).toFixed(2)}
           {" €"}
         </p>
