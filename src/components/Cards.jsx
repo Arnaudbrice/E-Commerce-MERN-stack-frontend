@@ -2,6 +2,28 @@ import React from "react";
 import Card from "./Card";
 import ProductContext from "../context/ProductContext.jsx";
 import useProducts from "../hooks/useProducts.jsx";
+import Pagination from "./Pagination.jsx";
+
+/* const Pagination = (props) => (
+  <div className="flex justify-center items-center gap-2 my-6">
+    {props.paginationArray.map((pageNumber, index) =>
+      pageNumber === props.currentPage ?
+        <a
+          className="btn btn-secondary"
+          key={index}
+          href={`?page=${pageNumber}`}>
+          {pageNumber}
+        </a>
+      : <a
+          className="btn btn-outline btn-secondary"
+          href={`?page=${pageNumber}`}
+          key={index}>
+          {pageNumber}
+        </a>
+    )}
+  </div>
+); */
+
 const Cards = () => {
   /*   const { products, setProducts } = useContext(ProductContext); */
 
@@ -47,23 +69,7 @@ const Cards = () => {
 
       {/* pagination */}
 
-      <div className="flex justify-center items-center gap-2 my-6">
-        {paginationArray.map((pageNumber, index) =>
-          pageNumber === currentPage ?
-            <a
-              className="btn btn-secondary"
-              key={index}
-              href={`?page=${pageNumber}`}>
-              {pageNumber}
-            </a>
-          : <a
-              className="btn btn-outline btn-secondary"
-              href={`?page=${pageNumber}`}
-              key={index}>
-              {pageNumber}
-            </a>
-        )}
-      </div>
+      <Pagination paginationArray={paginationArray} currentPage={currentPage} />
     </div>
   );
 };
