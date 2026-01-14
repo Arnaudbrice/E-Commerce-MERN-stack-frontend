@@ -7,6 +7,8 @@ import GuestMenu from "./GuestMenu.jsx";
 const NavBar = () => {
   const { user, isLoadingAuth } = useAuth();
 
+  console.log("user in NavBar:", user);
+
   if (isLoadingAuth) {
     return (
       <div className="text-lg shadow-sm navbar sm:text-xl bg-secondary animate-pulse ">

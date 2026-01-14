@@ -328,7 +328,7 @@ const Cart = () => {
                           </td>
                           <td className="px-4 ">
                             {(
-                              parseFloat(product.productId.price) *
+                              parseFloat(product.productId?.price) *
                               product.quantity
                             ).toFixed(2)}{" "}
                             {" €"}

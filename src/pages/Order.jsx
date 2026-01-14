@@ -50,7 +50,7 @@ const Order = () => {
           return;
         }
         const data = await response.json();
-        console.log("orderData", data);
+        console.log("orderData", data.ordersProducts.flat());
         // API returns an array of arrays; flatten so each entry is an order object
         setOrders(data.ordersProducts.flat());
 
@@ -62,12 +62,15 @@ const Order = () => {
         for (const order of data.ordersProductsForCurrentPage.flat()) {
           const total = order.products
             .reduce((accumulator, currentValue) => {
+
               return (
                 accumulator +
-                parseFloat(currentValue.productId.price) * currentValue.quantity
+                parseFloat(currentValue.productId.price ||currentValue.price ) * currentValue.quantity
               );
             }, 0)
             .toFixed(2);
+
+            console.log("total", total);
           setTotals((prevTotals) => [...prevTotals, total]);
         }
       } catch (error) {
@@ -186,6 +189,8 @@ const Order = () => {
                   </p>
                   {order.products.map((product) => {
                     const p = product.productId || product;
+
+                    console.log("product in order", p);
                     //! Check if the product is already in the cart
                     const inCart = cartList.products?.some(
                       (item) => item.productId._id === p._id
@@ -208,7 +213,7 @@ const Order = () => {
                         <div className="w-full ">
                           <h2>{p.title}</h2>
                           <p>Price: {parseFloat(p.price).toFixed(2) + " €"}</p>
-                          <p>Quantity: {p.quantity}</p>
+                          <p>Quantity: {p.quantity || product.quantity}</p>
                         </div>
                         {/* display the buy again button only if the product is not in the cart */}
                         <div>

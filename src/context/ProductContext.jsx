@@ -27,6 +27,8 @@ export const ProductProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationArray, setPaginationArray] = useState([]);
 
+  //********** searching products **********
+
   useEffect(() => {
     const fetchProducts = async () => {
       /*    if (!user) {
@@ -96,6 +98,8 @@ export const ProductProvider = ({ children }) => {
       const params = new URLSearchParams(location.search);
       const currentSearchInUrl = params.get("search") || "";
 
+
+
       // Only update if there's a change
       if (searchTerm !== currentSearchInUrl) {
         // if the user has entered something in the search bar, set or update the 'search' parameter
@@ -106,7 +110,10 @@ export const ProductProvider = ({ children }) => {
           params.delete("search");
         }
         // Always delete 'page' parameter
-        params.delete("page");
+        // params.delete("page");
+
+        // reset pagination on new search
+        params.set("page", "1");
 
         // Navigate with the updated query string
         navigate(`?${params.toString()}`);

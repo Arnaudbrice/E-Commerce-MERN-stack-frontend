@@ -59,8 +59,10 @@ const Card = ({
   useEffect(() => {
     // console.log("cartList products 2", cartList.products);
 
+    console.log("cartList_products", cartList.products);
+
     const productQuantity = cartList.products?.find(
-      (item) => item.productId._id === _id
+      (item) => item.productId?._id === _id
     )?.quantity;
 
     // console.log("productQuantity", productQuantity);
