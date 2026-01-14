@@ -25,3 +25,54 @@ input[type="search"]::-webkit-search-cancel-button {
 
   cursor: pointer;
 }
+
+
+/****** schwebende ChatBot ******/
+
+/* Die Klasse für das Element */
+.floating-effect {
+  transition: transform 0.3s ease-in-out;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Die Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px); /* Höhe des Schwebens */
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Optional: Schatten, der mitschwingt */
+.floating-shadow {
+  position: relative;
+}
+
+.floating-shadow::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 10%;
+  width: 80%;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  filter: blur(4px);
+  animation: shadow-float 3s ease-in-out infinite;
+}
+
+@keyframes shadow-float {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(0.7); /* Schatten wird kleiner/heller wenn Element steigt */
+    opacity: 0.2;
+  }
+}

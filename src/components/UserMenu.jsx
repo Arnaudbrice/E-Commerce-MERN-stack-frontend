@@ -71,36 +71,39 @@ const UserMenu = () => {
                 className={({
                   isActive,
                 }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
+        ${isActive ? "bg-black text-white " : "text-white "}`}
                 to="/"
                 onClick={handleLinkClicked}>
                 Home
               </NavLink>
             </li>
 
-            <li>
-              <NavLink
-                className={({
-                  isActive,
-                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
-                to="/add-product"
-                onClick={handleLinkClicked}>
-                Add Product
-              </NavLink>
-            </li>
 
-            <li>
-              <NavLink
-                className={({
-                  isActive,
-                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
-                to="/admin/products"
-                onClick={handleLinkClicked}>
-                Admin Products
-              </NavLink>
-            </li>
+{user.role==="admin" &&  <>
+              <li>
+                <NavLink
+                  className={({
+                    isActive,
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+                      ${isActive ? "bg-black text-white" : "text-white "}`}
+                  to="/add-product"
+                  onClick={handleLinkClicked}>
+                  Add Product
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({
+                    isActive,
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+                      ${isActive ? "bg-black text-white" : "text-white "}`}
+                  to="/admin/products"
+                  onClick={handleLinkClicked}>
+                  Admin Products
+                </NavLink>
+              </li>
+            </>}
+
 
             {/* wishlist */}
             <li>
@@ -191,27 +194,30 @@ const UserMenu = () => {
             </NavLink>
           </li>
 
-          <li>
-            <NavLink
-              className={({
-                isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
-              to="/add-product">
-              Add Product
-            </NavLink>
-          </li>
+{user.role==="admin" && <>
+  <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+          ${isActive ? "bg-black text-white" : "text-white "}`}
+                to="/add-product">
+                Add Product
+              </NavLink>
+            </li>
 
-          <li>
-            <NavLink
-              className={({
-                isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
-              to="/admin/products">
-              Admin Products
-            </NavLink>
-          </li>
+   <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+          ${isActive ? "bg-black text-white" : "text-white "}`}
+                to="/admin/products">
+                Admin Products
+              </NavLink>
+            </li>
+</>}
+
 
           {/* wishlist */}
           <li>

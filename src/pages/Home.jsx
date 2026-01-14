@@ -10,6 +10,10 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import useCart from "../hooks/useCart.jsx";
 
+import ChatBotImage from "../assets/images/ChatBox_image.jpg";
+import ChatDialog from "../components/ChatDialog.jsx";
+
+
 const Home = () => {
   const {
     isLoading,
@@ -20,6 +24,8 @@ const Home = () => {
   } = useProducts();
 
   const { categories, setCategories } = useCategories();
+
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
 
   if (error) {
     return (
@@ -113,6 +119,18 @@ const Home = () => {
         </label>
       </div>
       <Cards />
+
+      {/* chatbot */}
+
+        <div className="flex justify-end items-center  mr-auto my-4"><button onClick={()=>{setIsChatModalOpen(true);
+          document.getElementById("chatModal").showModal();
+        }}   className=" floating-effect floating-shadow  "> <img src={ChatBotImage} alt="ChatBot" className="size-24 rounded-full  " /> </button></div>
+
+
+
+      {/* Open the modal using document.getElementById('ID').showModal() method */}
+
+{isChatModalOpen && <ChatDialog/>}
     </main>
   );
 };
