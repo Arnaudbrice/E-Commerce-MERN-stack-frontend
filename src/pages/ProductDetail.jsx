@@ -12,8 +12,8 @@ import useAuth from "../hooks/useAuth.jsx";
 const ProductDetail = () => {
   const location = useLocation(); // Initialize useLocation hook
   // access the passed state data
-  const { quantityInCart, stock, title, price, description, category, image } =
-    location.state || {};
+  const stateProduct = location.state || {};
+  const { quantityInCart } = stateProduct;
 
   console.log("location.state", location.state);
 
@@ -23,6 +23,8 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [product, setProduct] = useState({});
+  const displayProduct = { ...stateProduct, ...product };
+  const displayStock = displayProduct.stock ?? 0;
   const [isLoading, setIsLoading] = useState(true);
 
   const [isClicked, setIsClicked] = useState(false);
@@ -112,7 +114,7 @@ const ProductDetail = () => {
   const handleAddToCartList = async (e, id) => {
     e.stopPropagation(); // <--- Stop event propagation here
 
-    if (quantity === stock) {
+    if (quantity === displayStock) {
       toast.error("Product is out of stock");
       return;
     }
@@ -149,7 +151,7 @@ const ProductDetail = () => {
   };
 
   const handleShowDialog = () => {
-    if (product?.userId.toString() === user?._id.toString()) {
+    if (product?.userId?.toString() === user?._id?.toString()) {
       toast.error("You Cannot Give A Review For Your Own Product");
     } else {
       setIsDialogOpen(true);
@@ -179,13 +181,13 @@ const ProductDetail = () => {
         <figure>
           <img
             className="block object-contain w-full bg-white h-52 aspect-square"
-            src={image}
-            alt={title}
+            src={displayProduct.image}
+            alt={displayProduct.title}
           />
         </figure>
         <div className="p-4  card-body  flex-none">
           <h2 className="  text-balance text-center  card-title justify-center p-2  w-full ">
-            {title}
+            {displayProduct.title}
           </h2>
           {/* rating */}
 
@@ -223,17 +225,17 @@ const ProductDetail = () => {
           </div>
 
           {/* description */}
-          <p>{description}</p>
+          <p>{displayProduct.description}</p>
           {/* glass should be the last class to make it work */}
           <p className=" badge badge-lg badge-outline badge-primary w-[100px] text-white flex-none px-12 text-xl glass">
-            {Number(price).toFixed(2)}
+            {Number(displayProduct.price || 0).toFixed(2)}
             {" €"}
           </p>
           <div className="items-center justify-between w-full card-actions ">
             <Link
               className="my-4 p-2 text-xs hover:link sm:my-none"
-              to={`/category/${category}`}>
-              More from {category}
+              to={`/category/${displayProduct.category}`}>
+              More from {displayProduct.category}
             </Link>
             {!quantity ?
               <button
@@ -243,7 +245,7 @@ const ProductDetail = () => {
               </button>
             : <ButtonGroup
                 quantity={quantity}
-                stock={stock}
+                stock={displayStock}
                 handleAdd={(e) => handleAddToCartList(e, id)}
                 handleRemove={(e) => handleRemoveFromCartList(e, id)}
               />
