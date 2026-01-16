@@ -76,3 +76,50 @@ input[type="search"]::-webkit-search-cancel-button {
     opacity: 0.2;
   }
 }
+
+/* Chatbot chat bubble styling */
+
+
+
+.chat-bubble h2{
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+ color: #2c3e50;
+}
+
+.chat-bubble h3,.chat-bubble h4 {
+  color: #2c3e50;
+  margin-top: 15px;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+/* for markdow ##### */
+.chat-bubble h4{
+  font-size: 1rem;
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+.chat-bubble h5{
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+
+.chat-bubble ul {
+  padding-left: 20px;
+  list-style-type: disc;
+  margin-bottom: 10px;
+}
+
+.chat-bubble li {
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.chat-bubble strong {
+  font-weight: 600;
+  color: #e67e22; /* Akzentfarbe für Preise oder Namen */
+}
