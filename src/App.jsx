@@ -20,6 +20,7 @@ import MailResetPassword from "./pages/MailResetPassword.jsx";
 import Order from "./pages/Order.jsx";
 import Favorite from "./pages/Favorite.jsx";
 import AdminProducts from "./pages/AdminProducts.jsx";
+import Profile from "./pages/Profile.jsx";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route
                   path="/mail-reset-password"
                   element={<MailResetPassword />}

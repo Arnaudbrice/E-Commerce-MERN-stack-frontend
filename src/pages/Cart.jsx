@@ -8,6 +8,8 @@ import useCart from "../hooks/useCart.jsx";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import { useNavigate } from "react-router";
 import useAuth from "../hooks/useAuth.jsx";
+import { FaLocationDot } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
 
 const Cart = () => {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -338,7 +340,88 @@ const Cart = () => {
                   )}
               </tbody>
             </table>
-            <div className="flex items-center justify-center gap-4 my-4">
+
+            {/* Reset Cart and Checkout Buttons */}
+
+            <div className="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-2xl border-l-4 border-r-4 border-secondary my-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold flex  ">
+                  {/* <span className="material-symbols-outlined text-secondary">
+                    location_on
+                  </span> */}
+                  <span className="flex flex-row items-center gap-2">
+                    <FaLocationDot className="text-secondary" />
+                    Shipping Address
+                  </span>
+                </h3>
+                <div className="flex flex-row items-center gap-2">
+                  <a
+                    className="flex items-center gap-2 text-secondary text-md font-bold hover:underline"
+                    href="#">
+                    <FaEdit />
+                    Change Address
+                  </a>
+                </div>
+              </div>
+
+              {/* Address Details */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-bold text-base">
+                    {user && user.firstName} {user && user.lastName}
+                  </span>
+                  <span className="bg-secondary/20 text-secondary text-[10px] font-black uppercase px-2 py-0.5 rounded-full">
+                    secondary
+                  </span>
+                </div>
+                <p className="text-md text-gray-600 dark:text-gray-300">
+                  {user?.streetAddress && user.streetAddress + ", "}
+                  {user?.zipCode && user.zipCode + " "}
+                  {user?.city && user.city + ", "}
+                  {user?.state && user.state + " "}
+                </p>
+                <p className="text-md text-gray-600 dark:text-gray-300">
+                  {user?.country && user.country}
+                </p>
+              </div>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-2xl space-y-4">
+              <div className="flex justify-between items-center text-gray-500">
+                <span className="text-md">Subtotal</span>
+                <span className="font-semibold">
+                  {cartAmount.toFixed(2)} {" €"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-gray-500">
+                <span className="text-md">Shipping</span>
+                <span className="font-semibold">0.00 €</span>
+              </div>
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-800 flex justify-between items-center py-4">
+                <span className="font-bold text-md">Total</span>
+                <span className="text-2xl font-bold text-secondary">
+                  Checkout: {cartAmount.toFixed(2)} {" €"}
+                </span>
+              </div>
+              {/* <button className="w-full bg-secondary text-white font-bold py-4 rounded-xl shadow-lg shadow-secondary/30 hover:opacity-90 transition-opacity uppercase tracking-widest text-sm">
+                Checkout: 39.99 €
+              </button> */}
+
+              <div className="flex items-center justify-center gap-4 my-4">
+                <button
+                  className="btn btn-lg btn-outline btn-secondary"
+                  onClick={handleReset}>
+                  Reset Cart
+                </button>
+                <button
+                  className="btn btn-lg btn-secondary"
+                  onClick={handleCheckout}>
+                  Checkout: {cartAmount.toFixed(2)} {" €"}
+                </button>
+              </div>
+            </div>
+
+            {/* this already works */}
+            {/* <div className="flex items-center justify-center gap-4 my-4">
               <button
                 className="btn btn-lg btn-outline btn-secondary"
                 onClick={handleReset}>
@@ -349,7 +432,7 @@ const Cart = () => {
                 onClick={handleCheckout}>
                 Checkout: {cartAmount.toFixed(2)} {" €"}
               </button>
-            </div>
+            </div> */}
           </div>
         </>
       }
