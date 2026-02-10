@@ -5,6 +5,8 @@ import useAuth from "../hooks/useAuth.jsx";
 import useCart from "../hooks/useCart.jsx";
 import { MdFavoriteBorder } from "react-icons/md";
 
+import defaultProfileImage from "../assets/images/default_profile.png";
+
 const UserMenu = () => {
   const { logout, setIsLoadingAuth, user, numberOfFavoriteProducts } =
     useAuth();
@@ -78,32 +80,32 @@ const UserMenu = () => {
               </NavLink>
             </li>
 
-
-{user.role==="admin" &&  <>
-              <li>
-                <NavLink
-                  className={({
-                    isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+            {user.role === "admin" && (
+              <>
+                <li>
+                  <NavLink
+                    className={({
+                      isActive,
+                    }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
                       ${isActive ? "bg-black text-white" : "text-white "}`}
-                  to="/add-product"
-                  onClick={handleLinkClicked}>
-                  Add Product
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  className={({
-                    isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+                    to="/add-product"
+                    onClick={handleLinkClicked}>
+                    Add Product
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    className={({
+                      isActive,
+                    }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
                       ${isActive ? "bg-black text-white" : "text-white "}`}
-                  to="/admin/products"
-                  onClick={handleLinkClicked}>
-                  Admin Products
-                </NavLink>
-              </li>
-            </>}
-
+                    to="/admin/products"
+                    onClick={handleLinkClicked}>
+                    Admin Products
+                  </NavLink>
+                </li>
+              </>
+            )}
 
             {/* wishlist */}
             <li>
@@ -164,6 +166,24 @@ const UserMenu = () => {
               </NavLink>
             </li>
 
+            {/* profile */}
+
+            <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+        ${isActive ? "bg-black text-white" : "text-white "}`}
+                onClick={handleLinkClicked}
+                to="/profile">
+                <img
+                  src={defaultProfileImage}
+                  alt="profile-image"
+                  className="size-8 rounded-full"
+                />
+              </NavLink>
+            </li>
+
             <li className=" text-lg block px-4 py-2  rounded text-white hover:bg-orange-500">
               <button
                 className=" h-full p-0 bg-none text-lg"
@@ -180,6 +200,7 @@ const UserMenu = () => {
         <NavLink to="/">Bon Marché</NavLink>
       </div>
 
+      {/* ---------------------------------------------------------------- */}
       {/* shown on middle screens with md:flex */}
       <div className="hidden navbar-center justify-between  lg:flex">
         <ul className="justify-around gap-6 px-4 text-xl menu menu-horizontal">
@@ -194,30 +215,31 @@ const UserMenu = () => {
             </NavLink>
           </li>
 
-{user.role==="admin" && <>
-  <li>
-              <NavLink
-                className={({
-                  isActive,
-                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+          {user.role === "admin" && (
+            <>
+              <li>
+                <NavLink
+                  className={({
+                    isActive,
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
           ${isActive ? "bg-black text-white" : "text-white "}`}
-                to="/add-product">
-                Add Product
-              </NavLink>
-            </li>
+                  to="/add-product">
+                  Add Product
+                </NavLink>
+              </li>
 
-   <li>
-              <NavLink
-                className={({
-                  isActive,
-                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+              <li>
+                <NavLink
+                  className={({
+                    isActive,
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
           ${isActive ? "bg-black text-white" : "text-white "}`}
-                to="/admin/products">
-                Admin Products
-              </NavLink>
-            </li>
-</>}
-
+                  to="/admin/products">
+                  Admin Products
+                </NavLink>
+              </li>
+            </>
+          )}
 
           {/* wishlist */}
           <li>
@@ -274,6 +296,24 @@ const UserMenu = () => {
                   {cartProductsQuantity || 0}
                 </span>
               </div>
+            </NavLink>
+          </li>
+
+          {/* profile */}
+
+          <li>
+            <NavLink
+              className={({
+                isActive,
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+        ${isActive ? "bg-black text-white" : "text-white "}`}
+              to="/profile"
+              onClick={handleLinkClicked}>
+              <img
+                src={defaultProfileImage}
+                alt="profile-image"
+                className="size-8 rounded-full"
+              />
             </NavLink>
           </li>
 

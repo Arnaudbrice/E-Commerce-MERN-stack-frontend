@@ -12,7 +12,7 @@ import useCart from "../hooks/useCart.jsx";
 
 import ChatBotImage from "../assets/images/ChatBox_image.jpg";
 import ChatDialog from "../components/ChatDialog.jsx";
-
+import useAuth from "../hooks/useAuth.jsx";
 
 const Home = () => {
   const {
@@ -22,6 +22,8 @@ const Home = () => {
     searchTerm,
     setSearchTerm,
   } = useProducts();
+
+  const { user } = useAuth();
 
   const { categories, setCategories } = useCategories();
 
@@ -122,15 +124,26 @@ const Home = () => {
 
       {/* chatbot */}
 
-        <div className="flex justify-end items-center  mr-auto my-4"><button onClick={()=>{setIsChatModalOpen(true);
-          document.getElementById("chatModal").showModal();
-        }}   className=" floating-effect floating-shadow  "> <img src={ChatBotImage} alt="ChatBot" className="size-24 rounded-full  " /> </button></div>
-
-
-
+      {user && (
+        <div className="flex justify-end items-center  mr-auto my-4">
+          <button
+            onClick={() => {
+              setIsChatModalOpen(true);
+              document.getElementById("chatModal").showModal();
+            }}
+            className=" floating-effect floating-shadow  ">
+            {" "}
+            <img
+              src={ChatBotImage}
+              alt="ChatBot"
+              className="size-24 rounded-full  "
+            />{" "}
+          </button>
+        </div>
+      )}
       {/* Open the modal using document.getElementById('ID').showModal() method */}
 
-{isChatModalOpen && <ChatDialog/>}
+      {isChatModalOpen && <ChatDialog />}
     </main>
   );
 };
