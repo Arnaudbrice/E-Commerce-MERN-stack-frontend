@@ -29,6 +29,10 @@ const Home = () => {
 
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
 
+  const handleChatModalOpen = () => {
+    setIsChatModalOpen(true);
+  };
+
   if (error) {
     return (
       <div
@@ -127,10 +131,7 @@ const Home = () => {
       {user && (
         <div className="flex justify-end items-center  mr-auto my-4">
           <button
-            onClick={() => {
-              setIsChatModalOpen(true);
-              document.getElementById("chatModal").showModal();
-            }}
+            onClick={handleChatModalOpen}
             className=" floating-effect floating-shadow  ">
             {" "}
             <img
@@ -143,7 +144,12 @@ const Home = () => {
       )}
       {/* Open the modal using document.getElementById('ID').showModal() method */}
 
-      {isChatModalOpen && <ChatDialog />}
+      {isChatModalOpen && (
+        <ChatDialog
+          isChatModalOpen={isChatModalOpen}
+          setIsChatModalOpen={setIsChatModalOpen}
+        />
+      )}
     </main>
   );
 };

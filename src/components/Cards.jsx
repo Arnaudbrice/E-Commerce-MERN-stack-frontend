@@ -60,7 +60,7 @@ const Cards = () => {
   }; */
 
   return (
-    <div className={!productsPerPage.length && " mt-60"}>
+    <div className={!productsPerPage.length ? " mt-60" : ""}>
       <div className="grid min-h-full grid-cols-1 sm:grid-cols-2 gap-6 mx-auto my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
         {!productsPerPage.length ?
           <div
