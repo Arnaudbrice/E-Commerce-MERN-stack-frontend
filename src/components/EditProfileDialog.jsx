@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import useAuth from "../hooks/useAuth.jsx";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 
-const EditProfileDialog = () => {
+const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
+  const dialogRef = useRef(null);
   const [isSavingClicked, setIsSavingClicked] = useState(false);
   const { user, setUser } = useAuth();
   const [formState, setFormState] = useState({
@@ -17,6 +18,20 @@ const EditProfileDialog = () => {
     zipCode: "",
     country: "",
   });
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (dialog && isEditButtonClicked) {
+      dialog.showModal();
+
+      const handleClose = () => setIsEditButtonClicked(false);
+      dialog.addEventListener("close", handleClose);
+
+      return () => {
+        dialog.removeEventListener("close", handleClose);
+      };
+    }
+  }, [isEditButtonClicked, setIsEditButtonClicked]);
 
   // Populate form state with user data (autofilling the form fields with the current user data)
   useEffect(() => {
@@ -95,7 +110,8 @@ const EditProfileDialog = () => {
 
       setUser(data);
 
-      document.getElementById("edit_profile_modal").close();
+      // document.getElementById("edit_profile_modal").close();
+      dialogRef.current.close();
 
       toast.success("Profile updated successfully");
     } catch (error) {
@@ -119,12 +135,13 @@ const EditProfileDialog = () => {
   return (
     <dialog
       id="edit_profile_modal"
+      ref={dialogRef}
       className="modal modal-bottom sm:modal-middle place-items-center"
       onClick={(e) => {
         // !the dialog cover the full screen and only the modal box is displayed
         // if the user clicks directly on the dialog backdrop(background of the modal box)=outside the modal box → close
-        if (e.target === document.getElementById("edit_profile_modal")) {
-          document.getElementById("edit_profile_modal").close();
+        if (e.target === dialogRef.current) {
+          dialogRef.current.close();
           // setIsSavingClicked(false);
         }
       }}>
@@ -138,7 +155,8 @@ const EditProfileDialog = () => {
         </h3>
         <div className="modal-action">
           <form
-            method="dialog"
+            // method="dialog"
+            onSubmit={handleEditProfileSubmission}
             className="dialog-form space-y-2  w-full max-w-md">
             {/* if there is a button in form, it will close the modal */}
 
@@ -189,8 +207,10 @@ const EditProfileDialog = () => {
               value={formState.phone}
               onChange={handleChange}
               placeholder="Phone"
-              pattern="[0-9+\s()-]{7,}"
-              title="Please enter a valid phone number"
+              pattern="^[+]?[\d\s\-()]{7,20}$"
+              minLength={7}
+              maxLength={20}
+              title="Please enter a valid phone number (digits, spaces, +, -, parentheses allowed)"
               id="phone"
             />
             <label className="label" htmlFor="streetAddress">
@@ -274,7 +294,7 @@ const EditProfileDialog = () => {
               {/* Add more countries as needed */}
             </select>
             <button
-              onClick={handleEditProfileSubmission}
+              type="submit"
               className="btn btn-lg btn-secondary rounded-lg mt-4"
               disabled={isSavingClicked}>
               {isSavingClicked ? "Saving..." : "Save"}

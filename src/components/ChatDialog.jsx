@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import ChatBotImage from "../assets/images/ChatBox_image.jpg";
 import avatar from "../assets/images/avatar.png";
@@ -7,7 +7,9 @@ import { useNavigate } from "react-router";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import { toast } from "react-toastify";
 
-const ChatDialog = () => {
+const ChatDialog = ({ isChatModalOpen, setIsChatModalOpen }) => {
+  const chatDialogRef = useRef(null);
+
   const baseURL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
 
@@ -15,10 +17,26 @@ const ChatDialog = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    const dialog = chatDialogRef.current;
+    if (dialog && isChatModalOpen) {
+      dialog.showModal();
+
+      const handleClose = () => setIsChatModalOpen(false);
+      // add event listener to close the modal when the user clicks outside of it or clicks the close button
+      dialog.addEventListener("close", handleClose);
+
+      // cleanup function to remove the event listener when the component unmounts or when isChatModalOpen changes
+      return () => {
+        dialog.removeEventListener("close", handleClose);
+      };
+    }
+  }, [isChatModalOpen, setIsChatModalOpen]);
+
   const handleInternalLinkClick = (event, href) => {
     event.preventDefault();
 
-    const dialog = document.getElementById("chatModal");
+    const dialog = chatDialogRef.current;
     if (dialog?.open) {
       dialog.close();
     }
@@ -74,7 +92,8 @@ const ChatDialog = () => {
 
       setMessage("");
     } catch (error) {
-      toast.error(error);
+      toast.error(error?.message || "Something went wrong");
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -106,24 +125,21 @@ const ChatDialog = () => {
       }
     } catch (error) {
       /* return null; */ // Ungültige URL
-      toast.error("Invalid URL: ");
+      toast.error(error);
     }
 
     return null; // Link ist extern
   };
 
-  useEffect(() => {
-    document.getElementById("chatModal").showModal();
-  }, []);
-
   return (
     <dialog
       onClick={(event) => {
-        if (event.target === document.getElementById("chatModal")) {
-          document.getElementById("chatModal").close();
+        if (event.target === chatDialogRef.current) {
+          chatDialogRef.current.close(); // Close the modal
         }
       }}
       id="chatModal"
+      ref={chatDialogRef}
       className="modal modal-bottom sm:modal-middle flex items-center justify-center ">
       <div className="modal-box sm:w-full sm:max-w-3/4 relative bg-white text-black rounded-xl shadow-xl flex flex-col p-2 overflow-y-auto">
         <div className="py-4">
@@ -276,12 +292,12 @@ const ChatDialog = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                strokeWidth="1.5"
                 stroke="currentColor"
-                class="mr-1 size-6">
+                className="mr-1 size-6">
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"></path>
               </svg>
               Ask AI

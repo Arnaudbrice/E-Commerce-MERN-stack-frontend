@@ -93,7 +93,7 @@ export const ProductProvider = ({ children }) => {
 
   /* this effect is used to update the URL with the search term 10ms after the user stops typing then re-fetch the products and set page to 1 (by deleting the page parameter)*/
   useEffect(() => {
-    // debounce the search input by 100ms (to avoid updating the URL (and refetching) on every keystroke.)
+    // debounce the search input by 10ms (to avoid updating the URL (and refetching) on every keystroke.)
     const handler = setTimeout(() => {
       const params = new URLSearchParams(location.search);
       const currentSearchInUrl = params.get("search") || "";
@@ -116,7 +116,7 @@ export const ProductProvider = ({ children }) => {
         // Navigate with the updated query string
         navigate(`?${params.toString()}`);
       }
-    }, 10);
+    }, 10); // 10ms debounce
 
     return () => {
       clearTimeout(handler); //clear timeout when component unmounts or before running the effect next time(dependency change) => to avoid memory leaks

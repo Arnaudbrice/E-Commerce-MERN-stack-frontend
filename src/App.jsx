@@ -33,7 +33,7 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/profile" element={<Profile />} />
+
                 <Route
                   path="/mail-reset-password"
                   element={<MailResetPassword />}
@@ -50,6 +50,7 @@ function App() {
                   <Route path="/add-product" element={<AddProduct />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/admin/products" element={<AdminProducts />} />
+                  <Route path="/profile" element={<Profile />} />
                 </Route>
 
                 <Route path="/orders" element={<Order />} />

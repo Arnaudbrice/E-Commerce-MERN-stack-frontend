@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaRegAddressCard } from "react-icons/fa";
@@ -7,36 +7,74 @@ import { FaUserEdit } from "react-icons/fa";
 import default_profile from "../assets/images/default_profile.png";
 import EditProfileDialog from "../components/EditProfileDialog";
 import useAuth from "../hooks/useAuth.jsx";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
 
-  const { user } = useAuth();
-  const handleEditProfile = () => {
-    console.log("Edit Profile clicked");
-    setIsEditButtonClicked(true);
-    document.getElementById("edit_profile_modal").showModal();
+  const { user, isLoadingAuth } = useAuth();
+
+  /**
+   * Formats the user's address by joining available parts and removing any falsy values.
+   * This prevents extra commas if some address fields are missing.
+   */
+  const getFullAddress = (user) => {
+    const addressParts = [
+      user?.streetAddress,
+      user?.zipCode,
+      user?.city,
+      user?.state,
+      user?.country,
+    ].filter(Boolean); // Remove falsy values to avoid extra commas
+    return addressParts.join(", ");
   };
 
-  if (!user) {
-    return null; // oder ein Spinner/Loading
+  const fullAddress = getFullAddress(user);
+
+  const handleEditProfile = () => {
+    setIsEditButtonClicked(true);
+  };
+
+  useEffect(() => {
+    if (!isLoadingAuth && !user) {
+      navigate("/login");
+    }
+  }, [user, isLoadingAuth, navigate]);
+
+  // Show loading UI while authentication is loading
+  if (isLoadingAuth) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <span className="text-lg font-semibold">Loading...</span>
+      </div>
+    );
   }
+
+  // Prevent rendering profile page if user is not authenticated
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col items-center px-4 py-8 bg-gradient-to-b from-secondary/5 to-transparent">
-      <EditProfileDialog />
-      <div className="avatar">
-        <div className="size-32  border-4 border-secondary p-1 rounded-full">
-          <img
-            src={default_profile}
-            alt="profile-image"
-            className="size-full rounded-full"
-          />
-        </div>
+      {isEditButtonClicked && (
+        <EditProfileDialog
+          isEditButtonClicked={isEditButtonClicked}
+          setIsEditButtonClicked={setIsEditButtonClicked}
+        />
+      )}
+      <div className="size-32  border-4 border-secondary p-1 rounded-full">
+        <img
+          src={default_profile}
+          alt="profile-image"
+          className="size-full rounded-full"
+        />
       </div>
 
       <div className="mt-4 text-center">
         <h1 className="text-2xl font-bold tracking-tight">
-          {user && user.firstName} {user && user.lastName}
+          {user?.firstName} {user?.lastName}
         </h1>
         <div className="flex items-center justify-center gap-2 mt-1">
           {/* Additional info can go here */}
@@ -75,7 +113,7 @@ const Profile = () => {
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">
                   Email
                 </p>
-                <p className="text-base font-semibold">{user && user.email}</p>
+                <p className="text-base font-semibold">{user?.email}</p>
               </div>
             </div>
             {/* Phone Item */}
@@ -103,13 +141,7 @@ const Profile = () => {
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">
                   Address
                 </p>
-                <p className="text-base font-semibold">
-                  {user?.streetAddress && user.streetAddress + ", "}
-                  {user?.zipCode && user.zipCode + " "}
-                  {user?.city && user.city + ", "}
-                  {user?.state && user.state + ", "}
-                  {user?.country && user.country}
-                </p>
+                <p className="text-base font-semibold">{fullAddress}</p>
               </div>
             </div>
           </div>
