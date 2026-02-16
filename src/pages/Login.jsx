@@ -7,6 +7,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
+
   const { login, user, isLoadingAuth } = useAuth();
   const [isClicked, setIsClicked] = useState(false);
 
@@ -47,6 +48,7 @@ const Login = () => {
       </div>
     );
   }
+
   return (
     <form
       onSubmit={handleSubmit}
