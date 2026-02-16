@@ -207,10 +207,10 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
               value={formState.phone}
               onChange={handleChange}
               placeholder="Phone"
-              pattern="^[+]?[\d\s\-()]{7,20}$"
+              pattern="^\\+?[0-9]{7,20}$"
               minLength={7}
               maxLength={20}
-              title="Please enter a valid phone number (digits, spaces, +, -, parentheses allowed)"
+              title="Please enter a valid phone number (digits, +, -, parentheses allowed)"
               id="phone"
             />
             <label className="label" htmlFor="streetAddress">

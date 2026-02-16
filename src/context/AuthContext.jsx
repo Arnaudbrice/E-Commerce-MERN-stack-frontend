@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createContext } from "react";
 
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import { toast } from "react-toastify";
 import { useEffect } from "react";
@@ -10,6 +10,7 @@ const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const [user, setUser] = useState(null);
 
@@ -90,7 +91,7 @@ export const AuthContextProvider = ({ children }) => {
 
       setUser(userData);
 
-      toast.success("Welcome back!");
+      toast.success(`Welcome back ${userData?.firstName}!`);
       navigate("/");
     } catch (error) {
       // server validation error
@@ -134,7 +135,19 @@ export const AuthContextProvider = ({ children }) => {
 
         if (!response.ok) {
           const { error: validationError } = await response.json();
-          await customErrorMessage(validationError, 5000);
+          console.log(location.pathname);
+
+          // Only show the toast if not on the login/register/reset pages
+          if (
+            ![
+              "/login",
+              "/register",
+              "/mail-reset-password",
+              "/reset-password",
+            ].includes(location.pathname)
+          ) {
+            await customErrorMessage(validationError, 5000);
+          }
           return;
         }
         const userData = await response.json();
@@ -152,16 +165,17 @@ export const AuthContextProvider = ({ children }) => {
       }
     };
     getUser();
-  }, [navigate, baseUrl]);
+  }, [navigate, baseUrl, location.pathname]);
 
   useEffect(() => {
     const fetchFavoriteProducts = async () => {
-      /* if (!user) {
+      // Only fetch if user is available, otherwise clear favorites and return
+      if (!user) {
         setFavoriteProducts([]);
         setNumberOfFavoriteProducts(0);
+        setIsLoadingFavoriteProducts(false); // Ensure loading state is false
         return;
-      } */
-
+      }
       try {
         const response = await fetch(`${baseUrl}/users/products/favorite`, {
           method: "GET",
@@ -169,7 +183,9 @@ export const AuthContextProvider = ({ children }) => {
         });
         if (!response.ok) {
           const { message: errorMessage } = await response.json();
-          customErrorMessage(errorMessage, 5000);
+
+          await customErrorMessage(errorMessage, 5000);
+
           return;
         }
         const allFavoriteProducts = await response.json();
