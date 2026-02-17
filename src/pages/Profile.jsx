@@ -20,17 +20,27 @@ const Profile = () => {
    * This prevents extra commas if some address fields are missing.
    */
   const getFullAddress = (user) => {
+    const userAddress = user?.addresses?.find(
+      (address) => address.label === "Home"
+    );
     const addressParts = [
-      user?.streetAddress,
-      user?.zipCode,
-      user?.city,
-      user?.state,
-      user?.country,
+      userAddress?.streetAddress.replace(",", ""), //removes comma
+      userAddress?.zipCode,
+      userAddress?.city,
+      userAddress?.state,
+      userAddress?.country,
+      userAddress?.phone,
     ].filter(Boolean); // Remove falsy values to avoid extra commas
     return addressParts.join(", ");
   };
-
+  const getPhoneNumber = () => {
+    const userAddress = user?.addresses?.find(
+      (address) => address.label === "Home"
+    );
+    return userAddress?.phone;
+  };
   const fullAddress = getFullAddress(user);
+  const phoneNumber = getPhoneNumber();
 
   const handleEditProfile = () => {
     setIsEditButtonClicked(true);
@@ -127,7 +137,7 @@ const Profile = () => {
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">
                   Phone
                 </p>
-                <p className="text-base font-semibold">{user?.phone}</p>
+                <p className="text-base font-semibold">{phoneNumber}</p>
               </div>
             </div>
             {/* Location Item */}
