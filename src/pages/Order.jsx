@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import useCart from "../hooks/useCart.jsx";
 import Pagination from "../components/Pagination.jsx";
 import useAuth from "../hooks/useAuth.jsx";
+import { FaShippingFast } from "react-icons/fa";
 
 const Order = () => {
   const navigate = useNavigate();
@@ -59,20 +60,36 @@ const Order = () => {
         setCurrentPage(data.currentPageNumber);
 
         // Calculate totals for each order
-        for (const order of data.ordersProductsForCurrentPage.flat()) {
+        /*  for (const order of data.ordersProductsForCurrentPage.flat()) {
           const total = order.products
             .reduce((accumulator, currentValue) => {
-
               return (
                 accumulator +
-                parseFloat(currentValue.productId.price ||currentValue.price ) * currentValue.quantity
+                parseFloat(currentValue.productId.price || currentValue.price) *
+                  currentValue.quantity
               );
             }, 0)
             .toFixed(2);
 
-            console.log("total", total);
+          console.log("total", total);
           setTotals((prevTotals) => [...prevTotals, total]);
-        }
+        } */
+
+        // Calculate totals for each order
+        const totalsArr = data.ordersProductsForCurrentPage
+          .flat()
+          .map((order) =>
+            order.products
+              .reduce(
+                (acc, curr) =>
+                  acc +
+                  parseFloat(curr.productId?.price || curr.price) *
+                    curr.quantity,
+                0
+              )
+              .toFixed(2)
+          );
+        setTotals(totalsArr);
       } catch (error) {
         toast.error(error);
       } finally {
@@ -184,6 +201,15 @@ const Order = () => {
                 <div
                   key={index}
                   className=" flex flex-col border border-gray rounded-lg p-2 space-y-4  ">
+                  {/* order date */}
+                  <p className="text-lg ">
+                    Order On: {order.createdAt?.split("T")[0]}
+                  </p>
+                  {/* order status */}
+                  <p className="text-lg glow-text-secondary glass w-fit px-2 py-1 rounded-selector">
+                    📦 → <span className="text-secondary">{order.status}</span>
+                  </p>
+                  {/* order products */}
                   <p className=" text-secondary text-center">
                     Order({index + 1}) - ({order.id})
                   </p>
@@ -198,19 +224,19 @@ const Order = () => {
                     return (
                       <div
                         key={p._id}
-                        className="grid grid-cols-3  h-full place-items-center p-2 rounded-lg border border-gray-100/20"
+                        className="grid sm:grid-cols-3 grid-cols-1 sm:space-y-1 space-y-4 place-items-center  h-full  p-2 rounded-lg border border-gray-100/20"
                         onClick={(e) => handleImageClick(p._id, e, p)}>
-                        <div className="avatar size-30 mr-auto">
+                        <div className="avatar size-30  sm:mr-auto">
                           <img
                             // onClick={(e) =>
                             //   handleImageClick(product.productId._id, e, product)
                             // }
-                            className="object-fill  bg-white mask mask-circle "
+                            className="object-fill   bg-white mask mask-circle "
                             src={p.image}
                             alt={p.title}
                           />
                         </div>
-                        <div className="w-full ">
+                        <div className="w-full text-center sm:text-left ">
                           <h2>{p.title}</h2>
                           <p>Price: {parseFloat(p.price).toFixed(2) + " €"}</p>
                           <p>Quantity: {p.quantity || product.quantity}</p>

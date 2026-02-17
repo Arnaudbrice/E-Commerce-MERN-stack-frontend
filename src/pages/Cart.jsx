@@ -10,6 +10,12 @@ import { useNavigate } from "react-router";
 import useAuth from "../hooks/useAuth.jsx";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
+import EditShippingAddressDialog from "../components/EditShippingAddressDialog.jsx";
+import EditProfileDialog from "../components/EditProfileDialog.jsx";
+import { IoMdAddCircleOutline } from "react-icons/io";
+
+import { FaRegAddressBook } from "react-icons/fa";
+import ShippingAddressDialog from "../components/ShippingAddressDialog.jsx";
 
 const Cart = () => {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -42,18 +48,46 @@ const Cart = () => {
 
   // const [cartQuantity, setCartQuantity] = useState(0);
   const [order, setOrder] = useState({});
+
+  const [userAddress, setUserAddress] = useState(null);
   const [cartAmount, setCartAmount] = useState(0);
 
   const [redirecting, setRedirecting] = useState(false);
+
+  const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
+  const [isShippingAddressDialogOpen, setIsShippingAddressDialogOpen] =
+    useState(false);
   // used to prevent duplicate handling of redirect (e.g., StrictMode double effect)
   const redirectHandledRef = useRef(false);
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const createOrder = useCallback(async () => {
+    //! check if the user has a home address or shipping address before creating an order
+    const userAddress = user?.addresses?.find(
+      (address) =>
+        address.label === "Home" || address.label === "shippingAddress"
+    );
+    // if there is no address
+    if (
+      !userAddress?.streetAddress ||
+      !userAddress?.city ||
+      !userAddress?.state ||
+      !userAddress?.zipCode ||
+      !userAddress?.country
+    ) {
+      toast.error("Please add an address before making an order.", {
+        autoClose: 5000,
+      });
+      return;
+    }
     try {
       const response = await fetch(`${baseUrl}/users/orders`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ shippingAddress: userAddress }),
         credentials: "include",
       });
       if (!response.ok) {
@@ -71,7 +105,7 @@ const Cart = () => {
     } catch (error) {
       toast.error(error);
     }
-  }, [baseUrl]);
+  }, [baseUrl, user]);
 
   //********** reset cart **********
   const handleReset = useCallback(async () => {
@@ -85,6 +119,18 @@ const Cart = () => {
     },
     [updateProductStockAfterPayment]
   );
+
+  useEffect(() => {
+    /*  Find the user's home address added in the profile page
+     or take the last shipping address added from the user if no home address is found (note: reverse mutates the original array, so we should use it on a shallow copy of the array) */
+    const userAddress =
+      user?.addresses?.find((address) => address.label === "Home") ||
+      [...(user?.addresses || [])]
+        .reverse()
+        .find((address) => address.label === "shippingAddress");
+
+    setUserAddress(userAddress || null);
+  }, [user]);
 
   // console.log("cartList", cartList);
   useEffect(() => {
@@ -101,7 +147,7 @@ const Cart = () => {
 
     calculateCartTotalAmount();
   }, [cartList]);
-  console.log("cartList", cartList);
+  // console.log("cartList", cartList);
 
   // After the payment process, if we want to inform the user that payment was successful, we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment.
   useEffect(() => {
@@ -228,6 +274,18 @@ const Cart = () => {
     }
   };
 
+  //********** handleEditShippingAddress **********
+  const handleEditShippingAddress = () => {
+    setIsEditButtonClicked(true);
+  };
+
+  //********** handle choose shipping address **********
+  const handleChooseShippingAddress = (address) => {
+    setUserAddress(address);
+    // setIsShippingAddressDialogOpen(true);
+    // setIsEditButtonClicked(false);
+  };
+
   if (!cartProductsQuantity && !isLoadingCart) {
     return (
       <div
@@ -262,88 +320,90 @@ const Cart = () => {
           <span className="sr-only">Loading...</span>
         </div>
       : <>
-          <div className="w-2/3 mx-auto my-6 text-3xl font-bold text-center divider divider-secondary">
+          <div className="w-2/3 mx-auto my-8 text-3xl font-bold text-center divider divider-secondary">
             Cart
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="table w-full table-md table-zebra">
-              <thead className="invisible text-white bg-gray-700 sm:visible">
-                <tr className=" grid py-4 grid-cols-[2fr_3fr_1fr_1fr] mx-4 place-content-center text-sm sm:text-lg">
-                  <th>Product</th>
-                  <th>Description</th>
-                  <th>Amount</th>
-                  <th>Line Total</th>
-                </tr>
-              </thead>
-              <tbody className="min-h-full ">
-                {/* Ensure cartList.products exists before mapping */}
-                {cartList.products &&
-                  cartList.products.map(
-                    (product) =>
-                      product.quantity > 0 && (
-                        <tr
-                          key={product.productId?._id}
-                          className="grid grid-cols-[1fr] md:grid-cols-[2fr_3fr_1fr_1fr] border-b-2 gap-2 md:gap-8 border-gray-700 place-items-center h-full space-y-4 ">
-                          <td className="flex flex-col items-center justify-center gap-4 ">
-                            <div className=" avatar  size-40  ">
-                              <img
-                                className="object-fill  bg-white mask mask-circle "
-                                src={product.productId?.image}
-                                alt={product.productId?.title}
+          <div className="overflow-x-auto ">
+            <div className="border-l-4 border-r-4 border-secondary rounded-2xl">
+              <table className="table text-center  w-full table-md table-zebra  ">
+                <thead className="invisible text-white  sm:visible">
+                  <tr className=" grid py-4 grid-cols-[2fr_3fr_1fr_1fr]  place-content-center text-sm sm:text-lg bg-gray-700/50 rounded-tl-2xl rounded-tr-2xl">
+                    <th>Product</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Line Total</th>
+                  </tr>
+                </thead>
+                <tbody className="min-h-full ">
+                  {/* Ensure cartList.products exists before mapping */}
+                  {cartList.products &&
+                    cartList.products.map(
+                      (product) =>
+                        product.quantity > 0 && (
+                          <tr
+                            key={product.productId?._id}
+                            className="grid grid-cols-[1fr] md:grid-cols-[2fr_3fr_1fr_1fr] border-b-2 gap-2 md:gap-8 border-gray-700 place-items-center h-full space-y-4 ">
+                            <td className="flex flex-col items-center justify-center gap-4 ">
+                              <div className=" avatar  size-40  ">
+                                <img
+                                  className="object-fill  bg-white mask mask-circle "
+                                  src={product.productId?.image}
+                                  alt={product.productId?.title}
+                                />
+                              </div>
+                              <div className="px-0 text-center">
+                                <h2 className="text-white">
+                                  {product.productId?.title}
+                                </h2>
+                                <p className="text-gray-400">
+                                  <span>Unit Price: </span>
+                                  {parseFloat(product.productId?.price).toFixed(
+                                    2
+                                  )}{" "}
+                                  {" €"}
+                                </p>
+                              </div>
+                            </td>
+                            <td className="px-4 text-gray-400">
+                              {product.productId?.description}
+                            </td>
+                            <td>
+                              <ButtonGroup
+                                quantity={product.quantity}
+                                stock={product.productId?.stock}
+                                handleAdd={() =>
+                                  addCart(
+                                    product.productId._id,
+                                    product.productId.stock,
+                                    product.quantity
+                                  )
+                                } // Pass correct ID and updated quantity
+                                handleRemove={() =>
+                                  handleRemoveFromCartList(
+                                    product.productId._id,
+                                    product.quantity
+                                  )
+                                }
                               />
-                            </div>
-                            <div className="px-0 text-center">
-                              <h2 className="text-white">
-                                {product.productId?.title}
-                              </h2>
-                              <p className="text-gray-400">
-                                <span>Unit Price: </span>
-                                {parseFloat(product.productId?.price).toFixed(
-                                  2
-                                )}{" "}
-                                {" €"}
-                              </p>
-                            </div>
-                          </td>
-                          <td className="px-4 text-gray-400">
-                            {product.productId?.description}
-                          </td>
-                          <td>
-                            <ButtonGroup
-                              quantity={product.quantity}
-                              stock={product.productId?.stock}
-                              handleAdd={() =>
-                                addCart(
-                                  product.productId._id,
-                                  product.productId.stock,
-                                  product.quantity
-                                )
-                              } // Pass correct ID and updated quantity
-                              handleRemove={() =>
-                                handleRemoveFromCartList(
-                                  product.productId._id,
-                                  product.quantity
-                                )
-                              }
-                            />
-                          </td>
-                          <td className="px-4 ">
-                            {(
-                              parseFloat(product.productId?.price) *
-                              product.quantity
-                            ).toFixed(2)}{" "}
-                            {" €"}
-                          </td>
-                        </tr>
-                      )
-                  )}
-              </tbody>
-            </table>
+                            </td>
+                            <td className="px-4 ">
+                              {(
+                                parseFloat(product.productId?.price) *
+                                product.quantity
+                              ).toFixed(2)}{" "}
+                              {" €"}
+                            </td>
+                          </tr>
+                        )
+                    )}
+                </tbody>
+              </table>
+            </div>
 
             {/* Reset Cart and Checkout Buttons */}
 
-            <div className="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-2xl border-l-4 border-r-4 border-secondary my-4">
+            <div className="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-2xl border-l-4 border-r-4 border-secondary my-8">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold flex  ">
                   {/* <span className="material-symbols-outlined text-secondary">
@@ -354,12 +414,27 @@ const Cart = () => {
                     Shipping Address
                   </span>
                 </h3>
-                <div className="flex flex-row items-center gap-2">
+
+                {/* handleEditShippingAddress is a function that opens the EditShippingAddressDialog component */}
+
+                {isEditButtonClicked && (
+                  <EditShippingAddressDialog
+                    isEditButtonClicked={isEditButtonClicked}
+                    setIsEditButtonClicked={setIsEditButtonClicked}
+                    userAddress={userAddress}
+                    setUserAddress={setUserAddress}
+                  />
+                )}
+                <div
+                  className="flex flex-row items-center gap-2"
+                  onClick={handleEditShippingAddress}>
                   <a
                     className="flex items-center gap-2 text-secondary text-md font-bold hover:underline"
                     href="#">
-                    <FaEdit />
-                    Change Address
+                    {/* <FaEdit /> */}
+                    <IoMdAddCircleOutline />
+                    {/* <FaRegAddressBook /> */}
+                    Add New Address
                   </a>
                 </div>
               </div>
@@ -368,23 +443,43 @@ const Cart = () => {
               <div className="space-y-1">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="font-bold text-base">
-                    {user && user.firstName} {user && user.lastName}
-                  </span>
-                  <span className="bg-secondary/20 text-secondary text-[10px] font-black uppercase px-2 py-0.5 rounded-full">
-                    secondary
+                    {userAddress?.firstName} {userAddress?.lastName}
                   </span>
                 </div>
                 <p className="text-md text-gray-600 dark:text-gray-300">
-                  {user?.streetAddress && user.streetAddress + ", "}
-                  {user?.zipCode && user.zipCode + " "}
-                  {user?.city && user.city + ", "}
-                  {user?.state && user.state + " "}
+                  {userAddress?.streetAddress.replace(",", "") + ", "}
+                  {userAddress?.zipCode + " "}
+                  {userAddress?.city + ", "}
+                  {userAddress?.state + ", "}
+                  {userAddress?.country}
                 </p>
                 <p className="text-md text-gray-600 dark:text-gray-300">
                   {user?.country && user.country}
                 </p>
+
+                {/* dialog with scrollable area for already added shipping addresses */}
+                {isShippingAddressDialogOpen && (
+                  <ShippingAddressDialog
+                    user={user}
+                    handleChooseShippingAddress={handleChooseShippingAddress}
+                    isShippingAddressDialogOpen={isShippingAddressDialogOpen}
+                    setIsShippingAddressDialogOpen={
+                      setIsShippingAddressDialogOpen
+                    }
+                  />
+                )}
+
+                <div className="flex justify-start mt-4">
+                  <button
+                    onClick={() => setIsShippingAddressDialogOpen(true)}
+                    className="
+                     btn btn-outline btn-outline-primary rounded-lg">
+                    Choose Another Address
+                  </button>
+                </div>
               </div>
             </div>
+
             <div className="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-2xl space-y-4">
               <div className="flex justify-between items-center text-gray-500">
                 <span className="text-md">Subtotal</span>

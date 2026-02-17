@@ -1,19 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import useAuth from "../hooks/useAuth.jsx";
-import { customErrorMessage } from "../../utils/customErrorMessage.js";
-import { useLocation } from "react-router";
+import { customErrorMessage } from "../../utils/customErrorMessage";
 
-const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
-  const location = useLocation();
-  const dialogRef = useRef(null);
+const EditShippingAddressDialog = ({
+  isEditButtonClicked,
+  setIsEditButtonClicked,
+  userAddress,
+  setUserAddress,
+}) => {
   const [isSavingClicked, setIsSavingClicked] = useState(false);
-  const { user, setUser } = useAuth();
   const [formState, setFormState] = useState({
-    email: "",
     firstName: "",
     lastName: "",
-    phone: "",
     streetAddress: "",
     city: "",
     state: "",
@@ -21,73 +19,47 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
     country: "",
   });
 
+  const dialogRef = useRef(null);
+
   useEffect(() => {
     const dialog = dialogRef.current;
     if (dialog && isEditButtonClicked) {
       dialog.showModal();
 
       const handleClose = () => setIsEditButtonClicked(false);
+
       dialog.addEventListener("close", handleClose);
 
-      return () => {
-        dialog.removeEventListener("close", handleClose);
-      };
+      // cleanmup function to remove the event listener when the component unmounts or when isEditButtonClicked changes
+      return () => dialog.removeEventListener("close", handleClose);
     }
   }, [isEditButtonClicked, setIsEditButtonClicked]);
 
-  // Populate form state with user data (autofilling the form fields with the current user data)
-  useEffect(() => {
-    const userAddress = user?.addresses?.find(
-      (address) => address.label === "Home"
-    );
-    if (userAddress) {
-      setFormState({
-        email: user.email || "",
-        firstName: userAddress.firstName || "",
-        lastName: userAddress.lastName || "",
-        phone: userAddress.phone || "",
-        streetAddress: userAddress.streetAddress || "",
-        city: userAddress.city || "",
-        state: userAddress.state || "",
-        zipCode: userAddress.zipCode || "",
-        country: userAddress.country || "",
-      });
-    }
-  }, [user]);
-
-  const handleEditProfileSubmission = async (e) => {
+  const handleEditAddressSubmission = async (e) => {
     e.preventDefault();
-    console.log("Edit Profile Submission clicked");
-    setIsSavingClicked(true);
 
     try {
       if (
-        !formState.email ||
         !formState.firstName ||
         !formState.lastName ||
-        !formState.phone ||
         !formState.streetAddress ||
         !formState.city ||
-        !formState.state ||
         !formState.zipCode ||
         !formState.country
       ) {
-        toast.error("Please fill in all required fields");
+        toast.error("Please fill in all required fields.", { autoClose: 5000 });
         return;
       }
+
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/profile`,
+        `${import.meta.env.VITE_API_BASE_URL}/auth/shippingAddress`,
         {
-          method: "PUT",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-
-          body: JSON.stringify({
-            ...formState,
-            label: "Home",
-          }),
           credentials: "include",
+          body: JSON.stringify(formState),
         }
       );
 
@@ -98,38 +70,26 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
       }
 
       const { user: data } = await response.json();
-
-      console.log("Profile update response data", data);
-
-      const userAddress = data?.addresses?.find(
-        (address) => address.label === "Home"
-      );
-
-      setFormState((prev) => {
-        return {
-          ...prev,
-          email: data.email,
-          firstName: userAddress.firstName,
-          lastName: userAddress.lastName,
-          phone: userAddress.phone,
-          streetAddress: userAddress.streetAddress,
-          city: userAddress.city,
-          state: userAddress.state,
-          zipCode: userAddress.zipCode,
-          country: userAddress.country,
-        };
+      console.log("data", data);
+      setFormState({
+        firstName: data.addresses[data.addresses.length - 1].firstName,
+        lastName: data.addresses[data.addresses.length - 1].lastName,
+        streetAddress: data.addresses[data.addresses.length - 1].streetAddress,
+        city: data.addresses[data.addresses.length - 1].city,
+        zipCode: data.addresses[data.addresses.length - 1].zipCode,
+        country: data.addresses[data.addresses.length - 1].country,
       });
 
-      setUser(data);
+      setUserAddress(data.addresses[data.addresses.length - 1]);
 
-      // document.getElementById("edit_profile_modal").close();
       dialogRef.current.close();
-
-      toast.success("Profile updated successfully");
     } catch (error) {
-      toast.error(error);
+      toast.error(
+        error.message || "An error occurred while saving the address.",
+        { autoClose: 5000 }
+      );
     } finally {
-      setIsSavingClicked(false); // Always set back to false when done
+      setIsSavingClicked(false);
     }
   };
 
@@ -139,10 +99,6 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
       return { ...prevState, [name]: value };
     });
   };
-
-  if (!user) {
-    return null; // oder ein Spinner/Loading
-  }
 
   return (
     <dialog
@@ -163,27 +119,15 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
         </h3> */}
 
         <h3 className=" w-full divider divider-secondary font-bold text-xl text-center ">
-          Edit Your Profile
+          Add Shipping Address
         </h3>
         <div className="modal-action">
           <form
             // method="dialog"
-            onSubmit={handleEditProfileSubmission}
+            onSubmit={handleEditAddressSubmission}
             className="dialog-form space-y-2  w-full max-w-md">
             {/* if there is a button in form, it will close the modal */}
 
-            <label className="label" htmlFor="email">
-              <span className="label-text">Email</span>
-            </label>
-            <input
-              className="input w-full"
-              type="email"
-              name="email"
-              value={formState.email}
-              onChange={handleChange}
-              placeholder="Email"
-              id="email"
-            />
             <label className="label" htmlFor="firstName">
               <span className="label-text">First Name</span>
             </label>
@@ -208,24 +152,7 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
               placeholder="Last Name"
               id="lastName"
             />
-            <label className="label" htmlFor="phone">
-              <span className="label-text">Phone</span>
-            </label>
 
-            <input
-              className="input w-full"
-              type="tel"
-              name="phone"
-              value={formState.phone}
-              onChange={handleChange}
-              // pattern="^\\+?[0-9]{7,20}$"
-              pattern="\+?[0-9]{7,20}"
-              minLength={7}
-              maxLength={20}
-              title="Please enter a valid phone number (digits, +, -, parentheses allowed)"
-              id="phone"
-              placeholder="Enter your phone number (optional)"
-            />
             <label className="label" htmlFor="streetAddress">
               <span className="label-text">Street Address</span>
             </label>
@@ -319,4 +246,4 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
   );
 };
 
-export default EditProfileDialog;
+export default EditShippingAddressDialog;
