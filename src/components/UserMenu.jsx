@@ -104,6 +104,19 @@ const UserMenu = () => {
                     Admin Products
                   </NavLink>
                 </li>
+
+                {/* admin dashboard */}
+                <li>
+                  <NavLink
+                    className={({
+                      isActive,
+                    }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+                      ${isActive ? "bg-black text-white" : "text-white "}`}
+                    to="/admin/dashboard"
+                    onClick={handleLinkClicked}>
+                    Dashboard
+                  </NavLink>
+                </li>
               </>
             )}
 
@@ -201,7 +214,7 @@ const UserMenu = () => {
       </div>
 
       {/* ---------------------------------------------------------------- */}
-      {/* shown on middle screens with md:flex */}
+      {/* shown from middle screens (md:flex) to big screens  */}
       <div className="hidden navbar-center justify-between  lg:flex">
         <ul className="justify-around gap-6 px-4 text-xl menu menu-horizontal">
           <li>
@@ -236,6 +249,19 @@ const UserMenu = () => {
           ${isActive ? "bg-black text-white" : "text-white "}`}
                   to="/admin/products">
                   Admin Products
+                </NavLink>
+              </li>
+
+              {/* admin dashboard */}
+              <li>
+                <NavLink
+                  className={({
+                    isActive,
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+                      ${isActive ? "bg-black text-white" : "text-white "}`}
+                  to="/admin/dashboard"
+                  onClick={handleLinkClicked}>
+                  Dashboard
                 </NavLink>
               </li>
             </>
