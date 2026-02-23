@@ -49,38 +49,42 @@ const ShippingAddressDialog = ({
               Change Shipping Addresses
             </h2> */}
           {user?.addresses && user.addresses.length > 0 ?
-            user.addresses.map((address) => (
-              <div
-                key={address._id}
-                className="border border-gray-700 p-6 rounded-lg space-y-4 ">
-                <div className="flex justify-between items-center text-gray-500 ">
-                  <span className="text-md">
-                    {address.label === "Home" ? "Home" : address.label}
-                  </span>
-                </div>
-                <p className="font-semibold">
-                  {address.firstName} {address.lastName}
-                </p>
-                <p className="text-md text-gray-600 dark:text-gray-300">
-                  {address.streetAddress ?
-                    address.streetAddress.replace(",", "") + ", "
-                  : ""}
-                  {address.zipCode + " "}
-                  {address.city + ", "}
-                  {address.state + ", "}
-                  {address.country}
-                </p>
-                <div className="flex justify-end">
-                  <button
-                    onClick={(e) => handleChooseButtonClick(e, address)}
-                    className="
+            user.addresses.map((address) => {
+              console.log("address", address);
+              return (
+                <div
+                  key={address._id}
+                  className="border border-gray-700 p-6 rounded-lg space-y-4 ">
+                  <div className="flex justify-between items-center text-gray-500 ">
+                    <span className="text-md">
+                      {address.label === "Home" ? "Home" : address.label}
+                    </span>
+                  </div>
+                  <p className="font-semibold">
+                    {address?.firstName && address.firstName + " "}
+                    {address?.lastName && address.lastName}
+                  </p>
+                  <p className="text-md text-gray-600 dark:text-gray-300">
+                    {address.streetAddress ?
+                      address.streetAddress.replace(",", "") + ", "
+                    : ""}
+                    {address?.zipCode && address.zipCode + " "}
+                    {address?.city && address.city + ", "}
+                    {address?.state && address.state + " "}
+                    {address?.country && address.country}
+                  </p>
+                  <div className="flex justify-end">
+                    <button
+                      onClick={(e) => handleChooseButtonClick(e, address)}
+                      className="
                        btn btn-outline btn-outline-primary rounded-lg"
-                    type="button">
-                    Choose This Address
-                  </button>
+                      type="button">
+                      Choose This Address
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           : <p className="text-center text-gray-500">
               No shipping addresses found. Please add a shipping address
             </p>

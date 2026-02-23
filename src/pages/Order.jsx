@@ -6,28 +6,36 @@ import useCart from "../hooks/useCart.jsx";
 import Pagination from "../components/Pagination.jsx";
 import useAuth from "../hooks/useAuth.jsx";
 import { FaShippingFast } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+import ChooseStatusDialog from "../components/ChooseStatusDialog.jsx";
 
-const Order = () => {
+const Order = ({
+  adminOrdersForCurrentPage,
+  paginationArray,
+  currentPage,
+  setAdminOrdersForCurrentPage,
+  setPaginationArray,
+  setCurrentPage,
+  adminTotals,
+  setAdminTotals,
+  dashboardLoading,
+  fetchAllOrders,
+}) => {
   const navigate = useNavigate();
-
-  const [orders, setOrders] = useState([]);
+  const { user } = useAuth();
 
   const { addProductToCart, decreaseProductQuantity, removeProductFromCart } =
     useCart();
 
   const [isLoading, setIsLoading] = useState(true);
 
-  // totals array to store totals for each order
-  const [totals, setTotals] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectOrderId, setSelectOrderId] = useState(null);
 
-  // state for Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [paginationArray, setPaginationArray] = useState([]);
   const [ordersForCurrentPage, setOrdersForCurrentPage] = useState([]);
 
-  /*   const location = useLocation(); // Access the location object
-
-  const { order } = location.state || {}; // Access the order object from the location state */
+  const [totals, setTotals] = useState([]);
 
   // console.log("order", order);
   const { cartProductsQuantity, cartList } = useCart();
@@ -51,29 +59,12 @@ const Order = () => {
           return;
         }
         const data = await response.json();
-        console.log("orderData", data.ordersProducts.flat());
-        // API returns an array of arrays; flatten so each entry is an order object
-        setOrders(data.ordersProducts.flat());
 
-        setOrdersForCurrentPage(data.ordersProductsForCurrentPage.flat());
-        setPaginationArray(data.paginationArray);
-        setCurrentPage(data.currentPageNumber);
+        console.log("data in order page", data);
 
-        // Calculate totals for each order
-        /*  for (const order of data.ordersProductsForCurrentPage.flat()) {
-          const total = order.products
-            .reduce((accumulator, currentValue) => {
-              return (
-                accumulator +
-                parseFloat(currentValue.productId.price || currentValue.price) *
-                  currentValue.quantity
-              );
-            }, 0)
-            .toFixed(2);
-
-          console.log("total", total);
-          setTotals((prevTotals) => [...prevTotals, total]);
-        } */
+        // Get orders for current page - handle both nested and flat arrays
+        const ordersData = data.ordersProductsForCurrentPage;
+        console.log("ordersData", ordersData);
 
         // Calculate totals for each order
         const totalsArr = data.ordersProductsForCurrentPage
@@ -89,19 +80,32 @@ const Order = () => {
               )
               .toFixed(2)
           );
-        setTotals(totalsArr);
+        setTotals(totalsArr || []);
+
+        setOrdersForCurrentPage(ordersData || []);
+        setPaginationArray(data.paginationArray || []);
+        setCurrentPage(data.currentPageNumber);
       } catch (error) {
         toast.error(error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchOrders();
-  }, [baseUrl]);
+
+    if (user.role && user.role !== "admin") {
+      fetchOrders();
+    }
+    // fetchOrders();
+  }, [
+    baseUrl,
+    setOrdersForCurrentPage,
+    setPaginationArray,
+    setCurrentPage,
+    user.role,
+    setTotals,
+  ]);
 
   const handleBuyAgain = async (e, id) => {
-    console.log("product id", id);
-
     e.stopPropagation();
     await addProductToCart(id, 1);
   };
@@ -162,9 +166,28 @@ const Order = () => {
     }
   };
 
-  console.log("ordersForCurrentPage", ordersForCurrentPage);
+  //********** handle edit order status **********
+  const handleEditOrderStatus = async (id) => {
+    setIsDialogOpen(true);
+    setSelectOrderId(id);
+  };
 
-  if (isLoading) {
+  const handleStatusUpdate = async (orderId, newStatus) => {
+    if (user.role === "admin" && typeof fetchAllOrders === "function") {
+      // For admin, re-fetch all orders from backend to update UI
+      await fetchAllOrders();
+    } else {
+      // For regular users, update local state
+      setOrdersForCurrentPage((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+    }
+  };
+
+  const loading = user.role === "admin" ? dashboardLoading : isLoading;
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
         <span className="text-xl">Loading orders </span>
@@ -172,10 +195,19 @@ const Order = () => {
       </div>
     );
   }
+
+  //! Determine which orders and totals to display based on user role
+  const orders =
+    user.role === "admin" ? adminOrdersForCurrentPage : ordersForCurrentPage;
+
+  const orderTotals = user.role === "admin" ? adminTotals : totals;
+
+  console.log("orders for current page", orders);
+
   return (
     <div>
       <div>
-        {!ordersForCurrentPage.length ?
+        {!orders?.length ?
           <div
             role="alert"
             className="w-2/3 mx-auto mt-8 text-xl alert alert-info">
@@ -194,85 +226,192 @@ const Order = () => {
           </div>
         : <>
             <div className="w-2/3 mx-auto my-6 text-3xl font-bold text-center divider divider-secondary">
-              Orders
+              {user.role === "admin" ? "Order Management" : "Orders"}
             </div>
             <div className="flex flex-col  p-2 space-y-8 ">
-              {ordersForCurrentPage.map((order, index) => (
-                <div
-                  key={index}
-                  className=" flex flex-col border border-gray rounded-lg p-2 space-y-4  ">
-                  {/* order date */}
-                  <p className="text-lg ">
-                    Order On: {order.createdAt?.split("T")[0]}
-                  </p>
-                  {/* order status */}
-                  <p className="text-lg glow-text-secondary glass w-fit px-2 py-1 rounded-selector">
-                    📦 → <span className="text-secondary">{order.status}</span>
-                  </p>
-                  {/* order products */}
-                  <p className=" text-secondary text-center">
-                    Order({index + 1}) - ({order.id})
-                  </p>
-                  {order.products.map((product) => {
-                    const p = product.productId || product;
+              {(orders || []).map((order, index) => {
+                console.log("order in map", order);
+                console.log("######user in Order page######", order);
+                console.log("######order total######", orderTotals[index]);
+                return (
+                  <div
+                    key={index}
+                    className=" flex flex-col border border-gray rounded-lg p-2 space-y-4  ">
+                    {/* order date */}
+                    <p className="text-lg  ">
+                      <span className="underline underline-offset-8 pr-2 ">
+                        Order On:
+                      </span>{" "}
+                      {order.createdAt?.split("T")[0]}
+                    </p>
+                    {/*********** user who placed the order ***********/}
+                    {user.role === "admin" && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 w-full spaye-y-2 sm:space-y-0 gap-4 sm:place-items-start place-items-center">
+                        <div className="text-sm text-gray-300 ">
+                          <h3 className="text-white text-lg mb-2">
+                            <span className="underline underline-offset-8 ">
+                              From:
+                            </span>{" "}
+                          </h3>
+                          <p>{order.userId?.email}</p>
+                          <p>
+                            {order.userId?.defaultAddress?.firstName}{" "}
+                            {order.userId?.defaultAddress?.lastName}
+                          </p>
+                          <p>
+                            {order.userId?.defaultAddress?.streetAddress?.replace(
+                              ",",
+                              ""
+                            )}
+                            {order.userId?.defaultAddress?.streetAddress &&
+                              ",  "}
+                            {order.userId?.defaultAddress?.zipCode}{" "}
+                            {order.userId?.defaultAddress?.city}{" "}
+                          </p>
+                          <p>
+                            {order.userId?.defaultAddress?.state}{" "}
+                            {order.userId?.defaultAddress?.streetAddress &&
+                              ",  "}
+                            {order.userId?.defaultAddress?.country}
+                          </p>
+                        </div>
+                        <div className="text-sm text-center text-gray-300 border border-primary w-fit rounded-lg p-2 space-y-1 sm:col-start-3 sm:col-span-1  ">
+                          <h3 className="text-white text-lg mb-2">
+                            <span className="flex flex-row items-center gap-2  underline underline-offset-8">
+                              <FaLocationDot className="text-primary" />
+                              Shipping Address:
+                            </span>
+                          </h3>
+                          <p>
+                            {order?.shippingAddress?.firstName}{" "}
+                            {order.shippingAddress?.lastName}
+                          </p>
 
-                    console.log("product in order", p);
-                    //! Check if the product is already in the cart
-                    const inCart = cartList.products?.some(
-                      (item) => item.productId._id === p._id
-                    );
-                    return (
-                      <div
-                        key={p._id}
-                        className="grid sm:grid-cols-3 grid-cols-1 sm:space-y-1 space-y-4 place-items-center  h-full  p-2 rounded-lg border border-gray-100/20"
-                        onClick={(e) => handleImageClick(p._id, e, p)}>
-                        <div className="avatar size-30  sm:mr-auto">
-                          <img
-                            // onClick={(e) =>
-                            //   handleImageClick(product.productId._id, e, product)
-                            // }
-                            className="object-fill   bg-white mask mask-circle "
-                            src={p.image}
-                            alt={p.title}
-                          />
-                        </div>
-                        <div className="w-full text-center sm:text-left ">
-                          <h2>{p.title}</h2>
-                          <p>Price: {parseFloat(p.price).toFixed(2) + " €"}</p>
-                          <p>Quantity: {p.quantity || product.quantity}</p>
-                        </div>
-                        {/* display the buy again button only if the product is not in the cart */}
-                        <div>
-                          {!inCart && (
-                            <button
-                              className="btn  btn-secondary"
-                              onClick={(e) => handleBuyAgain(e, p._id)}>
-                              Buy Again
-                            </button>
-                          )}
+                          <p>
+                            {order.shippingAddress?.streetAddress?.replace(
+                              ",",
+                              ""
+                            )}{" "}
+                            {order.shippingAddress && ","}
+                            {order.shippingAddress?.zipCode}{" "}
+                            {order.shippingAddress?.city}
+                          </p>
+                          <p>
+                            {order.shippingAddress?.state}{" "}
+                            {order.shippingAddress?.country}
+                          </p>
                         </div>
                       </div>
-                    );
-                  })}
-                  <>
-                    {/* Display totals for each order */}
-                    <p className="text-lg text-center text-secondary font-bold ">
-                      Totals: {totals[index] + " €"}
+                    )}
+
+                    {/***********order status ***********/}
+                    <p className=" flex items-center gap-2 text-lg glow-text-secondary glass w-fit px-2 py-1 rounded-selector">
+                      📦 →{" "}
+                      <span
+                        className={
+                          order.status === "shipped" ? "text-cyan-400"
+                          : order.status === "delivered" ?
+                            "text-lime-500"
+                          : order.status === "cancelled" ?
+                            "text-red-500"
+                          : "text-secondary"
+                        }>
+                        {order.status}
+                        {order.status === "cancelled" && " ❌"}
+                        {order.status === "delivered" && " ✅"}
+                        {/* car shipping icon   */}
+                        {order.status === "shipped" && " 🚚"}
+                      </span>
+                      {user.role === "admin" && (
+                        <FaEdit
+                          className=" cursor-pointer"
+                          onClick={() => handleEditOrderStatus(order._id)}
+                        />
+                      )}
                     </p>
-                    <div className="justify-end flex ">
-                      <button
-                        onClick={() => handleInvoicePDF(order.id)}
-                        className="btn btn-lg btn-outline btn-secondary">
-                        Invoice PDF
-                      </button>
-                    </div>
-                  </>
-                </div>
-              ))}
+
+                    {/* order products */}
+                    <p className=" text-secondary text-center">
+                      Order({index + 1}) - ({order.id})
+                    </p>
+                    {order.products.map((product) => {
+                      const p = product.productId || product;
+
+                      console.log("product in order", p);
+                      //! Check if the product is already in the cart
+                      const inCart = cartList.products?.some(
+                        (item) => item.productId._id === p._id
+                      );
+                      return (
+                        <div
+                          key={p._id}
+                          className="grid sm:grid-cols-3 grid-cols-1 sm:space-y-1 space-y-4 place-items-center  h-full  p-2 rounded-lg border border-gray-100/20"
+                          onClick={(e) => handleImageClick(p._id, e, p)}>
+                          <div className="avatar size-30  sm:mr-auto">
+                            <img
+                              // onClick={(e) =>
+                              //   handleImageClick(product.productId._id, e, product)
+                              // }
+                              className="object-fill   bg-white mask mask-circle "
+                              src={p.image}
+                              alt={p.title}
+                            />
+                          </div>
+                          <div className="w-full text-center sm:text-left ">
+                            <h2>{p.title}</h2>
+                            <p>
+                              Price: {parseFloat(p.price).toFixed(2) + " €"}
+                            </p>
+                            <p>Quantity: {p.quantity || product.quantity}</p>
+                          </div>
+                          {/* display the buy again button only if the product is not in the cart */}
+                          {user.role !== "admin" && (
+                            <div>
+                              {!inCart && (
+                                <button
+                                  className="btn  btn-secondary"
+                                  onClick={(e) => handleBuyAgain(e, p._id)}>
+                                  Buy Again
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                    <>
+                      {/* Display totals for each order */}
+                      <p className="text-lg text-center text-secondary font-bold ">
+                        {/* Totals: {orderTotals[index] + " €"} */}
+                        Totals:{" "}
+                        {orderTotals && orderTotals[index] !== undefined ?
+                          orderTotals[index]
+                        : "0.00" + " €"}
+                      </p>
+                      <div className="justify-end flex ">
+                        <button
+                          onClick={() => handleInvoicePDF(order.id)}
+                          className="btn btn-lg btn-outline btn-secondary">
+                          Invoice PDF
+                        </button>
+                      </div>
+                    </>
+                  </div>
+                );
+              })}
             </div>
           </>
         }
       </div>
+      {/***********choose status dialog (outside the map) ***********/}
+      {isDialogOpen && (
+        <ChooseStatusDialog
+          orderId={selectOrderId}
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          onStatusUpdate={handleStatusUpdate}
+        />
+      )}
       <Pagination paginationArray={paginationArray} currentPage={currentPage} />
     </div>
   );

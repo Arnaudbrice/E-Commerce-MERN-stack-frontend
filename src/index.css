@@ -26,7 +26,6 @@ input[type="search"]::-webkit-search-cancel-button {
   cursor: pointer;
 }
 
-
 /****** schwebende ChatBot ******/
 
 /* Die Klasse für das Element */
@@ -67,28 +66,30 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 @keyframes shadow-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.4;
   }
   50% {
-    transform: scale(0.7); /* Schatten wird kleiner/heller wenn Element steigt */
+    transform: scale(
+      0.7
+    ); /* Schatten wird kleiner/heller wenn Element steigt */
     opacity: 0.2;
   }
 }
 
 /* Chatbot chat bubble styling */
 
-
-
-.chat-bubble h2{
+.chat-bubble h2 {
   font-size: 1.4rem;
   margin-bottom: 10px;
   font-weight: bold;
- color: #2c3e50;
+  color: #2c3e50;
 }
 
-.chat-bubble h3,.chat-bubble h4 {
+.chat-bubble h3,
+.chat-bubble h4 {
   color: #2c3e50;
   margin-top: 15px;
   font-size: 1.2rem;
@@ -96,17 +97,16 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 /* for markdow ##### */
-.chat-bubble h4{
+.chat-bubble h4 {
   font-size: 1rem;
   margin-bottom: 10px;
   font-weight: 800;
 }
-.chat-bubble h5{
+.chat-bubble h5 {
   font-size: 0.9rem;
   margin-bottom: 10px;
   font-weight: 700;
 }
-
 
 .chat-bubble ul {
   padding-left: 20px;
@@ -122,4 +122,8 @@ input[type="search"]::-webkit-search-cancel-button {
 .chat-bubble strong {
   font-weight: 600;
   color: #e67e22; /* Akzentfarbe für Preise oder Namen */
+}
+
+.no-modal-bg {
+  background: transparent !important;
 }

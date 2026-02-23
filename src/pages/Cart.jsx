@@ -130,6 +130,7 @@ const Cart = () => {
         .find((address) => address.label === "shippingAddress");
 
     setUserAddress(userAddress || null);
+    console.log("userAddress from cart", userAddress);
   }, [user]);
 
   // console.log("cartList", cartList);
@@ -411,7 +412,9 @@ const Cart = () => {
                   </span> */}
                   <span className="flex flex-row items-center gap-2">
                     <FaLocationDot className="text-secondary" />
-                    Shipping Address
+                    {userAddress?.label === "Home" ?
+                      "Home"
+                    : "Shipping Address"}
                   </span>
                 </h3>
 
@@ -439,7 +442,7 @@ const Cart = () => {
                 </div>
               </div>
 
-              {/* Address Details */}
+              {/***********Address Details ***********/}
               <div className="space-y-1">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="font-bold text-base">
@@ -447,11 +450,13 @@ const Cart = () => {
                   </span>
                 </div>
                 <p className="text-md text-gray-600 dark:text-gray-300">
-                  {userAddress?.streetAddress.replace(",", "") + ", "}
-                  {userAddress?.zipCode + " "}
-                  {userAddress?.city + ", "}
-                  {userAddress?.state + ", "}
-                  {userAddress?.country}
+                  {userAddress?.streetAddress &&
+                    userAddress.streetAddress.replace(",", "") + ", "}
+                  {userAddress?.zipCode && userAddress.zipCode + " "}
+                  {userAddress?.city && userAddress.city + ", "}
+                  {userAddress?.state && userAddress.state + ", "}
+
+                  {userAddress?.country && userAddress.country}
                 </p>
                 <p className="text-md text-gray-600 dark:text-gray-300">
                   {user?.country && user.country}
@@ -474,7 +479,7 @@ const Cart = () => {
                     onClick={() => setIsShippingAddressDialogOpen(true)}
                     className="
                      btn btn-outline btn-outline-primary rounded-lg">
-                    Choose Another Address
+                    Choose An Address
                   </button>
                 </div>
               </div>

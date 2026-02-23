@@ -21,6 +21,7 @@ import Order from "./pages/Order.jsx";
 import Favorite from "./pages/Favorite.jsx";
 import AdminProducts from "./pages/AdminProducts.jsx";
 import Profile from "./pages/Profile.jsx";
+import Dashboard from "./components/Dashboard.jsx";
 
 function App() {
   return (
@@ -33,7 +34,6 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-
                 <Route
                   path="/mail-reset-password"
                   element={<MailResetPassword />}
@@ -43,17 +43,20 @@ function App() {
                   element={<ResetPassword />}
                 />
                 <Route path="/category/:category" element={<Category />} />
+
+                {/*********** protected routes ***********/}
                 <Route element={<ProtectedLayout />}>
                   <Route path="/cart" element={<Cart />} />
-
                   <Route path="/wishlist" element={<Favorite />} />
                   <Route path="/add-product" element={<AddProduct />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/admin/products" element={<AdminProducts />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/orders" element={<Order />} />
+                  <Route path="/admin/dashboard" element={<Dashboard />} />
                 </Route>
 
-                <Route path="/orders" element={<Order />} />
+                {/***********not defined routes ***********/}
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>

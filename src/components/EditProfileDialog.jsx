@@ -286,7 +286,7 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
               <span className="label-text">Country</span>
             </label>
             <select
-              className="input w-full"
+              className="select input w-full"
               name="country"
               value={formState.country}
               onChange={handleChange}
