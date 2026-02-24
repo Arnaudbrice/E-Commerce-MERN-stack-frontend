@@ -268,6 +268,7 @@ const UserMenu = () => {
           )}
 
           {/* wishlist */}
+
           <li>
             <NavLink
               className={({
@@ -284,16 +285,18 @@ const UserMenu = () => {
             </NavLink>
           </li>
 
-          <li>
-            <NavLink
-              className={({
-                isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
+          {user.role !== "admin" && (
+            <li>
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
         ${isActive ? "bg-black text-white" : "text-white "}`}
-              to="/orders">
-              Orders
-            </NavLink>
-          </li>
+                to="/orders">
+                Orders
+              </NavLink>
+            </li>
+          )}
 
           {/* cart */}
           <li>
