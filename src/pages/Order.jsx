@@ -92,7 +92,7 @@ const Order = ({
       }
     };
 
-    if (user.role && user.role !== "admin") {
+    if (user.role !== "admin") {
       fetchOrders();
     }
     // fetchOrders();
@@ -253,27 +253,31 @@ const Order = ({
                               From:
                             </span>{" "}
                           </h3>
-                          <p>{order.userId?.email}</p>
+
                           <p>
-                            {order.userId?.defaultAddress?.firstName}{" "}
-                            {order.userId?.defaultAddress?.lastName}
+                            {order.userId?.defaultAddress?.companyName || ""}
+                          </p>
+                          <p>
+                            {order.userId?.defaultAddress?.firstName || ""}{" "}
+                            {order.userId?.defaultAddress?.lastName || ""}
                           </p>
                           <p>
                             {order.userId?.defaultAddress?.streetAddress?.replace(
                               ",",
                               ""
-                            )}
+                            ) || ""}
                             {order.userId?.defaultAddress?.streetAddress &&
                               ",  "}
-                            {order.userId?.defaultAddress?.zipCode}{" "}
-                            {order.userId?.defaultAddress?.city}{" "}
+                            {order.userId?.defaultAddress?.zipCode || ""}{" "}
+                            {order.userId?.defaultAddress?.city || ""}{" "}
                           </p>
                           <p>
                             {order.userId?.defaultAddress?.state}{" "}
                             {order.userId?.defaultAddress?.streetAddress &&
                               ",  "}
-                            {order.userId?.defaultAddress?.country}
+                            {order.userId?.defaultAddress?.country || ""}
                           </p>
+                          <p>{order.userId?.email || ""}</p>
                         </div>
                         <div className="text-sm text-center text-gray-300 border border-primary w-fit rounded-lg p-2 space-y-1 sm:col-start-3 sm:col-span-1  ">
                           <h3 className="text-white text-lg mb-2">

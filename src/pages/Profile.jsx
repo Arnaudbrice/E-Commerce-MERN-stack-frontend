@@ -14,19 +14,19 @@ const Profile = () => {
   const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
 
   const { user, isLoadingAuth } = useAuth();
+  const userAddress = user?.addresses?.find(
+    (address) => address.label === "Home"
+  );
 
   /**
    * Formats the user's address by joining available parts and removing any falsy values.
    * This prevents extra commas if some address fields are missing.
    */
-  const getFullAddress = (user) => {
-    const userAddress = user?.addresses?.find(
-      (address) => address.label === "Home"
-    );
+  const getFullAddress = () => {
     const addressParts = [
+      userAddress?.companyName,
       userAddress?.streetAddress.replace(",", ""), //removes comma
-      userAddress?.zipCode,
-      userAddress?.city,
+      [userAddress?.zipCode, userAddress?.city].filter(Boolean).join(" "), // zip and city together
       userAddress?.state,
       userAddress?.country,
       userAddress?.phone,
@@ -34,12 +34,9 @@ const Profile = () => {
     return addressParts.join(", ");
   };
   const getPhoneNumber = () => {
-    const userAddress = user?.addresses?.find(
-      (address) => address.label === "Home"
-    );
     return userAddress?.phone;
   };
-  const fullAddress = getFullAddress(user);
+  const fullAddress = getFullAddress();
   const phoneNumber = getPhoneNumber();
 
   const handleEditProfile = () => {

@@ -13,6 +13,7 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
     email: "",
     firstName: "",
     lastName: "",
+    companyName: "",
     phone: "",
     streetAddress: "",
     city: "",
@@ -40,37 +41,59 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
     const userAddress = user?.addresses?.find(
       (address) => address.label === "Home"
     );
-    if (userAddress) {
+
+    console.log("User data in EditProfileDialog useEffect", user);
+    if (userAddress || user) {
       setFormState({
-        email: user.email || "",
-        firstName: userAddress.firstName || "",
-        lastName: userAddress.lastName || "",
-        phone: userAddress.phone || "",
-        streetAddress: userAddress.streetAddress || "",
-        city: userAddress.city || "",
-        state: userAddress.state || "",
-        zipCode: userAddress.zipCode || "",
-        country: userAddress.country || "",
+        email: user?.email || "",
+        firstName: userAddress?.firstName || "",
+        lastName: userAddress?.lastName || "",
+        companyName: userAddress?.companyName || "",
+        phone: userAddress?.phone || "",
+        streetAddress: userAddress?.streetAddress || "",
+        city: userAddress?.city || "",
+        state: userAddress?.state || "",
+        zipCode: userAddress?.zipCode || "",
+        country: userAddress?.country || "",
       });
     }
   }, [user]);
 
+  {
+    /***********handle edit profile submission ***********/
+  }
   const handleEditProfileSubmission = async (e) => {
     e.preventDefault();
     console.log("Edit Profile Submission clicked");
     setIsSavingClicked(true);
 
     try {
+      // phone number, firstname and lastname are required for admin
       if (
-        !formState.email ||
-        !formState.firstName ||
-        !formState.lastName ||
-        !formState.phone ||
-        !formState.streetAddress ||
-        !formState.city ||
-        !formState.state ||
-        !formState.zipCode ||
-        !formState.country
+        user.role === "admin" &&
+        (!formState.email ||
+          !formState.companyName ||
+          !formState.streetAddress ||
+          !formState.city ||
+          !formState.state ||
+          !formState.zipCode ||
+          !formState.country)
+      ) {
+        toast.error("Please fill in all required fields for admin");
+        return;
+      }
+
+      // phone number and company name are required for regular users
+      if (
+        user.role !== "admin" &&
+        (!formState.email ||
+          !formState.firstName ||
+          !formState.lastName ||
+          !formState.streetAddress ||
+          !formState.city ||
+          !formState.state ||
+          !formState.zipCode ||
+          !formState.country)
       ) {
         toast.error("Please fill in all required fields");
         return;
@@ -85,7 +108,7 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
 
           body: JSON.stringify({
             ...formState,
-            label: "Home",
+            label: "Home", //Address added within the profile page is always labeled as "Home"
           }),
           credentials: "include",
         }
@@ -108,15 +131,16 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
       setFormState((prev) => {
         return {
           ...prev,
-          email: data.email,
-          firstName: userAddress.firstName,
-          lastName: userAddress.lastName,
-          phone: userAddress.phone,
-          streetAddress: userAddress.streetAddress,
-          city: userAddress.city,
-          state: userAddress.state,
-          zipCode: userAddress.zipCode,
-          country: userAddress.country,
+          email: data?.email || "",
+          firstName: userAddress?.firstName || "",
+          lastName: userAddress?.lastName || "",
+          companyName: userAddress?.companyName || "",
+          phone: userAddress?.phone || "",
+          streetAddress: userAddress?.streetAddress || "",
+          city: userAddress?.city || "",
+          state: userAddress?.state || "",
+          zipCode: userAddress?.zipCode || "",
+          country: userAddress?.country || "",
         };
       });
 
@@ -133,6 +157,9 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
     }
   };
 
+  {
+    /***********handle change within the form ***********/
+  }
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormState((prevState) => {
@@ -184,30 +211,49 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
               placeholder="Email"
               id="email"
             />
-            <label className="label" htmlFor="firstName">
-              <span className="label-text">First Name</span>
+
+            {user.role !== "admin" && (
+              <>
+                <label className="label" htmlFor="firstName">
+                  <span className="label-text">First Name</span>
+                </label>
+                <input
+                  className="input w-full"
+                  type="text"
+                  name="firstName"
+                  value={formState.firstName}
+                  onChange={handleChange}
+                  placeholder="First Name"
+                  id="firstName"
+                />
+                <label className="label" htmlFor="lastName">
+                  <span className="label-text">Last Name</span>
+                </label>
+                <input
+                  className="input w-full"
+                  type="text"
+                  name="lastName"
+                  value={formState.lastName}
+                  onChange={handleChange}
+                  placeholder="Last Name"
+                  id="lastName"
+                />
+              </>
+            )}
+
+            <label className="label" htmlFor="companyName">
+              <span className="label-text">Company Name</span>
             </label>
             <input
               className="input w-full"
               type="text"
-              name="firstName"
-              value={formState.firstName}
+              name="companyName"
+              value={formState.companyName}
               onChange={handleChange}
-              placeholder="First Name"
-              id="firstName"
+              placeholder="Company Name (optional)"
+              id="companyName"
             />
-            <label className="label" htmlFor="lastName">
-              <span className="label-text">Last Name</span>
-            </label>
-            <input
-              className="input w-full"
-              type="text"
-              name="lastName"
-              value={formState.lastName}
-              onChange={handleChange}
-              placeholder="Last Name"
-              id="lastName"
-            />
+
             <label className="label" htmlFor="phone">
               <span className="label-text">Phone</span>
             </label>
@@ -292,7 +338,7 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
               onChange={handleChange}
               required
               id="country">
-              <option value="">Select Country</option>
+              <option value="">--Select Country--</option>
               <option value="Germany">Germany</option>
               <option value="France">France</option>
               <option value="United Kingdom">United Kingdom</option>

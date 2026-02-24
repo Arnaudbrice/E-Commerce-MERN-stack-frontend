@@ -445,11 +445,14 @@ const Cart = () => {
               {/***********Address Details ***********/}
               <div className="space-y-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="font-bold text-base">
-                    {userAddress?.firstName} {userAddress?.lastName}
+                  <span className="text-md text-gray-300 ">
+                    {userAddress?.companyName || ""}
+                  </span>
+                  <span className="text-md text-gray-600 ">
+                    {userAddress?.firstName || ""} {userAddress?.lastName || ""}
                   </span>
                 </div>
-                <p className="text-md text-gray-600 dark:text-gray-300">
+                <p className="text-md text-gray-300 ">
                   {userAddress?.streetAddress &&
                     userAddress.streetAddress.replace(",", "") + ", "}
                   {userAddress?.zipCode && userAddress.zipCode + " "}
@@ -458,7 +461,7 @@ const Cart = () => {
 
                   {userAddress?.country && userAddress.country}
                 </p>
-                <p className="text-md text-gray-600 dark:text-gray-300">
+                <p className="text-md text-gray-300 ">
                   {user?.country && user.country}
                 </p>
 

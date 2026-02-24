@@ -91,7 +91,7 @@ export const AuthContextProvider = ({ children }) => {
 
       setUser(userData);
 
-      toast.success(`Welcome back ${userData?.firstName}!`);
+      toast.success(`Welcome back ${userData?.firstName || "User"}!`);
       navigate("/");
     } catch (error) {
       // server validation error
