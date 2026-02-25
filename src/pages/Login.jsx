@@ -73,6 +73,8 @@ const Login = () => {
         <label className="label">
           <span className="label-text text-gray-100">Password</span>
         </label>
+
+
         <div className="relative mb-6">
           <input
             type={showPassword ? "text" : "password"}
