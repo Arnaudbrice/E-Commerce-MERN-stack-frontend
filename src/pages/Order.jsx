@@ -12,11 +12,11 @@ import ChooseStatusDialog from "../components/ChooseStatusDialog.jsx";
 
 const Order = ({
   adminOrdersForCurrentPage,
-  paginationArray,
-  currentPage,
+  adminPaginationArray,
+  adminCurrentPage,
   setAdminOrdersForCurrentPage,
-  setPaginationArray,
-  setCurrentPage,
+  setAdminPaginationArray,
+  setAdminCurrentPage,
   adminTotals,
   setAdminTotals,
   dashboardLoading,
@@ -34,6 +34,9 @@ const Order = ({
   const [selectOrderId, setSelectOrderId] = useState(null);
 
   const [ordersForCurrentPage, setOrdersForCurrentPage] = useState([]);
+
+  const [paginationArray, setPaginationArray] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [totals, setTotals] = useState([]);
 
@@ -76,9 +79,9 @@ const Order = ({
                   acc +
                   parseFloat(curr.productId?.price || curr.price) *
                     curr.quantity,
-                0
+                0,
               )
-              .toFixed(2)
+              .toFixed(2),
           );
         setTotals(totalsArr || []);
 
@@ -180,8 +183,8 @@ const Order = ({
       // For regular users, update local state
       setOrdersForCurrentPage((prevOrders) =>
         prevOrders.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order
-        )
+          order._id === orderId ? { ...order, status: newStatus } : order,
+        ),
       );
     }
   };
@@ -203,6 +206,10 @@ const Order = ({
   const orderTotals = user.role === "admin" ? adminTotals : totals;
 
   console.log("orders for current page", orders);
+  const userBasedpaginationArray =
+    user.role === "admin" ? adminPaginationArray : paginationArray;
+  const userBasedCurrentPage =
+    user.role === "admin" ? adminCurrentPage : currentPage;
 
   return (
     <div>
@@ -264,7 +271,7 @@ const Order = ({
                           <p>
                             {order.userId?.defaultAddress?.streetAddress?.replace(
                               ",",
-                              ""
+                              "",
                             ) || ""}
                             {order.userId?.defaultAddress?.streetAddress &&
                               ",  "}
@@ -294,7 +301,7 @@ const Order = ({
                           <p>
                             {order.shippingAddress?.streetAddress?.replace(
                               ",",
-                              ""
+                              "",
                             )}{" "}
                             {order.shippingAddress && ","}
                             {order.shippingAddress?.zipCode}{" "}
@@ -344,7 +351,7 @@ const Order = ({
                       console.log("product in order", p);
                       //! Check if the product is already in the cart
                       const inCart = cartList.products?.some(
-                        (item) => item.productId._id === p._id
+                        (item) => item.productId._id === p._id,
                       );
                       return (
                         <div
@@ -416,7 +423,10 @@ const Order = ({
           onStatusUpdate={handleStatusUpdate}
         />
       )}
-      <Pagination paginationArray={paginationArray} currentPage={currentPage} />
+      <Pagination
+        paginationArray={userBasedpaginationArray}
+        currentPage={userBasedCurrentPage}
+      />
     </div>
   );
 };

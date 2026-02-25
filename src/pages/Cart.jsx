@@ -66,7 +66,7 @@ const Cart = () => {
     //! check if the user has a home address or shipping address before creating an order
     const userAddress = user?.addresses?.find(
       (address) =>
-        address.label === "Home" || address.label === "shippingAddress"
+        address.label === "Home" || address.label === "shippingAddress",
     );
     // if there is no address
     if (
@@ -117,7 +117,7 @@ const Cart = () => {
     async (id, quantity) => {
       await updateProductStockAfterPayment(id, quantity);
     },
-    [updateProductStockAfterPayment]
+    [updateProductStockAfterPayment],
   );
 
   useEffect(() => {
@@ -187,6 +187,15 @@ const Cart = () => {
 
         // console.log("order after payment", order);
 
+        if (user.role === "admin") {
+          navigate("/admin/dashboard", {
+            replace: true,
+            /*    state: {
+              order: order, //pass the order details to the orders page
+            }, */
+          }); //! This replaces the current history entry /cart/?success=true in the back stack with the new one /orders( /cart/?success=true becomes -> /orders in the history back stack)
+          return;
+        }
         navigate("/orders", {
           replace: true,
           /*    state: {
@@ -256,7 +265,7 @@ const Cart = () => {
           },
           body: JSON.stringify({ cartList }),
           credentials: "include",
-        }
+        },
       );
       if (!response.ok) {
         const { message: errorMessage } = await response.json();
@@ -360,7 +369,7 @@ const Cart = () => {
                                 <p className="text-gray-400">
                                   <span>Unit Price: </span>
                                   {parseFloat(product.productId?.price).toFixed(
-                                    2
+                                    2,
                                   )}{" "}
                                   {" €"}
                                 </p>
@@ -377,13 +386,13 @@ const Cart = () => {
                                   addCart(
                                     product.productId._id,
                                     product.productId.stock,
-                                    product.quantity
+                                    product.quantity,
                                   )
                                 } // Pass correct ID and updated quantity
                                 handleRemove={() =>
                                   handleRemoveFromCartList(
                                     product.productId._id,
-                                    product.quantity
+                                    product.quantity,
                                   )
                                 }
                               />
@@ -396,7 +405,7 @@ const Cart = () => {
                               {" €"}
                             </td>
                           </tr>
-                        )
+                        ),
                     )}
                 </tbody>
               </table>

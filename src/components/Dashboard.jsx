@@ -45,9 +45,9 @@ const Dashboard = () => {
               (acc, curr) =>
                 acc +
                 parseFloat(curr.productId?.price || curr.price) * curr.quantity,
-              0
+              0,
             )
-            .toFixed(2)
+            .toFixed(2),
         );
       setTotals(totalsArr || []);
 
@@ -69,10 +69,10 @@ const Dashboard = () => {
     <Order
       adminOrdersForCurrentPage={ordersForCurrentPage}
       setAdminOrdersForCurrentPage={setOrdersForCurrentPage}
-      paginationArray={paginationArray}
-      setPaginationArray={setPaginationArray}
-      currentPage={currentPage}
-      setCurrentPage={setCurrentPage}
+      adminPaginationArray={paginationArray}
+      setAdminPaginationArray={setPaginationArray}
+      adminCurrentPage={currentPage}
+      setAdminCurrentPage={setCurrentPage}
       adminTotals={totals}
       setAdminTotals={setTotals}
       dashboardLoading={dashboardLoading}
