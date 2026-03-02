@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import useCategories from "../hooks/useCategories.jsx";
 import useProducts from "../hooks/useProducts.jsx";
 
-const EditDialog = ({ product }) => {
+const EditDialog = ({ product, isClicked, setIsClicked }) => {
   console.log("product in EditDialog", product);
 
   const navigate = useNavigate();
@@ -20,24 +20,29 @@ const EditDialog = ({ product }) => {
   const [formState, setFormState] = useState({
     title: product.title || "",
     price: product.price || "",
+    weight: product.weight || "",
     description: product.description || "",
     category: product.category || "",
     stock: product.stock || 0,
   });
 
-  const [isClicked, setIsClicked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // const [productId, setProductId] = useState(product._id);
 
   useEffect(() => {
-    document.getElementById("editModal").showModal();
-  }, [product]);
+    const dialog = document.getElementById("editModal");
+    if (dialog && isClicked) {
+      dialog.showModal();
+    }
+  }, [product, isClicked]);
 
   useEffect(() => {
     setPreviewImage(product.image);
     setFormState({
       title: product.title || "",
       price: product.price || "",
+      weight: product.weight || "",
       description: product.description || "",
       category: product.category || "",
       stock: product.stock || 0,
@@ -91,6 +96,7 @@ const EditDialog = ({ product }) => {
       if (
         !formState.title ||
         !formState.price ||
+        !formState.weight ||
         !formState.description ||
         !formState.category
       ) {
@@ -101,8 +107,17 @@ const EditDialog = ({ product }) => {
 
       // Validate and format price
       const price = parseFloat(formState.price);
+
       if (isNaN(price) || price < 0 || price > 999999.99) {
         toast.error("Price must be a valid number between 0 and 999,999.99");
+        setIsClicked(false);
+        return;
+      }
+      const weight = parseFloat(formState.weight);
+
+      console.log("weight", weight);
+      if (isNaN(weight) || weight < 0) {
+        toast.error("Weight must be a valid number");
         setIsClicked(false);
         return;
       }
@@ -113,6 +128,7 @@ const EditDialog = ({ product }) => {
       // formData.append("image", imageFile);
       formData.append("title", formState.title);
       formData.append("price", price.toFixed(2)); // Convert price to string with 2 decimal places
+      formData.append("weight", weight.toFixed(2)); // Convert price to string with 2 decimal places
       formData.append("description", formState.description);
       formData.append("category", formState.category);
       formData.append("stock", formState.stock);
@@ -124,6 +140,7 @@ const EditDialog = ({ product }) => {
 
       const response = await fetch(`${baseUrl}/users/products/${product._id}`, {
         method: "PUT",
+
         body: formData, //pass the form data as the request body (stringify not needed, browser will also set content type automatically)
         credentials: "include",
       });
@@ -138,7 +155,7 @@ const EditDialog = ({ product }) => {
       console.log("updated product", updateProduct);
 
       const updatedProducts = products.map((p) =>
-        p._id === updateProduct._id ? updateProduct : p
+        p._id === updateProduct._id ? updateProduct : p,
       );
 
       console.log("updatedProducts", updatedProducts);
@@ -151,6 +168,7 @@ const EditDialog = ({ product }) => {
       setFormState({
         title: "",
         price: "",
+        weight: "",
         description: "",
         category: "",
         stock: 0,
@@ -266,6 +284,22 @@ const EditDialog = ({ product }) => {
                   placeholder="Price"
                 />
               </div>
+              {/* weight */}
+              <div>
+                <label className="label text-gray-100" htmlFor="weight">
+                  Weight
+                </label>
+                <input
+                  className="input input-border input-lg w-full  inset-ring rounded-lg"
+                  type="number"
+                  step="0.01"
+                  id="weight"
+                  name="weight"
+                  value={formState.weight}
+                  onChange={handleChange}
+                  placeholder="Weight (kg)"
+                />
+              </div>
 
               {/* Stock */}
 
@@ -310,8 +344,8 @@ const EditDialog = ({ product }) => {
               <button
                 className="btn btn-lg rounded-lg btn-secondary"
                 type="submit"
-                disabled={isClicked}>
-                {isClicked ? "Editing..." : "Edit Product"}
+                disabled={isSubmitting}>
+                {isSubmitting ? "Editing..." : "Edit Product"}
               </button>
             </fieldset>
           </form>

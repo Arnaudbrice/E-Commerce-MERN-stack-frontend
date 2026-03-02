@@ -16,6 +16,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 import { FaRegAddressBook } from "react-icons/fa";
 import ShippingAddressDialog from "../components/ShippingAddressDialog.jsx";
+import { set } from "lodash";
 
 const Cart = () => {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -50,6 +51,8 @@ const Cart = () => {
   const [order, setOrder] = useState({});
 
   const [userAddress, setUserAddress] = useState(null);
+
+  const [shippingCosts, setShippingCosts] = useState(0);
   const [cartAmount, setCartAmount] = useState(0);
 
   const [redirecting, setRedirecting] = useState(false);
@@ -87,7 +90,7 @@ const Cart = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ shippingAddress: userAddress }),
+        body: JSON.stringify({ shippingAddress: userAddress, shippingCosts }),
         credentials: "include",
       });
       if (!response.ok) {
@@ -105,7 +108,7 @@ const Cart = () => {
     } catch (error) {
       toast.error(error);
     }
-  }, [baseUrl, user]);
+  }, [baseUrl, user, shippingCosts]);
 
   //********** reset cart **********
   const handleReset = useCallback(async () => {
@@ -137,17 +140,34 @@ const Cart = () => {
   useEffect(() => {
     const calculateCartTotalAmount = () => {
       const cartTotalAmount = cartList.products?.reduce((acc, item) => {
-        // Convert Decimal128 to string, then parse to float for calculation
-        const itemPrice = parseFloat(item.productId?.price) * item.quantity;
+        //parse to float for calculation
+        const itemPrice =
+          parseFloat(item.productId?.price || 0) * item.quantity;
 
         return acc + itemPrice;
       }, 0);
+
+      const totalWeight = cartList.products?.reduce(
+        (acc, product) => acc + (product.productId?.weight || 0),
+        0,
+      );
+
+      // Determine shipping costs
+      if (userAddress?.country !== "Germany") {
+        setShippingCosts(15.0);
+      } else if (totalWeight <= 2) {
+        setShippingCosts(3.5);
+      } else if (totalWeight <= 5) {
+        setShippingCosts(5.9);
+      } else {
+        setShippingCosts(9.9);
+      }
 
       setCartAmount(cartTotalAmount);
     };
 
     calculateCartTotalAmount();
-  }, [cartList]);
+  }, [cartList, userAddress]);
   // console.log("cartList", cartList);
 
   // After the payment process, if we want to inform the user that payment was successful, we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment.
@@ -166,19 +186,6 @@ const Cart = () => {
 
         console.log("Cart products to update stock:", cartList.products);
 
-        /* if (user && !isLoadingCart) {
-          // Check for 'user' instead of 'isAuthenticated' if 'user' is null/object
-
-          // todo:use createOrder request here
-
-           console.log("cartList product after payment", cartList?.products);
-          for (const item of cartList.products) {
-            await updateProductStock(item.productId._id, item.quantity);
-          }
-          await handleReset(); // This will now call the efficient clearCart
-
-
-        } */
         toast.success("Payment has been successfully made!");
 
         await createOrder();
@@ -263,7 +270,10 @@ const Cart = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ cartList }),
+          body: JSON.stringify({
+            cartList,
+            shippingCosts: shippingCosts.toFixed(2),
+          }),
           credentials: "include",
         },
       );
@@ -505,13 +515,15 @@ const Cart = () => {
                 </span>
               </div>
               <div className="flex justify-between items-center text-gray-500">
-                <span className="text-md">Shipping</span>
-                <span className="font-semibold">0.00 €</span>
+                <span className="text-md">Shipping Costs</span>
+                <span className="font-semibold">
+                  {shippingCosts.toFixed(2)} €
+                </span>
               </div>
               <div className="pt-4 border-t border-gray-200 dark:border-gray-800 flex justify-between items-center py-4">
                 <span className="font-bold text-md">Total</span>
                 <span className="text-2xl font-bold text-secondary">
-                  Checkout: {cartAmount.toFixed(2)} {" €"}
+                  Checkout: {(cartAmount + shippingCosts).toFixed(2)} {" €"}
                 </span>
               </div>
               {/* <button className="w-full bg-secondary text-white font-bold py-4 rounded-xl shadow-lg shadow-secondary/30 hover:opacity-90 transition-opacity uppercase tracking-widest text-sm">
@@ -527,7 +539,7 @@ const Cart = () => {
                 <button
                   className="btn btn-lg btn-secondary"
                   onClick={handleCheckout}>
-                  Checkout: {cartAmount.toFixed(2)} {" €"}
+                  Checkout: {(cartAmount + shippingCosts).toFixed(2)} {" €"}
                 </button>
               </div>
             </div>
