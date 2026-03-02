@@ -7,8 +7,6 @@ import { toast } from "react-toastify";
 import useAuth from "../hooks/useAuth.jsx";
 
 const Dashboard = () => {
-  // totals array to store totals for each order
-  const [totals, setTotals] = useState([]);
   // state for Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationArray, setPaginationArray] = useState([]);
@@ -36,21 +34,6 @@ const Dashboard = () => {
       const data = await response.json();
       console.log("data from dashboard", data);
 
-      // Calculate totals for each order
-      const totalsArr = data.orders
-        .flat()
-        .map((order) =>
-          order.products
-            .reduce(
-              (acc, curr) =>
-                acc +
-                parseFloat(curr.productId?.price || curr.price) * curr.quantity,
-              0,
-            )
-            .toFixed(2),
-        );
-      setTotals(totalsArr || []);
-
       setOrdersForCurrentPage(data.orders.flat() || []);
       setPaginationArray(data.paginationArray || []);
       setCurrentPage(data.currentPageNumber);
@@ -73,8 +56,6 @@ const Dashboard = () => {
       setAdminPaginationArray={setPaginationArray}
       adminCurrentPage={currentPage}
       setAdminCurrentPage={setCurrentPage}
-      adminTotals={totals}
-      setAdminTotals={setTotals}
       dashboardLoading={dashboardLoading}
       fetchAllOrders={fetchAllOrders}
     />

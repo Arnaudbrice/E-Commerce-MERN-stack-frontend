@@ -16,6 +16,7 @@ const AddProduct = () => {
   const [formState, setFormState] = useState({
     title: "",
     price: "",
+    weight: "",
     description: "",
     category: "",
     stock: 0,
@@ -59,6 +60,7 @@ const AddProduct = () => {
       if (
         !formState.title ||
         !formState.price ||
+        !formState.weight ||
         !formState.description ||
         !formState.category
       ) {
@@ -69,6 +71,7 @@ const AddProduct = () => {
 
       // Validate and format price
       const price = parseFloat(formState.price);
+      const weight = parseFloat(formState.weight);
       if (isNaN(price) || price < 0 || price > 999999.99) {
         toast.error("Price must be a valid number between 0 and 999,999.99");
         setIsClicked(false);
@@ -79,6 +82,7 @@ const AddProduct = () => {
       formData.append("image", imageFile);
       formData.append("title", formState.title);
       formData.append("price", price.toFixed(2)); // Convert price to string with 2 decimal places
+      formData.append("weight", weight.toFixed(2)); // Convert price to string with 2 decimal places
       formData.append("description", formState.description);
       formData.append("category", formState.category);
       formData.append("stock", formState.stock);
@@ -109,6 +113,7 @@ const AddProduct = () => {
       setFormState({
         title: "",
         price: "",
+        weight: "",
         description: "",
         category: "",
         stock: 0,
@@ -189,6 +194,22 @@ const AddProduct = () => {
             value={formState.price}
             onChange={handleChange}
             placeholder="Price"
+          />
+        </div>
+        {/* weight */}
+        <div>
+          <label className="label" htmlFor="weight">
+            Weight
+          </label>
+          <input
+            className="input input-border input-lg w-full  inset-ring rounded-lg"
+            type="number"
+            step="0.01"
+            id="weight"
+            name="weight"
+            value={formState.weight}
+            onChange={handleChange}
+            placeholder="Weight (kg)"
           />
         </div>
 

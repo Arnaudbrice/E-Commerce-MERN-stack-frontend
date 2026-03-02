@@ -52,7 +52,7 @@ const AdminProducts = () => {
 
       // update the products array
       const updatedProducts = products.filter(
-        (p) => p._id !== deletedProduct._id
+        (p) => p._id !== deletedProduct._id,
       );
       setProducts(updatedProducts);
       toast.success("Product deleted successfully");
@@ -64,7 +64,7 @@ const AdminProducts = () => {
   useEffect(() => {
     const getUserProducts = () => {
       const userProducts = products.filter(
-        (product) => product.userId === user._id
+        (product) => product.userId === user._id,
       );
 
       console.log("userProducts", userProducts);
@@ -119,7 +119,13 @@ const AdminProducts = () => {
               </div>
             </Card>
 
-            {isClicked && <EditDialog product={clickedProduct} />}
+            {isClicked && (
+              <EditDialog
+                product={clickedProduct}
+                isClicked={isClicked}
+                setIsClicked={setIsClicked}
+              />
+            )}
           </div>
         );
       })}
