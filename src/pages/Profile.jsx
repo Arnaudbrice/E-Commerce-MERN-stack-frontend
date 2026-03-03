@@ -14,8 +14,10 @@ const Profile = () => {
   const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
 
   const { user, isLoadingAuth } = useAuth();
+
+  console.log("user in profile", user);
   const userAddress = user?.addresses?.find(
-    (address) => address.label === "Home"
+    (address) => address.label === "Home",
   );
 
   /**
@@ -73,7 +75,7 @@ const Profile = () => {
       )}
       <div className="size-32  border-4 border-secondary p-1 rounded-full">
         <img
-          src={default_profile}
+          src={user.userAvatar || default_profile}
           alt="profile-image"
           className="size-full rounded-full"
         />

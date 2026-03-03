@@ -190,7 +190,7 @@ const UserMenu = () => {
                 onClick={handleLinkClicked}
                 to="/profile">
                 <img
-                  src={defaultProfileImage}
+                  src={user?.userAvatar || defaultProfileImage}
                   alt="profile-image"
                   className="size-8 rounded-full"
                 />
@@ -339,7 +339,7 @@ const UserMenu = () => {
               to="/profile"
               onClick={handleLinkClicked}>
               <img
-                src={defaultProfileImage}
+                src={user?.userAvatar || defaultProfileImage}
                 alt="profile-image"
                 className="size-8 rounded-full"
               />

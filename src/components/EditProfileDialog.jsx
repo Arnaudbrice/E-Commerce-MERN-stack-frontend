@@ -3,12 +3,15 @@ import { toast } from "react-toastify";
 import useAuth from "../hooks/useAuth.jsx";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import { useLocation } from "react-router";
+import default_profile from "../assets/images/default_profile.png";
 
 const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
   const location = useLocation();
   const dialogRef = useRef(null);
   const [isSavingClicked, setIsSavingClicked] = useState(false);
   const { user, setUser } = useAuth();
+
+  const [imageFile, setImageFile] = useState(null);
   const [formState, setFormState] = useState({
     email: "",
     firstName: "",
@@ -39,7 +42,7 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
   // Populate form state with user data (autofilling the form fields with the current user data)
   useEffect(() => {
     const userAddress = user?.addresses?.find(
-      (address) => address.label === "Home"
+      (address) => address.label === "Home",
     );
 
     console.log("User data in EditProfileDialog useEffect", user);
@@ -56,6 +59,8 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
         zipCode: userAddress?.zipCode || "",
         country: userAddress?.country || "",
       });
+
+      setImageFile(user?.userAvatar || default_profile);
     }
   }, [user]);
 
@@ -98,7 +103,22 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
         toast.error("Please fill in all required fields");
         return;
       }
-      const response = await fetch(
+
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      formData.append("email", formState.email);
+      formData.append("firstName", formState.firstName);
+      formData.append("lastName", formState.lastName);
+      formData.append("companyName", formState.companyName);
+      formData.append("phone", formState.phone);
+      formData.append("streetAddress", formState.streetAddress);
+      formData.append("city", formState.city);
+      formData.append("state", formState.state);
+      formData.append("zipCode", formState.zipCode);
+      formData.append("country", formState.country);
+      formData.append("label", "Home");
+
+      /*   const response = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/auth/profile`,
         {
           method: "PUT",
@@ -111,7 +131,15 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
             label: "Home", //Address added within the profile page is always labeled as "Home"
           }),
           credentials: "include",
-        }
+        },
+      ); */
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/profile`,
+        {
+          method: "PUT",
+          body: formData, //pass the form data as the request body (stringify not needed, browser will also set content type automatically)
+          credentials: "include",
+        },
       );
 
       if (!response.ok) {
@@ -125,7 +153,7 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
       console.log("Profile update response data", data);
 
       const userAddress = data?.addresses?.find(
-        (address) => address.label === "Home"
+        (address) => address.label === "Home",
       );
 
       setFormState((prev) => {
@@ -144,6 +172,8 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
         };
       });
 
+      setImageFile(data?.userAvatar || default_profile);
+
       setUser(data);
 
       // document.getElementById("edit_profile_modal").close();
@@ -157,14 +187,20 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
     }
   };
 
-  {
-    /***********handle change within the form ***********/
-  }
+  //***********handle change within the form ***********
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormState((prevState) => {
       return { ...prevState, [name]: value };
     });
+  };
+
+  //********** handle Image Change **********
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+    }
   };
 
   if (!user) {
@@ -197,7 +233,31 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
             // method="dialog"
             onSubmit={handleEditProfileSubmission}
             className="dialog-form space-y-2  w-full max-w-md">
+            {/* display image if it exists */}
+            {user.userAvatar ?
+              <img
+                src={user.userAvatar}
+                alt="profile-image"
+                className="size-24 rounded-full mx-auto"
+              />
+            : <img
+                src={default_profile}
+                alt="profile-image"
+                className="size-24 rounded-full mx-auto"
+              />
+            }
             {/* if there is a button in form, it will close the modal */}
+
+            <label className="label" htmlFor="image">
+              <span className="label-text">Image (optional)</span>
+            </label>
+            <input
+              className="file-input file-input-secondary  file-input-lg w-full    rounded-lg border-1  border-white "
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
 
             <label className="label" htmlFor="email">
               <span className="label-text">Email</span>
