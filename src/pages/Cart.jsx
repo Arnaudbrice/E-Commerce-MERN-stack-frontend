@@ -17,7 +17,6 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaRegAddressBook } from "react-icons/fa";
 import ShippingAddressDialog from "../components/ShippingAddressDialog.jsx";
 
-
 const Cart = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const {
