@@ -7,7 +7,8 @@ import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import { toast } from "react-toastify";
 
 const AdminProducts = () => {
-  const { products, setProducts, isLoading } = useProducts();
+  const { products, setProducts, searchTerm, setSearchTerm, isLoading } =
+    useProducts();
 
   const { user } = useAuth();
   const [userProducts, setUserProducts] = useState([]);
@@ -64,7 +65,7 @@ const AdminProducts = () => {
   useEffect(() => {
     const getUserProducts = () => {
       const userProducts = products.filter(
-        (product) => product.userId === user._id,
+        (product) => product.userId === user._id && user.role === "admin",
       );
 
       console.log("userProducts", userProducts);
@@ -99,36 +100,63 @@ const AdminProducts = () => {
   }
 
   return (
-    <div className="grid min-h-full grid-cols-1 sm:grid-cols-2 gap-6 mx-auto my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] sm:mx-6 auto-rows-min  ">
-      {userProducts.map((product) => {
-        return (
-          <div key={product._id}>
-            <Card {...product}>
-              {" "}
-              <div className="flex justify-evenly items-center  m-4">
-                <button
-                  onClick={(e) => handleEditClick(e, product)}
-                  className="btn  btn-secondary rounded-lg">
-                  Edit
-                </button>
-                <button
-                  onClick={(e) => handleDeleteClick(e, product)}
-                  className="btn btn-outline btn-secondary rounded-lg">
-                  Delete
-                </button>
-              </div>
-            </Card>
-
-            {isClicked && (
-              <EditDialog
-                product={clickedProduct}
-                isClicked={isClicked}
-                setIsClicked={setIsClicked}
-              />
-            )}
-          </div>
-        );
-      })}
+    <div>
+      {/* search bar */}
+      <div className="flex justify-center items-center  mx-auto my-4 ">
+        <label className="input input-lg rounded-lg input-bordered ring-1 ring-gray-100 ring-inset glass hover:ring-2 hover:ring-gray-100  ">
+          <svg
+            className="h-[1em] opacity-50 "
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <g
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeWidth="2.5"
+              fill="none"
+              stroke="currentColor">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+          <input
+            type="search"
+            required
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </label>
+      </div>
+      <div className="grid min-h-full grid-cols-1 sm:grid-cols-2 gap-6 mx-auto my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] sm:mx-6 auto-rows-min  ">
+        {userProducts.map((product) => {
+          return (
+            <div key={product._id}>
+              <Card {...product}>
+                {" "}
+                <div className="flex justify-evenly items-center  m-4">
+                  <button
+                    onClick={(e) => handleEditClick(e, product)}
+                    className="btn  btn-secondary rounded-lg">
+                    Edit
+                  </button>
+                  <button
+                    onClick={(e) => handleDeleteClick(e, product)}
+                    className="btn btn-outline btn-secondary rounded-lg">
+                    Delete
+                  </button>
+                </div>
+              </Card>
+              {isClicked && (
+                <EditDialog
+                  product={clickedProduct}
+                  isClicked={isClicked}
+                  setIsClicked={setIsClicked}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

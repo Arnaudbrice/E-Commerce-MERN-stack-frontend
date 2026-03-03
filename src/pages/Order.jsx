@@ -237,7 +237,7 @@ const Order = ({
                   const orderTotal = (productsTotal + shippingCosts).toFixed(2);
                   return (
                     <div
-                      key={index}
+                      key={order._id}
                       className=" flex flex-col border border-gray rounded-lg p-2 space-y-4  ">
                       {/* order date */}
                       <p className="text-lg  ">
@@ -248,8 +248,8 @@ const Order = ({
                       </p>
                       {/*********** user who placed the order ***********/}
                       {user.role === "admin" && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 w-full spaye-y-2 sm:space-y-0 gap-4 sm:place-items-start place-items-center">
-                          <div className="text-sm text-gray-300 ">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 w-full space-y-2 sm:space-y-0 gap-4 place-items-start ">
+                          <div className="text-sm text-gray-300  ">
                             <h3 className="text-white text-lg mb-2">
                               <span className="underline underline-offset-8 ">
                                 From:
@@ -281,7 +281,7 @@ const Order = ({
                             </p>
                             <p>{order.userId?.email || ""}</p>
                           </div>
-                          <div className="text-sm text-center text-gray-300 border border-primary w-fit rounded-lg p-2 space-y-1 sm:col-start-3 sm:col-span-1  ">
+                          <div className="text-sm text-center text-gray-300 border border-primary w-fit rounded-lg p-2 space-y-1 sm:col-start-3 sm:col-span-1 ml-auto ">
                             <h3 className="text-white text-lg mb-2">
                               <span className="flex flex-row items-center gap-2  underline underline-offset-8">
                                 <FaLocationDot className="text-primary" />
@@ -311,6 +311,25 @@ const Order = ({
                       )}
 
                       {/***********order status ***********/}
+
+                      <ul className="steps sm:steps-horizontal steps-vertical">
+                        <li
+                          className={`step ${(order.status === "processing" || order.status === "shipped" || order.status === "delivered") && " step-primary"}`}>
+                          Processing
+                        </li>
+                        <li
+                          className={`step ${(order.status === "shipped" || order.status === "delivered") && "step-primary"}`}>
+                          Shipped
+                        </li>
+                        <li
+                          className={`step ${order.status === "delivered" && "step-primary"}`}>
+                          Delivered
+                        </li>
+                        <li
+                          className={`step ${order.status === "cancelled" && "before:!bg-red-500 after:!bg-red-500"}`}>
+                          Cancelled
+                        </li>
+                      </ul>
                       <p className=" flex items-center gap-2 text-lg glow-text-secondary glass w-fit px-2 py-1 rounded-selector">
                         📦 →{" "}
                         <span
@@ -338,7 +357,7 @@ const Order = ({
 
                       {/* order products */}
                       <p className=" text-secondary text-center">
-                        Order({index + 1}) - ({order._id})
+                        Order - ({order._id})
                       </p>
                       {order.products.map((product) => {
                         const p = product.productId || product;

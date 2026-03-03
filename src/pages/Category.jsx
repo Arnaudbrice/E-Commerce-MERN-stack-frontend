@@ -10,10 +10,11 @@ const Category = () => {
    */
 
   const navigate = useNavigate();
-  const { products, setProducts, isLoading } = useProducts();
+  const { products, setProducts, searchTerm, setSearchTerm, isLoading } =
+    useProducts();
   const { category } = useParams();
   const filteredProductsByCategory = products.filter(
-    (product) => product.category === category
+    (product) => product.category === category,
   );
 
   if (isLoading) {
@@ -48,13 +49,40 @@ const Category = () => {
   }
   console.log(category);
   return (
-    <div>
+    <div className="space-y-8">
       <div className="divider divider-secondary my-8 ">
         {" "}
         <h1 className="text-3xl font-bold text-center ">Category {category}</h1>
       </div>
 
-      <div className="grid min-h-full grid-cols-2 gap-6 mx-0 my-8 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
+      {/* search bar */}
+      <div className="flex justify-center items-center  mx-auto my-8 ">
+        <label className="input input-lg rounded-lg input-bordered ring-1 ring-gray-100 ring-inset glass hover:ring-2 hover:ring-gray-100  ">
+          <svg
+            className="h-[1em] opacity-50 "
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <g
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeWidth="2.5"
+              fill="none"
+              stroke="currentColor">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+          <input
+            type="search"
+            required
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </label>
+      </div>
+
+      <div className="grid min-h-full  gap-6 mx-0 my-8 text-gray-400  grid-cols-1 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
         {filteredProductsByCategory.map((product) => {
           return <Card key={product.id} {...product} />;
         })}
