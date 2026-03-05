@@ -4,15 +4,12 @@ import React, {
   useMemo,
   useRef,
   useState,
-  memo,
 } from "react";
 
-import ChatBotImage from "../assets/images/ChatBox_image.jpg";
-import avatar from "../assets/images/avatar.png";
-import Markdown from "react-markdown";
 import { useNavigate } from "react-router";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import { toast } from "react-toastify";
+import ChatMessages from "./ChatMessages.jsx";
 
 const ChatDialog = ({ isChatModalOpen, setIsChatModalOpen }) => {
   const chatMessagesRef = useRef(null);
@@ -32,22 +29,10 @@ const ChatDialog = ({ isChatModalOpen, setIsChatModalOpen }) => {
       // Capture the viewport height ONCE when the modal opens
       const vh =
         window.visualViewport?.height ?? document.documentElement.clientHeight;
-      setLockedHeight(Math.floor(vh * 0.9)); // 90 % of viewport in px
+      setLockedHeight(Math.floor(vh * 0.7)); // 80 % of viewport in px ( so the modal will not shrink when keyboard appears)
     } else {
       setLockedHeight(null);
     }
-  }, [isChatModalOpen]);
-
-  //  Prevent body scroll while the modal is open
-  useEffect(() => {
-    if (isChatModalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
   }, [isChatModalOpen]);
 
   // Auto-scroll to the latest message
@@ -204,7 +189,8 @@ const ChatDialog = ({ isChatModalOpen, setIsChatModalOpen }) => {
       {/* Height is locked in pixels so the mobile keyboard cannot shrink it */}
       <div
         className="relative bg-white w-full max-w-3xl rounded-xl shadow-xl flex flex-col overflow-hidden"
-        style={{ maxHeight: lockedHeight ? `${lockedHeight}px` : "90vh" }}>
+        style={{ maxHeight: lockedHeight ? `${lockedHeight}px` : "70vh" }}>
+        {/* 70vh for devices with screen higher than phone height */}
         {/* ── Header (never shrinks) ── */}
         <div className="flex items-center justify-between p-3 border-b shrink-0">
           <h3 className="font-bold text-xl text-secondary">
@@ -218,7 +204,7 @@ const ChatDialog = ({ isChatModalOpen, setIsChatModalOpen }) => {
           </button>
         </div>
 
-        {/* ── Chat messages (scrollable, takes remaining space) ── */}
+        {/***********Chat messages (scrollable, takes remaining space) ***********/}
         <ChatMessages
           messages={messages}
           isLoading={isLoading}
@@ -270,78 +256,5 @@ const ChatDialog = ({ isChatModalOpen, setIsChatModalOpen }) => {
     </div>
   );
 };
-
-// ✅ Memoized individual message component to prevent image re-rendering
-const ChatMessage = memo(({ msg, index, mdComponents }) => (
-  <div
-    key={index}
-    className={`chat ${msg.sender === "user" ? "chat-end" : "chat-start"}`}>
-    <div className="chat-image avatar">
-      <div className="w-8 rounded-full">
-        <img
-          src={msg.sender === "user" ? avatar : ChatBotImage}
-          alt={msg.sender}
-        />
-      </div>
-    </div>
-    <div
-      className={`chat-bubble prose prose-md leading-9 text-md break-words ${
-        msg.sender === "user" ?
-          "bg-secondary text-white"
-        : "bg-gray-200 text-black"
-      }`}>
-      <Markdown components={mdComponents}>{msg.text}</Markdown>
-    </div>
-  </div>
-));
-
-// ✅ Memoized messages list to isolate from input changes
-const ChatMessages = memo(
-  React.forwardRef(({ messages, isLoading, mdComponents }, ref) => (
-    <div
-      ref={ref}
-      className="flex-1 min-h-0 overflow-y-auto space-y-3 p-4 bg-gray-50
-                 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
-      {/* Greeting */}
-      <div className="chat chat-start">
-        <div className="chat-image avatar">
-          <div className="w-10 rounded-full">
-            <img alt="ai avatar" src={ChatBotImage} />
-          </div>
-        </div>
-        <div className="chat-bubble bg-gray-200 text-black">
-          Hello there! I am here to help you find the best products for your
-          needs. Just type in your search query and I will provide you with the
-          most relevant results. How can I assist you today?
-        </div>
-      </div>
-
-      {/* Messages */}
-      {messages.map((msg, index) => (
-        <ChatMessage
-          key={index}
-          msg={msg}
-          index={index}
-          mdComponents={mdComponents}
-        />
-      ))}
-
-      {/* Loading indicator */}
-      {isLoading && (
-        <div className="chat chat-start">
-          <div className="chat-image avatar">
-            <div className="w-8 rounded-full">
-              <img alt="ai avatar" src={ChatBotImage} />
-            </div>
-          </div>
-          <div className="chat-bubble bg-gray-200 text-black">
-            <span className="loading loading-dots loading-sm"></span>{" "}
-            Thinking...
-          </div>
-        </div>
-      )}
-    </div>
-  )),
-);
 
 export default ChatDialog;
