@@ -1,6 +1,7 @@
 import "react-toastify/dist/ReactToastify.css";
 import { Link, NavLink, Outlet } from "react-router";
 import { useState } from "react";
+import logo from "../assets/images/logo.png";
 
 const GuestMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -75,7 +76,9 @@ const GuestMenu = () => {
           )}
         </div>
 
-        <NavLink to="/">E-Commerce</NavLink>
+        <NavLink to="/">
+          <img src={logo} alt="logo" className="h-16" />
+        </NavLink>
       </div>
       <div className="hidden navbar-end lg:flex">
         <ul className="justify-around gap-6 px-4 text-xl menu menu-horizontal">
