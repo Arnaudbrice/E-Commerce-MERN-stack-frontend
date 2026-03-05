@@ -191,7 +191,7 @@ export const AuthContextProvider = ({ children }) => {
         const allFavoriteProducts = await response.json();
         setFavoriteProducts(allFavoriteProducts.favoriteProducts || []);
         setNumberOfFavoriteProducts(
-          allFavoriteProducts.numberOfFavoriteProducts || 0
+          allFavoriteProducts.numberOfFavoriteProducts || 0,
         );
       } catch (error) {
         toast.error(error);

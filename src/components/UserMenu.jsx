@@ -7,6 +7,8 @@ import { MdFavoriteBorder } from "react-icons/md";
 
 import defaultProfileImage from "../assets/images/default_profile.png";
 
+import logo from "../assets/images/logo.png";
+
 const UserMenu = () => {
   const { logout, setIsLoadingAuth, user, numberOfFavoriteProducts } =
     useAuth();
@@ -210,7 +212,9 @@ const UserMenu = () => {
           </ul>
         </div>
 
-        <NavLink to="/">Bon Marché</NavLink>
+        <NavLink to="/">
+          <img src={logo} alt="logo" className="h-16" />
+        </NavLink>
       </div>
 
       {/* ---------------------------------------------------------------- */}
