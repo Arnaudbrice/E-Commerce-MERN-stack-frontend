@@ -13,6 +13,7 @@ import useCart from "../hooks/useCart.jsx";
 import ChatBotImage from "../assets/images/ChatBox_image.jpg";
 import ChatDialog from "../components/ChatDialog.jsx";
 import useAuth from "../hooks/useAuth.jsx";
+import Searchbar from "../components/Searchbar.jsx";
 
 const Home = () => {
   const {
@@ -90,6 +91,12 @@ const Home = () => {
       </div>
     );
   }
+
+  // Check for browser support of speech recognition
+  /*   if (!browserSupportsSpeechRecognition) {
+    return <span>Browser doesn't support speech recognition.</span>;
+  } */
+
   return (
     <main>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full sm:max-w-xl  my-2 gap-2  mr-auto p-2">
@@ -98,32 +105,8 @@ const Home = () => {
         })}
       </div>
 
-      {/* search bar */}
-      <div className="flex justify-center items-center  mx-auto my-4 ">
-        <label className="input input-lg rounded-lg input-bordered ring-1 ring-gray-100 ring-inset glass hover:ring-2 hover:ring-gray-100  ">
-          <svg
-            className="h-[1em] opacity-50 "
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24">
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-              fill="none"
-              stroke="currentColor">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </g>
-          </svg>
-          <input
-            type="search"
-            required
-            placeholder="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </label>
-      </div>
+      {/* ----------------search bar-------------------- */}
+      <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <Cards />
 
       {/* chatbot */}
