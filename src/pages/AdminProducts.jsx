@@ -5,6 +5,7 @@ import Card from "../components/Card";
 import EditDialog from "../components/EditDialog.jsx";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import { toast } from "react-toastify";
+import Searchbar from "../components/Searchbar.jsx";
 
 const AdminProducts = () => {
   const { products, setProducts, searchTerm, setSearchTerm, isLoading } =
@@ -93,40 +94,20 @@ const AdminProducts = () => {
   // this should happening after updating the state
   if (!userProducts?.length && hasFinishedGettingUserProducts) {
     return (
-      <div className="text-center text-2xl flex flex-col items-center justify-center h-full   ">
-        You Didn't Add Any Products Yet
+      <div>
+        <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <div className="text-center text-2xl flex flex-col items-center justify-center h-full mt-20">
+          You didn't add any products yet
+        </div>
       </div>
     );
   }
 
   return (
     <div>
-      {/* search bar */}
-      <div className="flex justify-center items-center  mx-auto my-4 ">
-        <label className="input input-lg rounded-lg input-bordered ring-1 ring-gray-100 ring-inset glass hover:ring-2 hover:ring-gray-100  ">
-          <svg
-            className="h-[1em] opacity-50 "
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24">
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-              fill="none"
-              stroke="currentColor">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </g>
-          </svg>
-          <input
-            type="search"
-            required
-            placeholder="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </label>
-      </div>
+      {/* ----------------search bar-------------------- */}
+      <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
       <div className="grid min-h-full grid-cols-1 sm:grid-cols-2 gap-6 mx-auto my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] sm:mx-6 auto-rows-min  ">
         {userProducts.map((product) => {
           return (
