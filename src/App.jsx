@@ -22,6 +22,12 @@ import Favorite from "./pages/Favorite.jsx";
 import AdminProducts from "./pages/AdminProducts.jsx";
 import Profile from "./pages/Profile.jsx";
 import Dashboard from "./components/Dashboard.jsx";
+import AboutUs from "./pages/AboutUs.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import FAQ from "./pages/FAQ.jsx";
+import TermsOfService from "./pages/TermsOfService.jsx";
+import ShippingPolicy from "./pages/ShippingPolicy.jsx";
+import ReturnsRefunds from "./pages/ReturnsRefunds.jsx";
 
 function App() {
   return (
@@ -43,6 +49,15 @@ function App() {
                   element={<ResetPassword />}
                 />
                 <Route path="/category/:category" element={<Category />} />
+                <Route path="/about-us" element={<AboutUs />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+
+                <Route path="/shipping-policy" element={<ShippingPolicy />} />
+
+                <Route path="/returns-refunds" element={<ReturnsRefunds />} />
 
                 {/*********** protected routes ***********/}
                 <Route element={<ProtectedLayout />}>
