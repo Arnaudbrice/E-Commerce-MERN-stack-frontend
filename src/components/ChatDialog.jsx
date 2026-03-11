@@ -181,7 +181,7 @@ const ChatDialog = ({ isChatModalOpen, setIsChatModalOpen }) => {
       aria-modal="true">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60"
+        className="absolute inset-0 bg-black/10"
         onClick={() => setIsChatModalOpen(false)}
       />
 
