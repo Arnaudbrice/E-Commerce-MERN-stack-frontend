@@ -63,7 +63,7 @@ const Searchbar = ({ searchTerm, setSearchTerm }) => {
               SpeechRecognition.stopListening();
               resetTranscript();
             }}
-            className="cursor-pointer text-primary animate-pulse"
+            className="cursor-pointer text-secondary animate-pulse  text-xl"
             title="Click to stop listening"
           />
         : <FaMicrophone
@@ -71,7 +71,7 @@ const Searchbar = ({ searchTerm, setSearchTerm }) => {
               resetTranscript();
               SpeechRecognition.startListening();
             }}
-            className="cursor-pointer text-blue-500"
+            className="cursor-pointer text-white text-xl"
             title="Click to start listening"
           />
         }

@@ -1,7 +1,7 @@
 import React from "react";
 
 import logo from "../assets/images/logo.png";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   FaCcMastercard,
   FaCcVisa,
@@ -16,6 +16,7 @@ import { MdAssignmentReturn, MdLocalShipping } from "react-icons/md";
 import { SiKlarna, SiSepa } from "react-icons/si";
 
 const Footer = () => {
+  const navigate = useNavigate();
   {
     /* <footer className="footer footer-center p-4 bg-white mt-16 text-lg sm:text-xl text-[#361F17] ">
       <p>
@@ -71,6 +72,12 @@ const Footer = () => {
                   to="/faq"
                   className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
                   FAQ
+                </Link>
+
+                <Link
+                  to="/contact-us"
+                  className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                  Contact
                 </Link>
               </ul>
             </div>
@@ -150,14 +157,11 @@ const Footer = () => {
             </div>
             <div className="flex flex-col md:items-end gap-4">
               <div className="flex gap-4 items-center">
-                <FaCcVisa />
-
-                <FaCcMastercard />
-
-                <FaPaypal />
-
-                <SiKlarna />
-                <SiSepa />
+                <FaCcVisa className="text-2xl" />
+                <FaCcMastercard className="text-2xl" />
+                <FaPaypal className="text-2xl" />
+                <SiKlarna className="text-2xl" />
+                <SiSepa className="text-2xl" />
               </div>
             </div>
           </div>

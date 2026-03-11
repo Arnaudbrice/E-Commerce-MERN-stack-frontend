@@ -62,7 +62,7 @@ const Card = ({
     console.log("cartList_products", cartList.products);
 
     const productQuantity = cartList.products?.find(
-      (item) => item.productId?._id === _id
+      (item) => item.productId?._id === _id,
     )?.quantity;
 
     // console.log("productQuantity", productQuantity);
@@ -143,7 +143,7 @@ const Card = ({
             isFavorite: !isFavoriteClicked,
           }),
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -171,7 +171,12 @@ const Card = ({
         toast.info("Product Successfully Deleted From Your Favorite List");
       }
     } catch (error) {
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     }
   };
 

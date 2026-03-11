@@ -69,7 +69,12 @@ const Order = ({
         setPaginationArray(data.paginationArray || []);
         setCurrentPage(data.currentPageNumber);
       } catch (error) {
-        toast.error(error);
+        // normalize to a readable string and avoid "[object Object]"
+        const msg =
+          error?.message ??
+          (typeof error === "string" ? error : String(error)) ??
+          "Something went wrong";
+        toast.error(msg);
       } finally {
         setIsLoading(false);
       }
@@ -145,7 +150,12 @@ const Order = ({
       // Immediately releases memory after download starts->Prevents memory leaks from accumulated blob URLs
       URL.revokeObjectURL(blobUrl);
     } catch (error) {
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     }
   };
 

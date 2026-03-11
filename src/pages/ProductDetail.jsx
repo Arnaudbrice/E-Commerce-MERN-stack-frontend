@@ -60,7 +60,7 @@ const ProductDetail = () => {
     // console.log("cartList products 2", cartList.products);
 
     const productQuantity = cartList.products?.find(
-      (item) => item.productId._id === id
+      (item) => item.productId._id === id,
     )?.quantity;
 
     // console.log("productQuantity", productQuantity);
@@ -85,7 +85,7 @@ const ProductDetail = () => {
         console.log("product###########", product);
 
         const review = product.reviews.find(
-          (review) => review.user.toString() === user?._id.toString()
+          (review) => review.user.toString() === user?._id.toString(),
         );
 
         console.log("review now************", review);
@@ -95,7 +95,12 @@ const ProductDetail = () => {
         }
         setProduct(product);
       } catch (error) {
-        toast.error(error);
+        // normalize to a readable string and avoid "[object Object]"
+        const msg =
+          error?.message ??
+          (typeof error === "string" ? error : String(error)) ??
+          "Something went wrong";
+        toast.error(msg);
       } finally {
         setIsLoading(false);
       }

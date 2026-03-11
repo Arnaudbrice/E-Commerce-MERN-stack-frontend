@@ -181,7 +181,12 @@ const EditProfileDialog = ({ isEditButtonClicked, setIsEditButtonClicked }) => {
 
       toast.success("Profile updated successfully");
     } catch (error) {
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     } finally {
       setIsSavingClicked(false); // Always set back to false when done
     }

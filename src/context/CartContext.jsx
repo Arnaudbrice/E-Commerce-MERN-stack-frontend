@@ -51,7 +51,12 @@ export const CartContextProvider = ({ children }) => {
         setCartList(cartData);
         setCartProductsQuantity(qty);
       } catch (error) {
-        toast.error(error);
+        // normalize to a readable string and avoid "[object Object]"
+        const msg =
+          error?.message ??
+          (typeof error === "string" ? error : String(error)) ??
+          "Something went wrong";
+        toast.error(msg);
       } finally {
         setIsLoadingCart(false);
       }
@@ -108,7 +113,12 @@ export const CartContextProvider = ({ children }) => {
 
       toast.success("Product Added to Cart Successfully!");
     } catch (error) {
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     }
   };
 
@@ -147,7 +157,12 @@ export const CartContextProvider = ({ children }) => {
 
       toast.success("Product quantity decreased successfully!");
     } catch (error) {
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     }
   };
 
@@ -178,7 +193,12 @@ export const CartContextProvider = ({ children }) => {
       toast.info("Product Removed from Cart Successfully!");
       // await getProductQuantityFromCart(id);
     } catch (error) {
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     }
   };
 
@@ -230,7 +250,7 @@ export const CartContextProvider = ({ children }) => {
           },
           credentials: "include",
           body: JSON.stringify({ quantity }),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -239,7 +259,12 @@ export const CartContextProvider = ({ children }) => {
         return;
       }
     } catch (error) {
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     }
   };
 

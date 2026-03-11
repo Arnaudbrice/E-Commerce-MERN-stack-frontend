@@ -45,7 +45,12 @@ const ResetPassword = () => {
 
       navigate("/login");
     } catch (error) {
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     } finally {
       setIsClicked(false);
     }
