@@ -16,6 +16,7 @@ import useAuth from "../hooks/useAuth.jsx";
 import Searchbar from "../components/Searchbar.jsx";
 
 const Home = () => {
+  const navigate = useNavigate();
   const {
     isLoading,
     error,
@@ -133,6 +134,22 @@ const Home = () => {
           setIsChatModalOpen={setIsChatModalOpen}
         />
       )}
+
+      {/* CTA */}
+      <div className="bg-secondary/10 dark:bg-secondary/5 rounded-xl p-8 text-center space-y-12">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+          Need Help?
+        </h2>
+        <p className="text-slate-600 dark:text-slate-400 mb-6">
+          Our support team is here to assist with any shipping questions or
+          concerns.
+        </p>
+        <button
+          onClick={() => navigate("/contact-us")}
+          className="inline-block bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-8 rounded-lg transition-all">
+          Contact Support
+        </button>
+      </div>
     </main>
   );
 };

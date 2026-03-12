@@ -28,6 +28,7 @@ import FAQ from "./pages/FAQ.jsx";
 import TermsOfService from "./pages/TermsOfService.jsx";
 import ShippingPolicy from "./pages/ShippingPolicy.jsx";
 import ReturnsRefunds from "./pages/ReturnsRefunds.jsx";
+import ContactUs from "./pages/ContactUs.jsx";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
                 <Route path="/shipping-policy" element={<ShippingPolicy />} />
 
                 <Route path="/returns-refunds" element={<ReturnsRefunds />} />
+                <Route path="/contact-us" element={<ContactUs />} />
 
                 {/*********** protected routes ***********/}
                 <Route element={<ProtectedLayout />}>

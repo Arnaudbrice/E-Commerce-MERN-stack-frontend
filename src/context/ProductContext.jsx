@@ -57,7 +57,7 @@ export const ProductProvider = ({ children }) => {
           {
             method: "GET",
             credentials: "include",
-          }
+          },
         );
         if (!response.ok) {
           const { message: errorMessage } = await response.json();
@@ -138,7 +138,7 @@ export const ProductProvider = ({ children }) => {
           },
           credentials: "include",
           body: JSON.stringify({ quantity }),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -150,7 +150,12 @@ export const ProductProvider = ({ children }) => {
       const product = await response.json();
       console.log("product", product);
     } catch (error) {
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     }
   };
 

@@ -61,7 +61,12 @@ export const AuthContextProvider = ({ children }) => {
       navigate("/login");
     } catch (error) {
       // Network or unknown error
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     } finally {
       setIsLoadingAuth(false);
     }
@@ -95,7 +100,12 @@ export const AuthContextProvider = ({ children }) => {
       navigate("/");
     } catch (error) {
       // server validation error
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     } finally {
       setIsLoadingAuth(false);
     }
@@ -121,7 +131,12 @@ export const AuthContextProvider = ({ children }) => {
       navigate("/login");
     } catch (error) {
       // Network or unknown error
-      toast.error(error);
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     }
   };
 
@@ -156,7 +171,12 @@ export const AuthContextProvider = ({ children }) => {
         setUser(userData);
       } catch (error) {
         // Network or unknown error
-        toast.error(error);
+        // normalize to a readable string and avoid "[object Object]"
+        const msg =
+          error?.message ??
+          (typeof error === "string" ? error : String(error)) ??
+          "Something went wrong";
+        toast.error(msg);
 
         setUser(null);
         // navigate("/login");
@@ -194,7 +214,12 @@ export const AuthContextProvider = ({ children }) => {
           allFavoriteProducts.numberOfFavoriteProducts || 0,
         );
       } catch (error) {
-        toast.error(error);
+        // normalize to a readable string and avoid "[object Object]"
+        const msg =
+          error?.message ??
+          (typeof error === "string" ? error : String(error)) ??
+          "Something went wrong";
+        toast.error(msg);
       } finally {
         setIsLoadingFavoriteProducts(false);
       }
