@@ -146,7 +146,7 @@ const Home = () => {
         </p>
         <button
           onClick={() => navigate("/contact-us")}
-          className="inline-block bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-8 rounded-lg transition-all">
+          className=" bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-8 rounded-lg transition-all btn btn-lg ">
           Contact Support
         </button>
       </div>
