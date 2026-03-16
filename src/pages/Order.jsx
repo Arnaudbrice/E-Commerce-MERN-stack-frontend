@@ -168,12 +168,51 @@ const Order = ({
     setSelectOrderId(id);
   };
 
+  const sendStatusUpdateEmail = async (orderId, newStatus) => {
+    // send mail to user about status update ( only for admin since regular users can't change order status )
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/users/admin/orders/${orderId}/send-status-update-email`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newStatus,
+          }),
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        const { message: errorMessage } = await response.json();
+        customErrorMessage(errorMessage, 5000);
+        return;
+      }
+
+      const { message } = await response.json();
+      toast.success(message);
+    } catch (error) {
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
+    }
+  };
+
   const handleStatusUpdate = async (orderId, newStatus) => {
-    if (user.role === "admin" && typeof fetchAllOrders === "function") {
-      // For admin, re-fetch all orders from backend to update UI
+    if (user.role === "admin") {
+      // For admin, re-fetch all orders from backend to update UI ( in case order pages are opened on different pages and we want to make sure all are updated )
       await fetchAllOrders();
+
+      await sendStatusUpdateEmail(orderId, newStatus);
     } else {
-      // For regular users, update local state
+      // For regular users, update local state (update only the order that was changed, without re-fetching all orders from backend)
       setOrdersForCurrentPage((prevOrders) =>
         prevOrders.map((order) =>
           order._id === orderId ? { ...order, status: newStatus } : order,
@@ -246,7 +285,7 @@ const Order = ({
             <span>No orders found for this user</span>
           </div>
         : <>
-            <div className="w-2/3 mx-auto my-6 text-3xl font-bold text-center divider divider-secondary">
+            <div className="w-2/3 mx-auto my-8 text-3xl font-bold text-center divider divider-secondary">
               {user.role === "admin" ? "Order Management" : "Orders"}
             </div>
 
@@ -254,10 +293,10 @@ const Order = ({
             <Searchbar
               searchTerm={orderSearchTerm}
               setSearchTerm={setOrderSearchTerm}
-              placeholder="Order ID, User Email, or Name"
+              placeholder="ID, User Email, or Name"
             />
 
-            <div className="flex flex-col  p-2 space-y-8 ">
+            <div className="flex flex-col  p-2 space-y-8  mt-8">
               {filteredOrders.length === 0 ?
                 <div className="text-center text-gray-500 py-8">
                   <p>No orders match your search "{orderSearchTerm}"</p>
