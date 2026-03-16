@@ -9,6 +9,7 @@ import { FaShippingFast } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import ChooseStatusDialog from "../components/ChooseStatusDialog.jsx";
+import Searchbar from "../components/Searchbar.jsx";
 
 const Order = ({
   adminOrdersForCurrentPage,
@@ -23,6 +24,8 @@ const Order = ({
 }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const [orderSearchTerm, setOrderSearchTerm] = useState("");
 
   const { addProductToCart, decreaseProductQuantity, removeProductFromCart } =
     useCart();
@@ -197,6 +200,26 @@ const Order = ({
   console.log("orderTotals", orderTotals); */
 
   console.log("orders for current page", orders);
+
+  // Filter orders by search term (order ID or user email)
+  const filteredOrders = (orders || []).filter((order) => {
+    // If search term is empty, return all orders
+    if (!orderSearchTerm.trim()) {
+      return true;
+    }
+    // otherwise display only orders that match the search term in either order ID, user email, or user name
+    const searchLower = orderSearchTerm.toLowerCase();
+    const orderId = order._id?.toLowerCase() || "";
+    const userEmail = order.userId?.email?.toLowerCase() || "";
+    const userName =
+      `${order.userId?.defaultAddress?.firstName || ""} ${order.userId?.defaultAddress?.lastName || ""}`.toLowerCase();
+
+    return (
+      orderId.includes(searchLower) ||
+      userEmail.includes(searchLower) ||
+      userName.includes(searchLower)
+    );
+  });
   const userBasedpaginationArray =
     user.role === "admin" ? adminPaginationArray : paginationArray;
   const userBasedCurrentPage =
@@ -226,218 +249,238 @@ const Order = ({
             <div className="w-2/3 mx-auto my-6 text-3xl font-bold text-center divider divider-secondary">
               {user.role === "admin" ? "Order Management" : "Orders"}
             </div>
+
+            {/* ----------------search bar-------------------- */}
+            <Searchbar
+              searchTerm={orderSearchTerm}
+              setSearchTerm={setOrderSearchTerm}
+              placeholder="Order ID, User Email, or Name"
+            />
+
             <div className="flex flex-col  p-2 space-y-8 ">
-              {(orders || [])
-                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .map((order, index) => {
-                  console.log("order in map", order);
-                  console.log(
-                    "######user in Order page######",
-                    order.shippingCosts,
-                  );
-                  // console.log("######order total######", orderTotals[index]);
+              {filteredOrders.length === 0 ?
+                <div className="text-center text-gray-500 py-8">
+                  <p>No orders match your search "{orderSearchTerm}"</p>
+                </div>
+              : filteredOrders
+                  // {(orders || [])
+                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                  .map((order) => {
+                    console.log("order in map", order);
+                    console.log(
+                      "######user in Order page######",
+                      order.shippingCosts,
+                    );
+                    // console.log("######order total######", orderTotals[index]);
 
-                  //  Calculate total for THIS specific order
-                  const productsTotal = order.products.reduce((acc, curr) => {
-                    const price = parseFloat(curr.price || 0);
-                    return acc + price * curr.quantity;
-                  }, 0);
+                    //  Calculate total for THIS specific order
+                    const productsTotal = order.products.reduce((acc, curr) => {
+                      const price = parseFloat(curr.price || 0);
+                      return acc + price * curr.quantity;
+                    }, 0);
 
-                  const shippingCosts = parseFloat(order.shippingCosts || 0);
-                  const orderTotal = (productsTotal + shippingCosts).toFixed(2);
-                  return (
-                    <div
-                      key={order._id}
-                      className=" flex flex-col border border-gray rounded-lg p-2 space-y-4  ">
-                      {/* order date */}
-                      <p className="text-lg  ">
-                        <span className="underline underline-offset-8 pr-2 ">
-                          Order On:
-                        </span>{" "}
-                        {order.createdAt?.split("T")[0]}
-                      </p>
-                      {/*********** user who placed the order ***********/}
-                      {user.role === "admin" && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 w-full space-y-2 sm:space-y-0 gap-4 place-items-start ">
-                          <div className="text-sm text-gray-300  ">
-                            <h3 className="text-white text-lg mb-2">
-                              <span className="underline underline-offset-8 ">
-                                From:
-                              </span>{" "}
-                            </h3>
+                    const shippingCosts = parseFloat(order.shippingCosts || 0);
+                    const orderTotal = (productsTotal + shippingCosts).toFixed(
+                      2,
+                    );
 
-                            <p>
-                              {order.userId?.defaultAddress?.companyName || ""}
-                            </p>
-                            <p>
-                              {order.userId?.defaultAddress?.firstName || ""}{" "}
-                              {order.userId?.defaultAddress?.lastName || ""}
-                            </p>
-                            <p>
-                              {order.userId?.defaultAddress?.streetAddress?.replace(
-                                ",",
-                                "",
-                              ) || ""}
-                              {order.userId?.defaultAddress?.streetAddress &&
-                                ",  "}
-                              {order.userId?.defaultAddress?.zipCode || ""}{" "}
-                              {order.userId?.defaultAddress?.city || ""}{" "}
-                            </p>
-                            <p>
-                              {order.userId?.defaultAddress?.state}{" "}
-                              {order.userId?.defaultAddress?.streetAddress &&
-                                ",  "}
-                              {order.userId?.defaultAddress?.country || ""}
-                            </p>
-                            <p>{order.userId?.email || ""}</p>
-                          </div>
-                          <div className="text-sm text-center text-gray-300 border border-primary w-fit rounded-lg p-2 space-y-1 sm:col-start-3 sm:col-span-1 ml-auto ">
-                            <h3 className="text-white text-lg mb-2">
-                              <span className="flex flex-row items-center gap-2  underline underline-offset-8">
-                                <FaLocationDot className="text-primary" />
-                                Shipping Address:
-                              </span>
-                            </h3>
-                            <p>
-                              {order?.shippingAddress?.firstName}{" "}
-                              {order.shippingAddress?.lastName}
-                            </p>
-
-                            <p>
-                              {order.shippingAddress?.streetAddress?.replace(
-                                ",",
-                                "",
-                              )}{" "}
-                              {order.shippingAddress && ","}
-                              {order.shippingAddress?.zipCode}{" "}
-                              {order.shippingAddress?.city}
-                            </p>
-                            <p>
-                              {order.shippingAddress?.state}{" "}
-                              {order.shippingAddress?.country}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-
-                      {/***********order status ***********/}
-
-                      <ul className="steps sm:steps-horizontal steps-vertical">
-                        <li
-                          className={`step ${(order.status === "processing" || order.status === "shipped" || order.status === "delivered") && " step-primary"}`}>
-                          Processing
-                        </li>
-                        <li
-                          className={`step ${(order.status === "shipped" || order.status === "delivered") && "step-primary"}`}>
-                          Shipped
-                        </li>
-                        <li
-                          className={`step ${order.status === "delivered" && "step-primary"}`}>
-                          Delivered
-                        </li>
-                        <li
-                          className={`step ${order.status === "cancelled" && "before:!bg-red-500 after:!bg-red-500"}`}>
-                          Cancelled
-                        </li>
-                      </ul>
-                      <p className=" flex items-center gap-2 text-lg glow-text-secondary glass w-fit px-2 py-1 rounded-selector">
-                        📦 →{" "}
-                        <span
-                          className={
-                            order.status === "shipped" ? "text-cyan-400"
-                            : order.status === "delivered" ?
-                              "text-lime-500"
-                            : order.status === "cancelled" ?
-                              "text-red-500"
-                            : "text-secondary"
-                          }>
-                          {order.status}
-                          {order.status === "cancelled" && " ❌"}
-                          {order.status === "delivered" && " ✅"}
-                          {/* car shipping icon   */}
-                          {order.status === "shipped" && " 🚚"}
-                        </span>
+                    return (
+                      <div
+                        key={order._id}
+                        className=" flex flex-col border border-gray rounded-lg p-2 space-y-4  ">
+                        {/* order date */}
+                        <p className="text-lg  ">
+                          <span className="underline underline-offset-8 pr-2 ">
+                            Order On:
+                          </span>{" "}
+                          {order.createdAt?.split("T")[0]}
+                        </p>
+                        {/*********** user who placed the order ***********/}
                         {user.role === "admin" && (
-                          <FaEdit
-                            className=" cursor-pointer"
-                            onClick={() => handleEditOrderStatus(order._id)}
-                          />
-                        )}
-                      </p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 w-full space-y-2 sm:space-y-0 gap-4 place-items-start ">
+                            <div className="text-sm text-gray-300  ">
+                              <h3 className="text-white text-lg mb-2">
+                                <span className="underline underline-offset-8 ">
+                                  From:
+                                </span>{" "}
+                              </h3>
 
-                      {/* order products */}
-                      <p className=" text-secondary text-center">
-                        Order - ({order._id})
-                      </p>
-                      {order.products.map((product) => {
-                        const p = product.productId || product;
-
-                        console.log("product in order", p);
-                        //! Check if the product is already in the cart
-                        const inCart = cartList.products?.some(
-                          (item) => item.productId._id === p._id,
-                        );
-                        return (
-                          <div
-                            key={p._id}
-                            className="grid sm:grid-cols-3 grid-cols-1 sm:space-y-1 space-y-4 place-items-center  h-full  p-2 rounded-lg border border-gray-100/20"
-                            onClick={(e) => handleImageClick(p._id, e, p)}>
-                            <div className="avatar size-30  sm:mr-auto">
-                              <img
-                                // onClick={(e) =>
-                                //   handleImageClick(product.productId._id, e, product)
-                                // }
-                                className="object-fill   bg-white mask mask-circle "
-                                src={p.image}
-                                alt={p.title}
-                              />
-                            </div>
-                            <div className="w-full text-center sm:text-left ">
-                              <h2>{p.title}</h2>
                               <p>
-                                Price: {parseFloat(p.price).toFixed(2) + " €"}
+                                {order.userId?.defaultAddress?.companyName ||
+                                  ""}
+                              </p>
+                              <p>
+                                {order.userId?.defaultAddress?.firstName || ""}{" "}
+                                {order.userId?.defaultAddress?.lastName || ""}
+                              </p>
+                              <p>
+                                {order.userId?.defaultAddress?.streetAddress?.replace(
+                                  ",",
+                                  "",
+                                ) || ""}
+                                {order.userId?.defaultAddress?.streetAddress &&
+                                  ",  "}
+                                {order.userId?.defaultAddress?.zipCode || ""}{" "}
+                                {order.userId?.defaultAddress?.city || ""}{" "}
+                              </p>
+                              <p>
+                                {order.userId?.defaultAddress?.state}{" "}
+                                {order.userId?.defaultAddress?.streetAddress &&
+                                  ",  "}
+                                {order.userId?.defaultAddress?.country || ""}
+                              </p>
+                              <p>{order.userId?.email || ""}</p>
+                            </div>
+                            <div className="text-sm text-center text-gray-300 border border-primary w-fit rounded-lg p-2 space-y-1 sm:col-start-3 sm:col-span-1 ml-auto ">
+                              <h3 className="text-white text-lg mb-2">
+                                <span className="flex flex-row items-center gap-2  underline underline-offset-8">
+                                  <FaLocationDot className="text-primary" />
+                                  Shipping Address:
+                                </span>
+                              </h3>
+                              <p>
+                                {order?.shippingAddress?.firstName}{" "}
+                                {order.shippingAddress?.lastName}
                               </p>
 
-                              <p>Quantity: {p.quantity || product.quantity}</p>
+                              <p>
+                                {order.shippingAddress?.streetAddress?.replace(
+                                  ",",
+                                  "",
+                                )}{" "}
+                                {order.shippingAddress && ","}
+                                {order.shippingAddress?.zipCode}{" "}
+                                {order.shippingAddress?.city}
+                              </p>
+                              <p>
+                                {order.shippingAddress?.state}{" "}
+                                {order.shippingAddress?.country}
+                              </p>
                             </div>
-                            {/* display the buy again button only if the product is not in the cart */}
-                            {user.role !== "admin" && (
-                              <div>
-                                {!inCart && (
-                                  <button
-                                    className="btn  btn-secondary"
-                                    onClick={(e) => handleBuyAgain(e, p._id)}>
-                                    Buy Again
-                                  </button>
-                                )}
-                              </div>
-                            )}
                           </div>
-                        );
-                      })}
+                        )}
 
-                      <p className="text-md text-center   ">
-                        Shipping Costs:{" "}
-                        {parseFloat(order?.shippingCosts || 0).toFixed(2) +
-                          " €"}
-                      </p>
-                      <>
-                        {/* Display totals for each order */}
-                        <p className="text-lg text-center text-secondary font-bold ">
-                          {/* Totals: {orderTotals[index] + " €"} */}
-                          Totals: {orderTotal} €
+                        {/***********order status ***********/}
+
+                        <ul className="steps sm:steps-horizontal steps-vertical">
+                          <li
+                            className={`step ${(order.status === "processing" || order.status === "shipped" || order.status === "delivered") && " step-primary"}`}>
+                            Processing
+                          </li>
+                          <li
+                            className={`step ${(order.status === "shipped" || order.status === "delivered") && "step-primary"}`}>
+                            Shipped
+                          </li>
+                          <li
+                            className={`step ${order.status === "delivered" && "step-primary"}`}>
+                            Delivered
+                          </li>
+                          <li
+                            className={`step ${order.status === "cancelled" && "before:!bg-red-500 after:!bg-red-500"}`}>
+                            Cancelled
+                          </li>
+                        </ul>
+                        <p className=" flex items-center gap-2 text-lg glow-text-secondary glass w-fit px-2 py-1 rounded-selector">
+                          📦 →{" "}
+                          <span
+                            className={
+                              order.status === "shipped" ? "text-cyan-400"
+                              : order.status === "delivered" ?
+                                "text-lime-500"
+                              : order.status === "cancelled" ?
+                                "text-red-500"
+                              : "text-secondary"
+                            }>
+                            {order.status}
+                            {order.status === "cancelled" && " ❌"}
+                            {order.status === "delivered" && " ✅"}
+                            {/* car shipping icon   */}
+                            {order.status === "shipped" && " 🚚"}
+                          </span>
+                          {user.role === "admin" && (
+                            <FaEdit
+                              className=" cursor-pointer"
+                              onClick={() => handleEditOrderStatus(order._id)}
+                            />
+                          )}
                         </p>
-                        <div className="justify-end flex ">
-                          <button
-                            onClick={() => handleInvoicePDF(order._id)}
-                            className="btn btn-lg btn-outline btn-secondary">
-                            Invoice PDF
-                          </button>
-                        </div>
-                      </>
-                    </div>
-                  );
-                })}
+
+                        {/* order products */}
+                        <p className=" text-secondary text-center">
+                          Order - ({order._id})
+                        </p>
+                        {order.products.map((product) => {
+                          const p = product.productId || product;
+
+                          console.log("product in order", p);
+                          //! Check if the product is already in the cart
+                          const inCart = cartList.products?.some(
+                            (item) => item.productId._id === p._id,
+                          );
+                          return (
+                            <div
+                              key={p._id}
+                              className="grid sm:grid-cols-3 grid-cols-1 sm:space-y-1 space-y-4 place-items-center  h-full  p-2 rounded-lg border border-gray-100/20"
+                              onClick={(e) => handleImageClick(p._id, e, p)}>
+                              <div className="avatar size-30  sm:mr-auto">
+                                <img
+                                  // onClick={(e) =>
+                                  //   handleImageClick(product.productId._id, e, product)
+                                  // }
+                                  className="object-fill   bg-white mask mask-circle "
+                                  src={p.image}
+                                  alt={p.title}
+                                />
+                              </div>
+                              <div className="w-full text-center sm:text-left ">
+                                <h2>{p.title}</h2>
+                                <p>
+                                  Price: {parseFloat(p.price).toFixed(2) + " €"}
+                                </p>
+
+                                <p>
+                                  Quantity: {p.quantity || product.quantity}
+                                </p>
+                              </div>
+                              {/* display the buy again button only if the product is not in the cart */}
+                              {user.role !== "admin" && (
+                                <div>
+                                  {!inCart && (
+                                    <button
+                                      className="btn  btn-secondary"
+                                      onClick={(e) => handleBuyAgain(e, p._id)}>
+                                      Buy Again
+                                    </button>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+
+                        <p className="text-md text-center   ">
+                          Shipping Costs:{" "}
+                          {parseFloat(order?.shippingCosts || 0).toFixed(2) +
+                            " €"}
+                        </p>
+                        <>
+                          {/* Display totals for each order */}
+                          <p className="text-lg text-center text-secondary font-bold ">
+                            {/* Totals: {orderTotals[index] + " €"} */}
+                            Totals: {orderTotal} €
+                          </p>
+                          <div className="justify-end flex ">
+                            <button
+                              onClick={() => handleInvoicePDF(order._id)}
+                              className="btn btn-lg btn-outline btn-secondary">
+                              Invoice PDF
+                            </button>
+                          </div>
+                        </>
+                      </div>
+                    );
+                  })
+              }
             </div>
           </>
         }

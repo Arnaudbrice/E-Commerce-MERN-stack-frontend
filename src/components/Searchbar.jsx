@@ -4,7 +4,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 
-const Searchbar = ({ searchTerm, setSearchTerm }) => {
+const Searchbar = ({ searchTerm, setSearchTerm, placeholder }) => {
   const {
     transcript,
     listening,
@@ -52,7 +52,7 @@ const Searchbar = ({ searchTerm, setSearchTerm }) => {
         <input
           type="search"
           required
-          placeholder="Search"
+          placeholder={placeholder || "Search..."}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
