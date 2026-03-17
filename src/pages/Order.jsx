@@ -10,19 +10,22 @@ import { FaEdit } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import ChooseStatusDialog from "../components/ChooseStatusDialog.jsx";
 import Searchbar from "../components/Searchbar.jsx";
+import AdminProducts from "./AdminProducts.jsx";
 
-const Order = ({
+/* const Order = ({
   adminOrdersForCurrentPage,
-  adminPaginationArray,
-  adminCurrentPage,
   setAdminOrdersForCurrentPage,
+  adminPaginationArray,
   setAdminPaginationArray,
+  adminCurrentPage,
   setAdminCurrentPage,
 
   dashboardLoading,
   fetchAllOrders,
-}) => {
+}) => { */
+const Order = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
 
   const [orderSearchTerm, setOrderSearchTerm] = useState("");
@@ -36,9 +39,15 @@ const Order = ({
   const [selectOrderId, setSelectOrderId] = useState(null);
 
   const [ordersForCurrentPage, setOrdersForCurrentPage] = useState([]);
+  const [adminOrdersForCurrentPage, setAdminOrdersForCurrentPage] = useState(
+    [],
+  );
 
   const [paginationArray, setPaginationArray] = useState([]);
+  const [adminPaginationArray, setAdminPaginationArray] = useState([]);
+
   const [currentPage, setCurrentPage] = useState(1);
+  const [adminCurrentPage, setAdminCurrentPage] = useState(1);
 
   const { cartProductsQuantity, cartList } = useCart();
 
@@ -49,8 +58,12 @@ const Order = ({
     const fetchOrders = async () => {
       try {
         // window.location.search is an empty string when there’s no query, so ${baseUrl}/users/orders${qs} resolves to just /users/orders
-        const qs = window.location.search; // e.g. ?page=2
-        const response = await fetch(`${baseUrl}/users/orders${qs}`, {
+        const qs = location.search; // includes ?page=X&search=Y
+
+        // Choose endpoint based on role
+        const endpoint =
+          user.role === "admin" ? "/users/admin/orders" : "/users/orders";
+        const response = await fetch(`${baseUrl}${endpoint}${qs}`, {
           method: "GET",
           credentials: "include",
         });
@@ -62,15 +75,21 @@ const Order = ({
         }
         const data = await response.json();
 
-        console.log("data in order page", data);
+        if (user.role === "admin") {
+          setAdminOrdersForCurrentPage(data.orders || []);
+          setAdminPaginationArray(data.paginationArray || []);
+          setAdminCurrentPage(data.currentPageNumber);
+        } else {
+          console.log("data in order page", data);
 
-        // Get orders for current page - handle both nested and flat arrays
-        const ordersData = data.ordersProductsForCurrentPage;
-        console.log("ordersData", ordersData);
+          // Get orders for current page - handle both nested and flat arrays
+          const ordersData = data.ordersProductsForCurrentPage;
+          console.log("ordersData", ordersData);
 
-        setOrdersForCurrentPage(ordersData || []);
-        setPaginationArray(data.paginationArray || []);
-        setCurrentPage(data.currentPageNumber);
+          setOrdersForCurrentPage(ordersData || []);
+          setPaginationArray(data.paginationArray || []);
+          setCurrentPage(data.currentPageNumber);
+        }
       } catch (error) {
         // normalize to a readable string and avoid "[object Object]"
         const msg =
@@ -82,18 +101,82 @@ const Order = ({
         setIsLoading(false);
       }
     };
-
-    if (user.role !== "admin") {
+    if (baseUrl && user?.role) {
       fetchOrders();
     }
     // fetchOrders();
-  }, [
-    baseUrl,
-    setOrdersForCurrentPage,
-    setPaginationArray,
-    setCurrentPage,
-    user.role,
-  ]);
+  }, [baseUrl, user.role, location.search]);
+
+  // Initialize search term from URL on mount (once)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlSearch = params.get("search") || "";
+    setOrderSearchTerm(urlSearch);
+  }, []); // ✅ Empty deps = once on mount
+
+  // Update URL with search term
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      // here window.location to avoid to add location.search as dependency, which will always reset the page to 1 if for instance pagination item  2 is clicked
+      const params = new URLSearchParams(window.location.search);
+      if (orderSearchTerm) {
+        params.set("search", orderSearchTerm);
+      } else {
+        params.delete("search");
+      }
+      params.set("page", "1"); // Reset to page 1 on new search
+      navigate(`?${params.toString()}`);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [orderSearchTerm, navigate]);
+
+  /*  const fetchAllOrders = async () => {
+    try {
+      // window.location.search is an empty string when there’s no query, so ${baseUrl}/users/orders${qs} resolves to just /users/orders
+      const qs = location.search; // includes ?page=X&search=Y
+
+      // Choose endpoint based on role
+      const endpoint =
+        user.role === "admin" ? "/users/admin/orders" : "/users/orders";
+      const response = await fetch(`${baseUrl}${endpoint}${qs}`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const { message: errorMessage } = await response.json();
+        customErrorMessage(errorMessage, 5000);
+        return;
+      }
+      const data = await response.json();
+
+      if (user.role === "admin") {
+        setAdminOrdersForCurrentPage(data.orders || []);
+        setAdminPaginationArray(data.paginationArray || []);
+        setAdminCurrentPage(data.currentPageNumber);
+      } else {
+        console.log("data in order page", data);
+
+        // Get orders for current page - handle both nested and flat arrays
+        const ordersData = data.ordersProductsForCurrentPage;
+        console.log("ordersData", ordersData);
+
+        setOrdersForCurrentPage(ordersData || []);
+        setPaginationArray(data.paginationArray || []);
+        setCurrentPage(data.currentPageNumber);
+      }
+    } catch (error) {
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
+    } finally {
+      setIsLoading(false);
+    }
+  }; */
 
   const handleBuyAgain = async (e, id) => {
     e.stopPropagation();
@@ -208,7 +291,11 @@ const Order = ({
   const handleStatusUpdate = async (orderId, newStatus) => {
     if (user.role === "admin") {
       // For admin, re-fetch all orders from backend to update UI ( in case order pages are opened on different pages and we want to make sure all are updated )
-      await fetchAllOrders();
+      // await fetchAllOrders();
+
+      // Re-trigger the main fetch effect by updating URL
+      const params = new URLSearchParams(location.search);
+      navigate(`?${params.toString()}`, { replace: true });
 
       await sendStatusUpdateEmail(orderId, newStatus);
     } else {
@@ -221,8 +308,8 @@ const Order = ({
     }
   };
 
-  const loading = user.role === "admin" ? dashboardLoading : isLoading;
-  if (loading) {
+  // const loading = user.role === "admin" ? dashboardLoading : isLoading;
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <span className="text-xl">Loading orders </span>
@@ -234,6 +321,10 @@ const Order = ({
   //! Determine which orders and totals to display based on user role
   const orders =
     user.role === "admin" ? adminOrdersForCurrentPage : ordersForCurrentPage;
+  const paginationData =
+    user.role === "admin" ? adminPaginationArray : paginationArray;
+  const currentPageNumber =
+    user.role === "admin" ? adminCurrentPage : currentPage;
 
   /*  const orderTotals = user.role === "admin" ? adminTotals : totals;
   console.log("orderTotals", orderTotals); */
@@ -241,7 +332,7 @@ const Order = ({
   console.log("orders for current page", orders);
 
   // Filter orders by search term (order ID or user email)
-  const filteredOrders = (orders || []).filter((order) => {
+  /*   const filteredOrders = (orders || []).filter((order) => {
     // If search term is empty, return all orders
     if (!orderSearchTerm.trim()) {
       return true;
@@ -258,14 +349,23 @@ const Order = ({
       userEmail.includes(searchLower) ||
       userName.includes(searchLower)
     );
-  });
-  const userBasedpaginationArray =
-    user.role === "admin" ? adminPaginationArray : paginationArray;
-  const userBasedCurrentPage =
-    user.role === "admin" ? adminCurrentPage : currentPage;
+  }); */
 
   return (
     <div>
+      <div className="w-2/3 mx-auto my-8 text-3xl font-bold text-center divider divider-secondary">
+        {user.role === "admin" ? "Order Management" : "Orders"}
+      </div>
+      {/* ----------------search bar-------------------- */}
+      <Searchbar
+        searchTerm={orderSearchTerm}
+        setSearchTerm={setOrderSearchTerm}
+        placeholder={
+          user.role === "admin" ?
+            "Order ID, User Email, or Name"
+          : "Order ID or Product"
+        }
+      />
       <div>
         {!orders?.length ?
           <div
@@ -282,26 +382,15 @@ const Order = ({
                 strokeWidth="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <span>No orders found for this user</span>
+            <span>No orders match your search "{orderSearchTerm}"</span>
           </div>
         : <>
-            <div className="w-2/3 mx-auto my-8 text-3xl font-bold text-center divider divider-secondary">
-              {user.role === "admin" ? "Order Management" : "Orders"}
-            </div>
-
-            {/* ----------------search bar-------------------- */}
-            <Searchbar
-              searchTerm={orderSearchTerm}
-              setSearchTerm={setOrderSearchTerm}
-              placeholder="ID, User Email, or Name"
-            />
-
             <div className="flex flex-col  p-2 space-y-8  mt-8">
-              {filteredOrders.length === 0 ?
+              {orders.length === 0 ?
                 <div className="text-center text-gray-500 py-8">
                   <p>No orders match your search "{orderSearchTerm}"</p>
                 </div>
-              : filteredOrders
+              : orders
                   // {(orders || [])
                   .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                   .map((order) => {
@@ -523,6 +612,13 @@ const Order = ({
             </div>
           </>
         }
+
+        {/* pagination */}
+
+        <Pagination
+          paginationArray={paginationData}
+          currentPage={currentPageNumber}
+        />
       </div>
       {/***********choose status dialog (outside the map) ***********/}
       {isDialogOpen && (
@@ -533,10 +629,6 @@ const Order = ({
           onStatusUpdate={handleStatusUpdate}
         />
       )}
-      <Pagination
-        paginationArray={userBasedpaginationArray}
-        currentPage={userBasedCurrentPage}
-      />
     </div>
   );
 };

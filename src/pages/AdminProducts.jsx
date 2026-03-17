@@ -6,10 +6,19 @@ import EditDialog from "../components/EditDialog.jsx";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import { toast } from "react-toastify";
 import Searchbar from "../components/Searchbar.jsx";
+import Pagination from "../components/Pagination.jsx";
 
 const AdminProducts = () => {
-  const { products, setProducts, searchTerm, setSearchTerm, isLoading } =
-    useProducts();
+  const {
+    products,
+    setProducts,
+    productsPerPage,
+    searchTerm,
+    paginationArray,
+    currentPage,
+    setSearchTerm,
+    isLoading,
+  } = useProducts();
 
   const { user } = useAuth();
   const [userProducts, setUserProducts] = useState([]);
@@ -82,7 +91,7 @@ const AdminProducts = () => {
     getUserProducts();
   }, [products, user, setUserProducts]);
 
-  if (!hasFinishedGettingUserProducts) {
+  if (isLoading) {
     return (
       <div role="status" className="max-w-sm animate-pulse">
         <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
@@ -97,7 +106,7 @@ const AdminProducts = () => {
   }
 
   // this should happening after updating the state
-  if (!userProducts?.length && hasFinishedGettingUserProducts) {
+  if (!productsPerPage?.length) {
     return (
       <div>
         <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -114,7 +123,7 @@ const AdminProducts = () => {
       <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
       <div className="grid min-h-full grid-cols-1 sm:grid-cols-2 gap-6 mx-auto my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] sm:mx-6 auto-rows-min  ">
-        {userProducts.map((product) => {
+        {productsPerPage.map((product) => {
           return (
             <div key={product._id}>
               <Card {...product}>
@@ -143,6 +152,10 @@ const AdminProducts = () => {
           );
         })}
       </div>
+
+      {/* pagination */}
+
+      <Pagination paginationArray={paginationArray} currentPage={currentPage} />
     </div>
   );
 };

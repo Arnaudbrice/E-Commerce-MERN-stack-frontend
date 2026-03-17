@@ -141,12 +141,16 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    // a guard to avoid that React Strict Mode calls the effects twice in development mode
+    let isMounted = true; // Guard flag
     const getUser = async () => {
       try {
         const response = await fetch(`${baseUrl}/auth/me`, {
           method: "GET",
           credentials: "include",
         });
+
+        if (!isMounted) return; //Don't update if unmounted
 
         if (!response.ok) {
           const { error: validationError } = await response.json();
@@ -185,6 +189,9 @@ export const AuthContextProvider = ({ children }) => {
       }
     };
     getUser();
+    return () => {
+      isMounted = false; //  Cleanup the guard
+    };
   }, [navigate, baseUrl, location.pathname]);
 
   useEffect(() => {

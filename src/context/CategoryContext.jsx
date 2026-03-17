@@ -9,6 +9,7 @@ export const CategoryContextProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
+    let isMounted = true; //the guard to avoid that the effect is called twice in development mode
     const fetchCategories = async () => {
       /*  if (!user) {
         return;
@@ -21,6 +22,8 @@ export const CategoryContextProvider = ({ children }) => {
             "Content-Type": "application/json",
           }, */
         });
+
+        if (!isMounted) return; //  Guard: don't proceed if unmounted
 
         if (!response.ok) {
           const { message: errorMessage } = await response.json();
@@ -41,6 +44,9 @@ export const CategoryContextProvider = ({ children }) => {
       }
     };
     fetchCategories();
+    return () => {
+      isMounted = false; //clean the guard
+    };
   }, [baseUrl, user]);
 
   return (
