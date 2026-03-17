@@ -30,11 +30,13 @@ export const ProductProvider = ({ children }) => {
   //********** searching products **********
 
   useEffect(() => {
+    let isMounted = true; // Guard flag
     const fetchProducts = async () => {
       /*    if (!user) {
         return;
       } */
-      // setIsLoading(true);
+      // setIsLoading(true); //start loading
+
       try {
         /* window.location.search is an empty string when there’s no query, so ${baseUrl}/users/products${qs} resolves to just /users/products */
         /*  const qs = window.location.search; // e.g. ?page=2
@@ -59,6 +61,7 @@ export const ProductProvider = ({ children }) => {
             credentials: "include",
           },
         );
+        if (!isMounted) return; //Guard: don't proceed if unmounted
         if (!response.ok) {
           const { message: errorMessage } = await response.json();
           customErrorMessage(errorMessage, 5000);
@@ -78,12 +81,19 @@ export const ProductProvider = ({ children }) => {
         // setIsLoading(false);
         setError(true);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); //always stop loading
       }
     };
 
-    fetchProducts();
-  }, [baseUrl, user, location.search]);
+    //Only fetch if baseUrl exists (prevents double fetch on mount)
+    if (baseUrl) {
+      fetchProducts();
+    }
+    return () => {
+      isMounted = false;
+    };
+    // fetchProducts();
+  }, [baseUrl, location.search]);
 
   /* this effect keep searchTerm in sync with the URL (for back/forward navigation) */
   useEffect(() => {

@@ -8,15 +8,15 @@ import useAuth from "../hooks/useAuth.jsx";
 
 const Dashboard = () => {
   // state for Pagination
-  const [currentPage, setCurrentPage] = useState(1);
+  /*  const [currentPage, setCurrentPage] = useState(1);
   const [paginationArray, setPaginationArray] = useState([]);
   const [ordersForCurrentPage, setOrdersForCurrentPage] = useState([]);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [dashboardLoading, setDashboardLoading] = useState(true); */
 
   // get all orders of all users
-  const fetchAllOrders = useCallback(async () => {
+  /*  const fetchAllOrders = useCallback(async () => {
     try {
       // window.location.search is an empty string when there’s no query, so ${baseUrl}/users/orders${qs} resolves to just /users/orders
       const qs = window.location.search; // e.g. ?page=2
@@ -30,7 +30,7 @@ const Dashboard = () => {
         customErrorMessage(errorMessage, 5000);
         return;
       }
-
+      alert("cool");
       const data = await response.json();
       console.log("data from dashboard", data);
 
@@ -47,24 +47,13 @@ const Dashboard = () => {
     } finally {
       setDashboardLoading(false);
     }
-  }, [baseUrl]);
+  }, [baseUrl]); */
 
-  useEffect(() => {
+  /*   useEffect(() => {
     fetchAllOrders();
-  }, [fetchAllOrders]);
+  }, [fetchAllOrders]); */
 
-  return (
-    <Order
-      adminOrdersForCurrentPage={ordersForCurrentPage}
-      setAdminOrdersForCurrentPage={setOrdersForCurrentPage}
-      adminPaginationArray={paginationArray}
-      setAdminPaginationArray={setPaginationArray}
-      adminCurrentPage={currentPage}
-      setAdminCurrentPage={setCurrentPage}
-      dashboardLoading={dashboardLoading}
-      fetchAllOrders={fetchAllOrders}
-    />
-  );
+  return <Order />;
 };
 
 export default Dashboard;
