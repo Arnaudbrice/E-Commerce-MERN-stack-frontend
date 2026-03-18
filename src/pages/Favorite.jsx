@@ -98,7 +98,7 @@ const Favorite = () => {
   return (
     <div>
       <div className="w-2/3 mx-auto my-16 text-lg sm:text-xl font-bold text-center divider divider-secondary ">
-        <div class="mask mask-heart size-40 flex items-center justify-center font-bold  bg-secondary text-white p-2">
+        <div className="mask mask-heart size-40 flex items-center justify-center font-bold  bg-secondary text-white p-2">
           My Wishlist
         </div>
       </div>
@@ -106,7 +106,7 @@ const Favorite = () => {
       <div className="grid min-h-full grid-cols-2 gap-6 mx-auto my-6 text-gray-400 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
         {favoriteProducts.map((product) => {
           const productFromCart = cartList.products.filter(
-            (productItem) => productItem.productId._id === product._id
+            (productItem) => productItem.productId._id === product._id,
           )[0];
           console.log("productFromCart", productFromCart);
           return (
@@ -143,7 +143,8 @@ const Favorite = () => {
                   </Link>
                   {(
                     !cartList.products.some(
-                      (productItem) => productItem.productId._id === product._id
+                      (productItem) =>
+                        productItem.productId._id === product._id,
                     )
                   ) ?
                     <button
@@ -151,7 +152,7 @@ const Favorite = () => {
                         handleAddToCartButtonClick(
                           e,
                           product._id,
-                          productFromCart?.quantity || 0
+                          productFromCart?.quantity || 0,
                         )
                       }
                       className="btn btn-secondary mb-8">
@@ -165,14 +166,14 @@ const Favorite = () => {
                           e,
                           product._id,
                           product.stock,
-                          productFromCart.quantity
+                          productFromCart.quantity,
                         )
                       }
                       handleRemove={(e) =>
                         handleRemoveFromCartList(
                           e,
                           product._id,
-                          productFromCart.quantity
+                          productFromCart.quantity,
                         )
                       }
                     />

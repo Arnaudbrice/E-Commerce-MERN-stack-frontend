@@ -50,7 +50,14 @@ const Card = ({
 
   const navigate = useNavigate();
 
-  const { user, setNumberOfFavoriteProducts } = useAuth();
+  const {
+    user,
+    setNumberOfFavoriteProducts,
+    favoriteProducts,
+    setFavoriteProducts,
+    isAddToFavoritesClicked,
+    setIsAddToFavoritesClicked,
+  } = useAuth();
 
   const [quantity, setQuantity] = useState(0);
   // const [productQuantity, setProductQuantity] = useState(0);
@@ -154,6 +161,8 @@ const Card = ({
 
       const updatedProduct = await response.json();
       setIsFavoriteClicked(updatedProduct.isFavorite);
+
+      setIsAddToFavoritesClicked(!isAddToFavoritesClicked);
 
       /*  setNumberOfFavoriteProducts((prev) =>
         updatedProduct.isFavorite ?

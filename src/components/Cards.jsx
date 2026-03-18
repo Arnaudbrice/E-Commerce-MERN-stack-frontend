@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "./Card";
 import ProductContext from "../context/ProductContext.jsx";
 import useProducts from "../hooks/useProducts.jsx";
 import Pagination from "./Pagination.jsx";
+import useAuth from "../hooks/useAuth.jsx";
 
 /* const Pagination = (props) => (
   <div className="flex justify-center items-center gap-2 my-6">
@@ -35,6 +36,7 @@ const Cards = () => {
     currentPage,
     setCurrentPage,
   } = useProducts();
+
   /*   const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchProducts = async () => {

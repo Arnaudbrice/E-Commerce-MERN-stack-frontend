@@ -109,7 +109,10 @@ const Order = () => {
 
   // Initialize search term from URL on mount (once)
   useEffect(() => {
+    // new URLSearchParams(window.location.search) creates a URLSearchParams object from the window.location.search string
+    /* window.location.search: This property of the window.location object returns the query string part of the URL, including the leading question mark (?). For example, if the URL is https://example.com/products?category=electronics&search=laptop, window.location.search would be ?category=electronics&search=laptop. */
     const params = new URLSearchParams(window.location.search);
+    // params.get("search") retrieves the value associated with the first parameter whose name is "search"
     const urlSearch = params.get("search") || "";
     setOrderSearchTerm(urlSearch);
   }, []); // ✅ Empty deps = once on mount
@@ -117,7 +120,10 @@ const Order = () => {
   // Update URL with search term
   useEffect(() => {
     const handler = setTimeout(() => {
-      // here window.location to avoid to add location.search as dependency, which will always reset the page to 1 if for instance pagination item  2 is clicked
+      // Using `window.location.search` directly instead of `location.search` (from `useLocation`)
+      // This prevents `location.search` from becoming a dependency in this `useEffect` hook.
+      // If `location.search` were a dependency, any change to the URL's query string (e.g., pagination clicks)
+      // would re-run this effect, potentially resetting the page to 1 unexpectedly.
       const params = new URLSearchParams(window.location.search);
       if (orderSearchTerm) {
         params.set("search", orderSearchTerm);
@@ -125,6 +131,7 @@ const Order = () => {
         params.delete("search");
       }
       params.set("page", "1"); // Reset to page 1 on new search
+
       navigate(`?${params.toString()}`);
     }, 500);
 

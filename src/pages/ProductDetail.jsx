@@ -84,8 +84,8 @@ const ProductDetail = () => {
         const product = await response.json();
         console.log("product###########", product);
 
-        const review = product.reviews.find(
-          (review) => review.user.toString() === user?._id.toString(),
+        const review = (product?.reviews || []).find(
+          (review) => review.user?.toString() === user?._id?.toString(),
         );
 
         console.log("review now************", review);
