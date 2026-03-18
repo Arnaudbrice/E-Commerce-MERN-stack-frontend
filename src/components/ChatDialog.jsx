@@ -89,22 +89,29 @@ const ChatDialog = ({ isChatModalOpen, setIsChatModalOpen }) => {
         credentials: "include",
       });
 
-      const data = await response.json().catch(() => null);
-
       if (!response.ok) {
+        const { message: validationError } = await response.json();
+
         customErrorMessage(
-          data?.message || "Unable to fetch a response.",
+          validationError || "Unable to fetch a response.",
           5000,
         );
+
         return;
       }
+      const data = await response.json();
 
       setMessages((prev) => [
         ...prev,
         { sender: "bot", text: data?.botResponse || "" },
       ]);
     } catch (error) {
-      toast.error(error?.message || "Something went wrong");
+      // normalize to a readable string and avoid "[object Object]"
+      const msg =
+        error?.message ??
+        (typeof error === "string" ? error : String(error)) ??
+        "Something went wrong";
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }

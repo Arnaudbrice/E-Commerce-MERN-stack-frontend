@@ -107,9 +107,6 @@ export const CartContextProvider = ({ children }) => {
         cartData.products?.reduce((acc, item) => acc + item.quantity, 0) || 0;
       setCartList(cartData);
       setCartProductsQuantity(qty);
-      // setCartList(cartData);
-
-      // await getProductQuantityFromCart(id);
 
       toast.success("Product Added to Cart Successfully!");
     } catch (error) {

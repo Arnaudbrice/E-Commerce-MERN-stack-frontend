@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 
 import { toast } from "react-toastify";
 
@@ -8,7 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 import useAuth from "../hooks/useAuth.jsx";
 const Register = () => {
-  const { register, isLoadingAuth } = useAuth();
+  const { register, isLoadingAuth, user } = useAuth();
 
   const [formState, setFormState] = useState({
     email: "",
@@ -53,6 +53,10 @@ const Register = () => {
         <div className="text-2xl">Loading...</div>
       </div>
     );
+  }
+
+  if (user) {
+    return <Navigate to="/" replace />;
   }
   return (
     <form

@@ -1,6 +1,6 @@
 import React from "react";
 import useAuth from "../hooks/useAuth.jsx";
-import { Outlet, useNavigate } from "react-router";
+import { Navigate, Outlet, useNavigate } from "react-router";
 import { useEffect } from "react";
 
 const ProtectedLayout = () => {
@@ -8,19 +8,25 @@ const ProtectedLayout = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (isLoadingAuth) {
-      return;
+      return <div>Loading...</div>; // Show a loading spinner or placeholder
     }
-
     if (!user) {
       navigate("/login");
     }
-  }, [user, isLoadingAuth, navigate]);
+  }, [user, isLoadingAuth, navigate]); */
+
+  // Prevent navigation until authentication is resolved
+  if (isLoadingAuth) {
+    return <div>Loading...</div>; // Show a loading spinner
+  }
 
   /*  (This prevents a page to be display for a small amount of time before the page to be displayed is ready */
   if (!user) {
-    return null;
+    /*  navigate("/login", { replace: true }); // Use `replace` to avoid adding to history
+    return null; */
+    return <Navigate to="/login" replace />;
   }
 
   // return Outlet to render child routes

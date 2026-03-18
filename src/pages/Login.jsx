@@ -1,13 +1,11 @@
 import React from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, Navigate } from "react-router";
 import useAuth from "../hooks/useAuth.jsx";
 import { useState } from "react";
 
 import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
-  const navigate = useNavigate();
-
   const { login, user, isLoadingAuth } = useAuth();
   const [isClicked, setIsClicked] = useState(false);
 
@@ -37,16 +35,16 @@ const Login = () => {
     }
   };
 
-  if (user) {
-    navigate("/");
-  }
-
   if (isLoadingAuth) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="text-2xl">Loading...</div>
       </div>
     );
+  }
+
+  if (user) {
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -73,7 +71,6 @@ const Login = () => {
         <label className="label">
           <span className="label-text text-gray-100">Password</span>
         </label>
-
 
         <div className="relative mb-6">
           <input

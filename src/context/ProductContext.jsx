@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, useRef } from "react";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
 import useAuth from "../hooks/useAuth.jsx";
 import { toast } from "react-toastify";
@@ -9,7 +9,13 @@ const ProductContext = createContext();
 export const ProductProvider = ({ children }) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-  const { user, setUser } = useAuth();
+  const {
+    user,
+    setUser,
+    isLoadingAuth,
+    isAddToFavoritesClicked,
+    setIsAddToFavoritesClicked,
+  } = useAuth();
 
   const [products, setProducts] = useState([]);
 
@@ -81,19 +87,23 @@ export const ProductProvider = ({ children }) => {
         // setIsLoading(false);
         setError(true);
       } finally {
-        setIsLoading(false); //always stop loading
+        if (isMounted) {
+          setIsLoading(false); //always stop loading
+        }
       }
     };
 
-    //Only fetch if baseUrl exists (prevents double fetch on mount)
-    if (baseUrl) {
+    //Only fetch if baseUrl exists and authentication is resolved
+    if (baseUrl && !isLoadingAuth) {
       fetchProducts();
     }
+
     return () => {
       isMounted = false;
     };
     // fetchProducts();
-  }, [baseUrl, location.search]);
+    // isAddToFavoritesClicked here to re-fetch the products when the user clicks on the add to favorites button (Home.jsx)
+  }, [baseUrl, location.search, isLoadingAuth, isAddToFavoritesClicked]);
 
   /* this effect keep searchTerm in sync with the URL (for back/forward navigation) */
   useEffect(() => {

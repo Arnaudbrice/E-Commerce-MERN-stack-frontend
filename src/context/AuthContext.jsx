@@ -74,6 +74,7 @@ export const AuthContextProvider = ({ children }) => {
 
   //********** login **********
   const login = async (formState) => {
+    setIsLoadingAuth(true);
     try {
       const response = await fetch(`${baseUrl}/auth/login`, {
         method: "POST",
@@ -153,8 +154,11 @@ export const AuthContextProvider = ({ children }) => {
         if (!isMounted) return; //Don't update if unmounted
 
         if (!response.ok) {
-          const { error: validationError } = await response.json();
-          console.log(location.pathname);
+          setUser(null); // Clear user state on failed auth check
+          const { message: validationError } = await response.json();
+
+          console.log("Auth check failed:", validationError);
+          console.log(window.location.pathname);
 
           // Only show the toast if not on the login/register/reset pages
           if (
@@ -163,7 +167,7 @@ export const AuthContextProvider = ({ children }) => {
               "/register",
               "/mail-reset-password",
               "/reset-password",
-            ].includes(location.pathname)
+            ].includes(window.location.pathname)
           ) {
             await customErrorMessage(validationError, 5000);
           }
@@ -180,19 +184,26 @@ export const AuthContextProvider = ({ children }) => {
           error?.message ??
           (typeof error === "string" ? error : String(error)) ??
           "Something went wrong";
+
+        console.log("Auth check error:", msg);
         toast.error(msg);
 
         setUser(null);
         // navigate("/login");
       } finally {
-        setIsLoadingAuth(false);
+        // setIsLoadingAuth(false);
+        if (isMounted) {
+          setIsLoadingAuth(false);
+        }
       }
     };
     getUser();
     return () => {
       isMounted = false; //  Cleanup the guard
     };
-  }, [navigate, baseUrl, location.pathname]);
+  }, [baseUrl]);
+
+  const [isAddToFavoritesClicked, setIsAddToFavoritesClicked] = useState(false);
 
   useEffect(() => {
     const fetchFavoriteProducts = async () => {
@@ -233,7 +244,7 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     fetchFavoriteProducts();
-  }, [baseUrl, user]);
+  }, [baseUrl, user, isAddToFavoritesClicked]);
 
   return (
     <AuthContext.Provider
@@ -249,6 +260,8 @@ export const AuthContextProvider = ({ children }) => {
         setFavoriteProducts,
         numberOfFavoriteProducts,
         setNumberOfFavoriteProducts,
+        isAddToFavoritesClicked,
+        setIsAddToFavoritesClicked,
       }}>
       {children}
     </AuthContext.Provider>
