@@ -136,7 +136,7 @@ export const ProductProvider = ({ children }) => {
         // Navigate with the updated query string
         navigate(`?${params.toString()}`);
       }
-    }, 10); // 10ms debounce
+    }, 500); // 500ms debounce
 
     return () => {
       clearTimeout(handler); //clear timeout when component unmounts or before running the effect next time(dependency change) => to avoid memory leaks
