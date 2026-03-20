@@ -174,6 +174,7 @@ const Cart = () => {
   }, [cartList, userAddress]);
   // console.log("cartList", cartList);
 
+  //********** handle redirection after payment **********
   // After the payment process, if we want to inform the user that payment was successful, we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment.
   useEffect(() => {
     const handleRedirect = async () => {
@@ -194,8 +195,6 @@ const Cart = () => {
 
         await createOrder();
 
-        // todo: navigate to order details page with order to be added to the orders array
-
         // console.log("order after payment", order);
 
         if (user.role === "admin") {
@@ -213,6 +212,8 @@ const Cart = () => {
             order: order, //pass the order details to the orders page
           }, */
         }); //! This replaces the current history entry /cart/?success=true in the back stack with the new one /orders( /cart/?success=true becomes -> /orders in the history back stack)
+
+        //todo: send email to the user
       } else if (canceled) {
         navigate(window.location.pathname, { replace: true });
         toast.error("Payment was canceled.");
