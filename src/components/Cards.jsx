@@ -32,6 +32,7 @@ const Cards = () => {
     products,
     setProducts,
     productsPerPage,
+
     paginationArray,
     currentPage,
     setCurrentPage,

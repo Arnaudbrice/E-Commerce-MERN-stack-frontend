@@ -2,15 +2,22 @@ import React, { useEffect, useState } from "react";
 import { customErrorMessage } from "../../utils/customErrorMessage";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import useAuth from "../hooks/useAuth";
+import useProducts from "../hooks/useProducts.jsx";
 
 const Dialog = ({
   id,
 
   setProduct,
+  product,
   isUserRatingExists,
+  setIsUserRatingExists,
   userComment,
   // setIsRatingExists,
 }) => {
+  const { user } = useAuth();
+  const { products, setProducts, productsPerPage, setProductsPerPage } =
+    useProducts();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const [isRatingClicked, setIsRatingClicked] = useState(false);
@@ -19,14 +26,34 @@ const Dialog = ({
 
   const [isSavingClicked, setIsSavingClicked] = useState(false);
 
-  // display the dialog when the component is mounted for the first time
+  const [stateSynced, setStateSynced] = useState(false); // Track if state is synced
+
+  //Synchronize state with existing review of user from the product when the dialog is opened
   useEffect(() => {
-    document.getElementById("my_modal_5").showModal();
-  }, []);
+    const existingReview = product?.reviews?.find(
+      (review) => review.user?.toString() === user?._id?.toString(),
+    );
+    console.log("existingReview", existingReview);
+
+    if (existingReview) {
+      setRating(existingReview.rating);
+      setComment(existingReview.comment || "");
+    }
+
+    setStateSynced(true); // Mark state as synced
+  }, [product, user]);
+
+  //display the dialog when the component is mounted for the first time
+  useEffect(() => {
+    if (stateSynced) {
+      document.getElementById("my_modal_5").showModal();
+    }
+  }, [stateSynced]);
 
   const handleRatingSubmission = async (e) => {
     e.preventDefault();
     console.log("rating.....", rating);
+    setIsSavingClicked(true);
 
     try {
       const response = await fetch(`${baseUrl}/users/products/${id}/rating`, {
@@ -50,16 +77,31 @@ const Dialog = ({
 
       const updatedProduct = await response.json();
       // setProductRating(updatedProduct.averageRating);
-      setIsSavingClicked(true);
+      console.log("------updatedProduct-----", updatedProduct);
 
-      setProduct(updatedProduct);
+      // setProduct(updatedProduct);
+      // Update the product state with the updated product data
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        reviews: updatedProduct.reviews,
+        averageRating: updatedProduct.averageRating,
+      }));
+
+      // update the globale product state
+      setProductsPerPage((prevProducts) => {
+        return prevProducts.map((product) =>
+          product._id === updatedProduct._id ? updatedProduct : product,
+        );
+      });
       document.getElementById("my_modal_5").close();
       if (isUserRatingExists) {
         toast.success("Your review has been updated!");
+        setIsUserRatingExists(true); // Ensure this is set to true after updating the product
         return;
       }
 
       toast.success("Your review has been Added Successfully!");
+      setIsUserRatingExists(true); // Ensure this is set to true after updating the product
 
       // setIsRatingExists(updatedProduct.isRatingExists);
     } catch (error) {
@@ -69,10 +111,13 @@ const Dialog = ({
         (typeof error === "string" ? error : String(error)) ??
         "Something went wrong";
       toast.error(msg);
+    } finally {
+      setIsSavingClicked(false);
     }
   };
-  const handleChange = (e) => {
-    setRating(e.target.value);
+  const handleRatingChange = (e, value) => {
+    setIsRatingClicked(true);
+    setRating(value);
   };
 
   const handleCommentChange = (e) => {
@@ -105,9 +150,9 @@ const Dialog = ({
             className="mask mask-star-2 mask-half-1 bg-secondary"
             aria-label="0.5 star"
             onClick={() => setIsRatingClicked(true)}
-            onChange={handleChange}
             value={0.5}
-            defaultChecked={rating === 0.5}
+            onChange={(e) => handleRatingChange(e, 0.5)}
+            checked={rating === 0.5}
           />
           <input
             type="radio"
@@ -116,8 +161,8 @@ const Dialog = ({
             aria-label="1 star"
             onClick={() => setIsRatingClicked(true)}
             value={1}
-            onChange={handleChange}
-            defaultChecked={rating === 1}
+            onChange={(e) => handleRatingChange(e, 1)}
+            checked={rating === 1}
           />
           <input
             type="radio"
@@ -125,10 +170,10 @@ const Dialog = ({
             className="mask mask-star-2 mask-half-1 bg-secondary"
             aria-label="1.5 star"
             onClick={() => setIsRatingClicked(true)}
-            // defaultChecked
+            // checked
             value={1.5}
-            onChange={handleChange}
-            defaultChecked={rating === 1.5}
+            onChange={(e) => handleRatingChange(e, 1.5)}
+            checked={rating === 1.5}
           />
           <input
             type="radio"
@@ -137,8 +182,8 @@ const Dialog = ({
             aria-label="2 star"
             onClick={() => setIsRatingClicked(true)}
             value={2}
-            onChange={handleChange}
-            defaultChecked={rating === 2}
+            onChange={(e) => handleRatingChange(e, 2)}
+            checked={rating === 2}
           />
           <input
             type="radio"
@@ -147,7 +192,8 @@ const Dialog = ({
             aria-label="2.5 star"
             onClick={() => setIsRatingClicked(true)}
             value={2.5}
-            defaultChecked={rating === 2.5}
+            onChange={(e) => handleRatingChange(e, 2.5)}
+            checked={rating === 2.5}
           />
           <input
             type="radio"
@@ -156,8 +202,8 @@ const Dialog = ({
             aria-label="3 star"
             onClick={() => setIsRatingClicked(true)}
             value={3}
-            onChange={handleChange}
-            defaultChecked={rating === 3}
+            onChange={(e) => handleRatingChange(e, 3)}
+            checked={rating === 3}
           />
           <input
             type="radio"
@@ -166,7 +212,8 @@ const Dialog = ({
             aria-label="3.5 star"
             onClick={() => setIsRatingClicked(true)}
             value={3.5}
-            defaultChecked={rating === 3.5}
+            onChange={(e) => handleRatingChange(e, 3.5)}
+            checked={rating === 3.5}
           />
           <input
             type="radio"
@@ -175,8 +222,8 @@ const Dialog = ({
             aria-label="4 star"
             onClick={() => setIsRatingClicked(true)}
             value={4}
-            onChange={handleChange}
-            defaultChecked={rating === 4}
+            onChange={(e) => handleRatingChange(e, 4)}
+            checked={rating === 4}
           />
           <input
             type="radio"
@@ -185,8 +232,8 @@ const Dialog = ({
             aria-label="4.5 star"
             onClick={() => setIsRatingClicked(true)}
             value={4.5}
-            onChange={handleChange}
-            defaultChecked={rating === 4.5}
+            onChange={(e) => handleRatingChange(e, 4.5)}
+            checked={rating === 4.5}
           />
           <input
             type="radio"
@@ -195,20 +242,19 @@ const Dialog = ({
             aria-label="5 star"
             onClick={() => setIsRatingClicked(true)}
             value={5}
-            onChange={handleChange}
-            defaultChecked={rating === 5}
+            onChange={(e) => handleRatingChange(e, 5)}
+            checked={rating === 5}
           />
         </div>
 
-        {isRatingClicked && (
-          <textarea
-            rows={6}
-            placeholder="Write A Review About This Product"
-            className="textarea textarea-secondary textarea-lg w-full "
-            onChange={handleCommentChange}
-            value={comment}
-          />
-        )}
+        <textarea
+          rows={6}
+          placeholder="Write A Review About This Product"
+          className="textarea textarea-secondary textarea-lg w-full "
+          onChange={handleCommentChange}
+          value={comment}
+        />
+
         <div className="modal-action">
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}

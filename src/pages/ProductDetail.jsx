@@ -273,8 +273,10 @@ const ProductDetail = () => {
         <Dialog
           id={id}
           setProduct={setProduct}
+          product={product}
           // setIsRatingExists={setIsRatingExists}
           isUserRatingExists={isUserRatingExists}
+          setIsUserRatingExists={setIsUserRatingExists}
           userComment={userComment}
         />
       )}
