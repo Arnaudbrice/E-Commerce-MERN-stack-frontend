@@ -50,6 +50,7 @@ const Dialog = ({
     }
   }, [stateSynced]);
 
+  //********** handle rating submission **********
   const handleRatingSubmission = async (e) => {
     e.preventDefault();
     console.log("rating.....", rating);
@@ -115,11 +116,14 @@ const Dialog = ({
       setIsSavingClicked(false);
     }
   };
+
+  //********** handle rating change **********
   const handleRatingChange = (e, value) => {
     setIsRatingClicked(true);
     setRating(value);
   };
 
+  //********** handle comment change **********
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
