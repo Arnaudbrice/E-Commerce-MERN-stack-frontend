@@ -81,7 +81,8 @@ const Cart = () => {
       toast.error("Please add an address before making an order.", {
         autoClose: 5000,
       });
-      return;
+      // return;
+      return null; //return null on failure
     }
     try {
       const response = await fetch(`${baseUrl}/users/orders`, {
@@ -95,15 +96,17 @@ const Cart = () => {
       if (!response.ok) {
         const { message: errorMessage } = await response.json();
         customErrorMessage(errorMessage, 5000);
-        return;
+        // return;
+        return null; //return null on failure
       }
       const orderMade = await response.json();
 
       console.log("orderMade fetched", orderMade);
 
       setOrder({ ...orderMade });
-
+      // handleReset();
       console.log("orderMade", orderMade);
+      return orderMade;
     } catch (error) {
       // normalize to a readable string and avoid "[object Object]"
       const msg =
@@ -111,6 +114,7 @@ const Cart = () => {
         (typeof error === "string" ? error : String(error)) ??
         "Something went wrong";
       toast.error(msg);
+      return null; //return null on failure
     }
   }, [baseUrl, user, shippingCosts]);
 
@@ -125,6 +129,41 @@ const Cart = () => {
       await updateProductStockAfterPayment(id, quantity);
     },
     [updateProductStockAfterPayment],
+  );
+  //********** send order confirmation email **********
+  const sendOrderConfirmationEmail = useCallback(
+    async (order) => {
+      try {
+        const response = await fetch(
+          `${baseUrl}/users/orders/send-order-confirmation-mail`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ order_id: order._id }),
+            credentials: "include",
+          },
+        );
+
+        if (!response.ok) {
+          const { message: errorMessage } = await response.json();
+          customErrorMessage(errorMessage, 5000);
+          return;
+        }
+
+        const { message } = await response.json();
+        toast.success(message);
+      } catch (error) {
+        // normalize to a readable string and avoid "[object Object]"
+        const msg =
+          error?.message ??
+          (typeof error === "string" ? error : String(error)) ??
+          "Something went wrong";
+        toast.error(msg);
+      }
+    },
+    [baseUrl],
   );
 
   useEffect(() => {
@@ -142,7 +181,7 @@ const Cart = () => {
 
   // console.log("cartList", cartList);
   useEffect(() => {
-    const calculateCartTotalAmount = () => {
+    const calculateCartTotalAmount = async () => {
       const cartTotalAmount = cartList.products?.reduce((acc, item) => {
         //parse to float for calculation
         const itemPrice =
@@ -156,8 +195,27 @@ const Cart = () => {
         0,
       );
 
+      let detectedCountry = null;
+      if (userAddress?.country) {
+        detectedCountry = userAddress.country;
+      } else {
+        try {
+          const response = await fetch(`${baseUrl}/users/location`, {
+            credentials: "include",
+          });
+          if (response.ok) {
+            const location = await response.json();
+            detectedCountry = location.country_name;
+            console.log("Detected country from IP:", detectedCountry);
+          }
+        } catch (error) {
+          // console.error("Could not fetch user location from frontend.");
+          toast.error("something went wrong");
+        }
+      }
+
       // Determine shipping costs
-      if (userAddress?.country !== "Germany") {
+      if (detectedCountry && detectedCountry !== "Germany") {
         setShippingCosts(15.0);
       } else if (totalWeight <= 2) {
         setShippingCosts(3.5);
@@ -171,75 +229,74 @@ const Cart = () => {
     };
 
     calculateCartTotalAmount();
-  }, [cartList, userAddress]);
+  }, [cartList, userAddress, baseUrl]);
   // console.log("cartList", cartList);
 
   //********** handle redirection after payment **********
-  // After the payment process, if we want to inform the user that payment was successful, we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment.
+  // This effect handles the logic after the user is redirected back from Stripe.(we can check the URL parameters (?success=true) when the user is redirected back from Stripe after payment)
   useEffect(() => {
-    const handleRedirect = async () => {
-      if (redirectHandledRef.current) return; //!prevent duplicate handling (e.g., StrictMode double effect)
-      const queryParams = new URLSearchParams(window.location.search);
-      const success = queryParams.get("success");
-      const canceled = queryParams.get("canceled");
+    const queryParams = new URLSearchParams(window.location.search);
+    const success = queryParams.get("success");
+    const canceled = queryParams.get("canceled");
+
+    // Guard clauses to exit early if not needed
+    if (!success && !canceled) return;
+    if (redirectHandledRef.current) return;
+    if (isLoadingAuth || isLoadingCart) return; // Wait until user and cart are loaded
+
+    const handlePostPayment = async () => {
+      redirectHandledRef.current = true; // Prevent this logic from running again
 
       if (success === "true") {
-        /*  navigate(window.location.pathname, { replace: true }); // Clean URL regardless */
+        setRedirecting(true); // Show a loading/processing state
+        toast.success("Payment successful! Finalizing your order...");
 
-        setRedirecting(true); // Hide cart and show spinner
-        redirectHandledRef.current = true; //! Prevent duplicate handling (e.g., StrictMode double effect liek toast showing 2 times)
+        try {
+          // 1. Create the order. The createOrder function  needs to RETURN the order.
+          // We need to modify the createOrder function slightly.
+          const createdOrder = await createOrder();
+          if (!createdOrder) {
+            // createOrder function should return null/undefined on failure
 
-        console.log("Cart products to update stock:", cartList.products);
+            toast.error("Order creation failed. Please contact support.");
+          }
 
-        toast.success("Payment has been successfully made!");
+          // 2. Send the confirmation email with the newly created order data.
+          await sendOrderConfirmationEmail(createdOrder);
 
-        await createOrder();
+          // 3. Clear the cart from the frontend state.
+          handleReset();
 
-        // console.log("order after payment", order);
-
-        if (user.role === "admin") {
-          navigate("/admin/dashboard", {
-            replace: true,
-            /*    state: {
-              order: order, //pass the order details to the orders page
-            }, */
-          }); //! This replaces the current history entry /cart/?success=true in the back stack with the new one /orders( /cart/?success=true becomes -> /orders in the history back stack)
-          return;
+          // 4. Navigate the user to their orders page.
+          toast.info("Redirecting to your orders...");
+          setTimeout(() => {
+            const destination =
+              user?.role === "admin" ? "/admin/dashboard/orders" : "/orders";
+            navigate(destination, { replace: true }); //! This replaces the current history entry /cart/?success=true in the back stack with the new one /orders( /cart/?success=true becomes -> /orders in the history back stack)
+          }, 3000); // A small delay so the user can read the toasts.
+        } catch (error) {
+          toast.error(
+            error.message || "A critical error occurred after payment.",
+          );
+          setRedirecting(false); // Hide loading state on error
         }
-        navigate("/orders", {
-          replace: true,
-          /*    state: {
-            order: order, //pass the order details to the orders page
-          }, */
-        }); //! This replaces the current history entry /cart/?success=true in the back stack with the new one /orders( /cart/?success=true becomes -> /orders in the history back stack)
-
-        //todo: send email to the user
       } else if (canceled) {
-        navigate(window.location.pathname, { replace: true });
         toast.error("Payment was canceled.");
+        //! Clean the URL by replacing the "/cart?canceled=true" with "/cart" in the history back stack
+        navigate("/cart", { replace: true });
       }
     };
 
-    const currentQueryParams = new URLSearchParams(window.location.search);
-
-    const hasPaymentParams =
-      currentQueryParams.get("success") || currentQueryParams.get("canceled");
-    if (
-      hasPaymentParams &&
-      !isLoadingAuth &&
-      !isLoadingCart // FIX: Only proceed if auth state is known AND cart is loaded
-    ) {
-      handleRedirect();
-    }
+    handlePostPayment();
   }, [
-    handleReset,
-    navigate,
-    updateProductStock,
-    cartList,
     user,
     isLoadingAuth,
     isLoadingCart,
     createOrder,
+    sendOrderConfirmationEmail,
+    handleReset,
+    navigate,
+    updateProductStock,
   ]);
 
   //**decrease product quantity or remove it from  **
@@ -267,6 +324,12 @@ const Cart = () => {
 
   //********** payment **********
   const handleCheckout = async () => {
+    if (!userAddress) {
+      toast.error("Please add an address before making an order.", {
+        autoClose: 5000,
+      });
+      return;
+    }
     try {
       const response = await fetch(
         `${baseUrl}/users/cart/create-checkout-session`,
