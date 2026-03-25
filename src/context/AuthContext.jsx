@@ -96,8 +96,21 @@ export const AuthContextProvider = ({ children }) => {
       const userData = await response.json();
 
       setUser(userData);
+      console.log("====================================");
+      console.log(userData);
+      console.log("====================================");
 
-      toast.success(`Welcome back ${userData?.firstName || "User"}!`);
+      if (userData?.role === "admin") {
+        toast.success(
+          <p>
+            Welcome back <span className="font-bold">Admin</span> from Bon
+            Marché GmbH!
+          </p>,
+        );
+      } else {
+        toast.success(`Welcome back ${userData?.firstName || "User"}!`);
+      }
+      // toast.success(`Welcome back ${userData?.firstName || "User"}!`);
       navigate("/");
     } catch (error) {
       // server validation error
@@ -129,7 +142,8 @@ export const AuthContextProvider = ({ children }) => {
       }
 
       toast.info("Logged out successfully");
-      navigate("/login");
+      // redirect to the login page with a state to show a message on the login page
+      navigate("/login", { state: { fromLogout: true } });
     } catch (error) {
       // Network or unknown error
       // normalize to a readable string and avoid "[object Object]"

@@ -5,7 +5,13 @@ import { useNavigate } from "react-router";
 import useCategories from "../hooks/useCategories.jsx";
 import useProducts from "../hooks/useProducts.jsx";
 
-const EditDialog = ({ product, isClicked, setIsClicked }) => {
+const EditDialog = ({
+  product,
+  isClicked,
+  setIsClicked,
+  productsPerPage,
+  setProductsPerPage,
+}) => {
   console.log("product in EditDialog", product);
 
   const navigate = useNavigate();
@@ -160,6 +166,11 @@ const EditDialog = ({ product, isClicked, setIsClicked }) => {
 
       console.log("updatedProducts", updatedProducts);
       setProducts(updatedProducts);
+
+      const updatedProductsPerPage = productsPerPage.map((p) =>
+        p._id === updateProduct._id ? updateProduct : p,
+      );
+      setProductsPerPage(updatedProductsPerPage);
 
       toast.success("Product Updated successfully!");
       // navigate("/");

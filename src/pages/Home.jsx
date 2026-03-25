@@ -113,7 +113,7 @@ const Home = () => {
       {/* chatbot */}
 
       {user && (
-        <div className="flex justify-end items-center  mr-auto my-4">
+        <div className=" fixed bottom-[1.2em] right-[1em] z-[99] cursor-pointer rounded-full shadow-modal">
           <button
             onClick={handleChatModalOpen}
             className=" floating-effect floating-shadow  ">
