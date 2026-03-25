@@ -540,7 +540,7 @@ const Cart = () => {
                   <span className="text-md text-gray-300 ">
                     {userAddress?.companyName || ""}
                   </span>
-                  <span className="text-md text-gray-600 ">
+                  <span className="text-md text-gray-300 ">
                     {userAddress?.firstName || ""} {userAddress?.lastName || ""}
                   </span>
                 </div>

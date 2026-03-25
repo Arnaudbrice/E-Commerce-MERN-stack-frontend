@@ -1,9 +1,10 @@
-import React from "react";
-import { Link, Navigate } from "react-router";
+import React, { useEffect, useRef } from "react";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import useAuth from "../hooks/useAuth.jsx";
 import { useState } from "react";
 
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const { login, user, isLoadingAuth } = useAuth();
@@ -15,6 +16,41 @@ const Login = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const shownRef = useRef(false);
+
+  useEffect(() => {
+    // the user has clicked on the logout button, so we don't show the toast (he was authenticated)
+
+    console.log("location.state in useEffect", location.state);
+
+    if (
+      location.state?.from === "/" ||
+      location.state?.from === "/wishlist" ||
+      location.state?.from === "/orders" ||
+      location.state?.from === "/profile"
+    ) {
+      return;
+    }
+    // the user has not clicked on the logout button, so we show the toast (he was automatically redirected to the login page because he was not authenticated)
+
+    if (
+      location.state?.from &&
+      !location.state?.fromLogout &&
+      !shownRef.current
+    ) {
+      toast.error("You must be logged in to access this page ➞ Redirecting...");
+      shownRef.current = true; // Mark as shown to prevent duplicate toasts in StrictMode
+
+      //IMPORTANT: We are removing the 'from' state so that the toast does not reappear when the page is reloaded or other navigation is performed.
+      navigate(location.pathname, {
+        replace: true,
+        state: {},
+      });
+    }
+  }, [location.state, navigate, location.pathname]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

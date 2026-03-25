@@ -1,21 +1,10 @@
 import React from "react";
 import useAuth from "../hooks/useAuth.jsx";
-import { Navigate, Outlet, useNavigate } from "react-router";
-import { useEffect } from "react";
+import { Navigate, Outlet, useLocation } from "react-router";
 
 const ProtectedLayout = () => {
   const { user, isLoadingAuth } = useAuth();
-
-  const navigate = useNavigate();
-
-  /*   useEffect(() => {
-    if (isLoadingAuth) {
-      return <div>Loading...</div>; // Show a loading spinner or placeholder
-    }
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, isLoadingAuth, navigate]); */
+  const location = useLocation();
 
   // Prevent navigation until authentication is resolved
   if (isLoadingAuth) {
@@ -26,7 +15,8 @@ const ProtectedLayout = () => {
   if (!user) {
     /*  navigate("/login", { replace: true }); // Use `replace` to avoid adding to history
     return null; */
-    return <Navigate to="/login" replace />;
+
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
   // return Outlet to render child routes

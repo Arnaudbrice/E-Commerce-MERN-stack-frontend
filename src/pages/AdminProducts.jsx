@@ -13,6 +13,7 @@ const AdminProducts = () => {
     products,
     setProducts,
     productsPerPage,
+    setProductsPerPage,
     searchTerm,
     paginationArray,
     currentPage,
@@ -146,6 +147,8 @@ const AdminProducts = () => {
                   product={clickedProduct}
                   isClicked={isClicked}
                   setIsClicked={setIsClicked}
+                  productsPerPage={productsPerPage}
+                  setProductsPerPage={setProductsPerPage}
                 />
               )}
             </div>

@@ -148,40 +148,6 @@ const Footer = () => {
             </div>
           </div>
         </footer>
-        <nav className="sticky bottom-0 w-full bg-background-light dark:bg-background-dark border-t border-slate-200 dark:border-secondary/10 md:hidden flex justify-around items-center h-16 px-4">
-          <a
-            className="flex flex-col items-center gap-1 text-secondary"
-            href="#">
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-[10px] font-bold uppercase tracking-tighter">
-              Home
-            </span>
-          </a>
-          <a
-            className="flex flex-col items-center gap-1 text-slate-500"
-            href="#">
-            <span className="material-symbols-outlined">storefront</span>
-            <span className="text-[10px] font-bold uppercase tracking-tighter">
-              Shop
-            </span>
-          </a>
-          <a
-            className="flex flex-col items-center gap-1 text-slate-500"
-            href="#">
-            <span className="material-symbols-outlined">shopping_cart</span>
-            <span className="text-[10px] font-bold uppercase tracking-tighter">
-              Cart
-            </span>
-          </a>
-          <a
-            className="flex flex-col items-center gap-1 text-slate-500"
-            href="#">
-            <span className="material-symbols-outlined">person</span>
-            <span className="text-[10px] font-bold uppercase tracking-tighter">
-              Profile
-            </span>
-          </a>
-        </nav>
       </div>
     : <div className="mt-12 text-center text-slate-500 dark:text-slate-500 text-sm">
         <p className=" footer footer-center p-4 bg-white mt-16 text-lg sm:text-xl text-[#361F17] ">

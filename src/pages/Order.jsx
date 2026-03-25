@@ -303,6 +303,12 @@ const Order = () => {
       // Re-trigger the main fetch effect by updating URL
       const params = new URLSearchParams(location.search);
       navigate(`?${params.toString()}`, { replace: true });
+      // update order status on the dashboard page
+      setAdminOrdersForCurrentPage((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? { ...order, status: newStatus } : order,
+        ),
+      );
 
       await sendStatusUpdateEmail(orderId, newStatus);
     } else {
