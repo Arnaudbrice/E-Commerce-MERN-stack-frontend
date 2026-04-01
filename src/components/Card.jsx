@@ -38,7 +38,6 @@ const Card = ({
     isLoadingCart,
     cartProductsQuantity,
     setCartProductsQuantity,
-
     decreaseProductQuantity,
   } = useCart();
 
@@ -52,6 +51,7 @@ const Card = ({
 
   const {
     user,
+    numberOfFavoriteProducts,
     setNumberOfFavoriteProducts,
     favoriteProducts,
     setFavoriteProducts,
@@ -75,6 +75,10 @@ const Card = ({
     // console.log("productQuantity", productQuantity);
     setQuantity(productQuantity || 0);
   }, [cartList, _id]);
+
+  useEffect(() => {
+    setIsFavoriteClicked(isFavorite);
+  }, [isFavorite]);
 
   const handleAddToCartButtonClick = async (e, id) => {
     e.stopPropagation(); // <--- Stop event propagation here
@@ -159,22 +163,22 @@ const Card = ({
         return;
       }
 
-      const updatedProduct = await response.json();
-      setIsFavoriteClicked(updatedProduct.isFavorite);
+      // const updatedUser = await response.json();
+      // updatedUser not needed here, so we will just consume the response body
+      await response.json();
 
+      const isFavorite = !isFavoriteClicked;
+
+      // triggers the useEffect in AuthContext that refetches favoriteProducts from the server
       setIsAddToFavoritesClicked(!isAddToFavoritesClicked);
 
-      /*  setNumberOfFavoriteProducts((prev) =>
-        updatedProduct.isFavorite ?
-          (prev || 0) + 1
-        : Math.max(0, (prev || 0) - 1)
-      ); */
+      setIsFavoriteClicked(isFavorite);
 
       setNumberOfFavoriteProducts((prev) => {
-        return updatedProduct.isFavorite ? prev + 1 : prev - 1;
+        return isFavorite ? prev + 1 : prev - 1;
       });
 
-      if (updatedProduct.isFavorite) {
+      if (isFavorite) {
         toast.info("Product Successfully Added To Your Favorite List");
       } else {
         toast.info("Product Successfully Deleted From Your Favorite List");

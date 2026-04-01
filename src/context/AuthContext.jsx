@@ -27,7 +27,7 @@ export const AuthContextProvider = ({ children }) => {
   //********** register **********
 
   const register = async (formState) => {
-    setIsLoadingAuth(true);
+    // setIsLoadingAuth(true);
     try {
       /* Use JSON.stringify to converts the formState object to JSON string and send it as the request body */
       const response = await fetch(`${baseUrl}/auth/register`, {
@@ -54,9 +54,9 @@ export const AuthContextProvider = ({ children }) => {
       console.log(userData);
       console.log("====================================");
 
-      setUser(userData);
+      // setUser(userData);
 
-      toast.success("User registered successfully");
+      toast.success("User registered successfully, You Can Login Now!");
 
       navigate("/login");
     } catch (error) {
@@ -74,7 +74,7 @@ export const AuthContextProvider = ({ children }) => {
 
   //********** login **********
   const login = async (formState) => {
-    setIsLoadingAuth(true);
+    // setIsLoadingAuth(true);
     try {
       const response = await fetch(`${baseUrl}/auth/login`, {
         method: "POST",

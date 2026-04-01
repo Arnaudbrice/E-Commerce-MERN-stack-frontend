@@ -37,6 +37,7 @@ const Cards = () => {
     currentPage,
     setCurrentPage,
   } = useProducts();
+  const { favoriteProducts } = useAuth();
 
   /*   const [products, setProducts] = useState([]);
   useEffect(() => {
@@ -72,7 +73,13 @@ const Cards = () => {
             No Products Found
           </div>
         : productsPerPage.map((product) => {
-            return <Card key={product._id} {...product} />;
+            return (
+              <Card
+                key={product._id}
+                isFavorite={favoriteProducts.some((p) => p._id === product._id)}
+                {...product}
+              />
+            );
           })
         }
       </div>
