@@ -400,7 +400,7 @@ const Order = () => {
         : <>
             <div className="flex flex-col  p-2 space-y-8  mt-8">
               {orders.length === 0 ?
-                <div className="text-center text-gray-500 py-8">
+                <div className="text-center text-gray-300 py-8">
                   <p>No orders match your search "{orderSearchTerm}"</p>
                 </div>
               : orders

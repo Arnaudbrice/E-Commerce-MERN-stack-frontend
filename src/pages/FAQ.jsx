@@ -164,7 +164,7 @@ const FAQ = () => {
           <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-slate-100 mb-4">
             Frequently Asked Questions
           </h1>
-          <p className="text-xl text-slate-600 dark:text-slate-400">
+          <p className="text-xl text-slate-300 dark:text-slate-300">
             Find answers to common questions about Bon Marché. Can't find what
             you're looking for?{" "}
             <a
@@ -221,7 +221,7 @@ const FAQ = () => {
           <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             Still have questions?
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 mb-6">
+          <p className="text-slate-300 dark:text-slate-300 mb-6">
             Our support team is here to help! Reach out anytime.
           </p>
           <a

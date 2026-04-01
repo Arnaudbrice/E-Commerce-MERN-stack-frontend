@@ -11,7 +11,7 @@ const PrivacyPolicy = () => {
 mb-4 text-center font-extrabold">
             <h2>Privacy Policy</h2>
           </div>
-          <p className="text-lg text-slate-600 dark:text-slate-400">
+          <p className="text-lg text-slate-300 dark:text-slate-300">
             Last updated: <strong>March 10, 2026</strong>
           </p>
         </div>
@@ -405,7 +405,7 @@ mb-4 text-center font-extrabold">
 
           {/* Closing */}
           <section className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-600">
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-sm text-slate-300 dark:text-slate-300 leading-relaxed">
               By using Bon Marché, you acknowledge that you have read and
               understood this Privacy Policy and agree to its terms. If you do
               not agree, please do not use our services.

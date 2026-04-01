@@ -27,7 +27,7 @@ const AboutUs = () => {
         <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-100">
           Welcome to <span className="text-secondary">Bon Marché</span>
         </h1>
-        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xl text-slate-300 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
           Your premium destination for curated fashion and lifestyle essentials.
           Quality meets elegance in every piece we offer.
         </p>
@@ -40,13 +40,13 @@ const AboutUs = () => {
             <h2 className="text-4xl font-bold mb-6 text-slate-900 dark:text-slate-100">
               Our Mission
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
+            <p className="text-lg text-slate-300 dark:text-slate-300 mb-4 leading-relaxed">
               At Bon Marché, we believe that shopping should be an experience,
               not just a transaction. We're committed to bringing you the finest
               selection of products curated with care and delivered with
               precision.
             </p>
-            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-lg text-slate-300 dark:text-slate-300 leading-relaxed">
               Our mission is to empower our customers to express themselves
               through fashion and lifestyle choices that reflect their unique
               personality.
@@ -96,7 +96,7 @@ const AboutUs = () => {
                 <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-slate-100">
                   {value.title}
                 </h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-slate-300 dark:text-slate-300 leading-relaxed">
                   {value.description}
                 </p>
               </div>
@@ -150,7 +150,7 @@ const AboutUs = () => {
                   <h3 className="text-2xl font-bold mb-2 text-slate-900 dark:text-slate-100">
                     {feature.title}
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                  <p className="text-slate-300 dark:text-slate-300 leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -171,19 +171,19 @@ const AboutUs = () => {
             <h2 className="text-4xl font-bold mb-6 text-slate-900 dark:text-slate-100 text-center">
               Our Story
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
+            <p className="text-lg text-slate-300 dark:text-slate-300 mb-4 leading-relaxed">
               Founded in 2025, Bon Marché started with a simple vision: to
               create an online shopping experience that truly understands what
               customers want. We began by carefully curating a selection of
               premium products and have grown into a trusted destination for
               fashion and lifestyle enthusiasts.
             </p>
-            <p className="text-lg text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
+            <p className="text-lg text-slate-300 dark:text-slate-300 mb-4 leading-relaxed">
               Today, we're proud to serve thousands of happy customers
               worldwide. Our integrated AI shopping assistant and secure payment
               system make every purchase smooth and enjoyable.
             </p>
-            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-lg text-slate-300 dark:text-slate-300 leading-relaxed">
               We're constantly innovating to bring you the best shopping
               experience possible. Thank you for being part of the Bon Marché
               community!
@@ -217,7 +217,7 @@ const AboutUs = () => {
                 <p className="text-secondary font-semibold mb-4">
                   Full Stack Developer
                 </p>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-slate-300 dark:text-slate-300 leading-relaxed">
                   Passionate about creating exceptional digital experiences.
                   Specialized in MERN and PERN stack development and building
                   secure, scalable applications.
@@ -266,7 +266,7 @@ const AboutUs = () => {
         <h2 className="text-4xl font-bold mb-6 text-slate-900 dark:text-slate-100">
           Ready to Experience Bon Marché?
         </h2>
-        <p className="text-xl text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-slate-300 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
           Explore our curated collection and discover products that match your
           style. Use our AI assistant for personalized recommendations.
         </p>
