@@ -55,7 +55,7 @@ const ShippingAddressDialog = ({
                 <div
                   key={address._id}
                   className="border border-gray-700 p-6 rounded-lg space-y-4 ">
-                  <div className="flex justify-between items-center text-gray-500 ">
+                  <div className="flex justify-between items-center text-gray-300 ">
                     <span className="text-md">
                       {address.label === "Home" ? "Home" : address.label}
                     </span>
@@ -85,7 +85,7 @@ const ShippingAddressDialog = ({
                 </div>
               );
             })
-          : <p className="text-center text-gray-500">
+          : <p className="text-center text-gray-300">
               No shipping addresses found. Please add a shipping address
             </p>
           }

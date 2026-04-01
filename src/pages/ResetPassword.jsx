@@ -86,7 +86,7 @@ const ResetPassword = () => {
             />
           : <EyeOff
               size={22}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer z-30"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 cursor-pointer z-30"
               onClick={() => setShowPassword(!showPassword)}
             />
           }

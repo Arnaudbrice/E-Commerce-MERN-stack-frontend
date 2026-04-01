@@ -51,7 +51,7 @@ const ShippingPolicy = () => {
 mb-8 text-center font-extrabold">
             <h2> Shipping Policy</h2>
           </div>
-          <p className="text-xl text-slate-600 dark:text-slate-400">
+          <p className="text-xl text-slate-300 dark:text-slate-300">
             Fast, reliable, and affordable shipping options for your orders
           </p>
         </div>
@@ -83,7 +83,7 @@ mb-8 text-center font-extrabold">
                   {option.details.map((detail, idx) => (
                     <li
                       key={idx}
-                      className="flex items-start gap-2 text-slate-600 dark:text-slate-400">
+                      className="flex items-start gap-2 text-slate-300 dark:text-slate-300">
                       <span className="text-secondary mt-1">•</span>
                       <span>{detail}</span>
                     </li>
@@ -106,7 +106,7 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Order Processing Time
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed">
                 Orders are processed within <strong>1-2 business days</strong>{" "}
                 after purchase. Processing includes quality checks, packing, and
                 label preparation. Tracking information is sent to your email
@@ -120,17 +120,17 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Order Tracking
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-4">
                 All orders include tracking. Once your package ships, you'll
                 receive an email with:
               </p>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+              <ul className="space-y-2 text-slate-300 dark:text-slate-300">
                 <li>✓ Tracking number and carrier information</li>
                 <li>✓ Estimated delivery date</li>
                 <li>✓ Link to track your package in real-time</li>
                 <li>✓ Delivery updates and notifications</li>
               </ul>
-              <p className="text-slate-600 dark:text-slate-400 mt-4">
+              <p className="text-slate-300 dark:text-slate-300 mt-4">
                 Track your order anytime in your account under "My Orders" or
                 use the carrier's website directly.
               </p>
@@ -141,7 +141,7 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Shipping Costs & Free Shipping
               </h3>
-              <div className="space-y-3 text-slate-600 dark:text-slate-400">
+              <div className="space-y-3 text-slate-300 dark:text-slate-300">
                 <p>
                   <strong className="text-slate-900 dark:text-slate-100">
                     ✓ Free Standard Shipping
@@ -167,7 +167,7 @@ mb-8 text-center font-extrabold">
                   International Shipping
                 </p>
               </div>
-              <p className="text-slate-600 dark:text-slate-400 mt-4 text-sm">
+              <p className="text-slate-300 dark:text-slate-300 mt-4 text-sm">
                 Shipping costs are calculated and displayed at checkout. You can
                 see the exact shipping cost for your location before confirming
                 your order.
@@ -179,15 +179,15 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Shipping to Your Location
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-4">
                 We ship to:
               </p>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+              <ul className="space-y-2 text-slate-300 dark:text-slate-300">
                 <li>🌍 All EU countries (Standard & Express)</li>
                 <li>🌍 UK, Switzerland, Norway (International rates)</li>
                 <li>🌍 Over 180 countries worldwide (International rates)</li>
               </ul>
-              <p className="text-slate-600 dark:text-slate-400 mt-4">
+              <p className="text-slate-300 dark:text-slate-300 mt-4">
                 During checkout, enter your address to see available shipping
                 options and costs for your location.
               </p>
@@ -198,10 +198,10 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Customs, Duties & Taxes
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-4">
                 For international orders outside the EU:
               </p>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+              <ul className="space-y-2 text-slate-300 dark:text-slate-300">
                 <li>
                   • Customs duties and import taxes may apply and are the
                   customer's responsibility
@@ -219,7 +219,7 @@ mb-8 text-center font-extrabold">
                   delivery (COD - Cash on Delivery)
                 </li>
               </ul>
-              <p className="text-slate-600 dark:text-slate-400 mt-4">
+              <p className="text-slate-300 dark:text-slate-300 mt-4">
                 We are not responsible for any customs delays, fees, or taxes
                 imposed by the recipient's country. Please contact your local
                 customs authority for more information about applicable duties.
@@ -231,10 +231,10 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Shipping Address Requirements
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-4">
                 To ensure successful delivery:
               </p>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+              <ul className="space-y-2 text-slate-300 dark:text-slate-300">
                 <li>
                   ✓ Provide a <strong>complete and accurate address</strong>
                 </li>
@@ -254,7 +254,7 @@ mb-8 text-center font-extrabold">
                   delivery
                 </li>
               </ul>
-              <p className="text-slate-600 dark:text-slate-400 mt-4">
+              <p className="text-slate-300 dark:text-slate-300 mt-4">
                 Changes to your address must be made within{" "}
                 <strong>2 hours of placing your order</strong>. After that, the
                 order is already in the fulfillment process.
@@ -266,11 +266,11 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Delivery Exceptions & Delays
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-4">
                 Estimated delivery times are not guaranteed. Delays may occur
                 due to:
               </p>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+              <ul className="space-y-2 text-slate-300 dark:text-slate-300">
                 <li>• Weather conditions and natural disasters</li>
                 <li>• Carrier strikes or service disruptions</li>
                 <li>• Customs clearance for international orders</li>
@@ -278,7 +278,7 @@ mb-8 text-center font-extrabold">
                 <li>• Holiday periods and peak season volume</li>
                 <li>• Force majeure events</li>
               </ul>
-              <p className="text-slate-600 dark:text-slate-400 mt-4">
+              <p className="text-slate-300 dark:text-slate-300 mt-4">
                 We are not liable for delays beyond our control. However, we
                 will work with the carrier to resolve any issues. If your
                 package is significantly delayed, contact us for assistance.
@@ -290,10 +290,10 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Lost or Damaged Packages
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-4">
                 We guarantee safe delivery. If your package:
               </p>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-400 mb-4">
+              <ul className="space-y-2 text-slate-300 dark:text-slate-300 mb-4">
                 <li>
                   <strong>• Arrives damaged:</strong> Contact us within 48 hours
                   with photos. We'll send a replacement or refund.
@@ -308,7 +308,7 @@ mb-8 text-center font-extrabold">
                   local post office.
                 </li>
               </ul>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-slate-300 dark:text-slate-300">
                 <strong>What to do:</strong> Take photos of the
                 damage/condition, check your tracking status, and contact our
                 support team at{" "}
@@ -326,7 +326,7 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Multiple Orders & Consolidation
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed">
                 Each order is shipped separately. If you place multiple orders,
                 they will be processed and shipped independently. We cannot
                 consolidate orders into a single shipment. However, you can
@@ -341,7 +341,7 @@ mb-8 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 Signature Requirements
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed">
                 Standard and Express shipments do not require a signature. If
                 you require a signature for your delivery due to insurance or
                 preference, please contact us. The carrier will leave packages
@@ -358,16 +358,16 @@ mb-8 text-center font-extrabold">
             Holiday & Seasonal Information
           </h2>
           <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-md">
-            <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+            <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-4">
               During peak seasons (Black Friday, Christmas, New Year), we
               experience higher order volumes. This may result in:
             </p>
-            <ul className="space-y-2 text-slate-600 dark:text-slate-400 mb-4">
+            <ul className="space-y-2 text-slate-300 dark:text-slate-300 mb-4">
               <li>• Extended processing times (up to 3-5 business days)</li>
               <li>• Longer shipping delays</li>
               <li>• Limited Express shipping availability</li>
             </ul>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-slate-300 dark:text-slate-300">
               We recommend placing orders early during holiday seasons to ensure
               timely delivery. Check our website for estimated delivery dates
               during peak periods.
@@ -441,7 +441,7 @@ mb-8 text-center font-extrabold">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             Need Help with Shipping?
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 mb-6">
+          <p className="text-slate-300 dark:text-slate-300 mb-6">
             Our support team is here to assist with any shipping questions or
             concerns.
           </p>

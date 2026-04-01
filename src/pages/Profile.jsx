@@ -119,7 +119,7 @@ const Profile = () => {
                 </span>
               </div>
               <div className="flex-1">
-                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">
+                <p className="text-xs text-gray-300 dark:text-gray-400 uppercase font-bold tracking-wider">
                   Email
                 </p>
                 <p className="text-base font-semibold">{user?.email}</p>
@@ -133,7 +133,7 @@ const Profile = () => {
                 </span>
               </div>
               <div className="flex-1">
-                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">
+                <p className="text-xs text-gray-300 dark:text-gray-400 uppercase font-bold tracking-wider">
                   Phone
                 </p>
                 <p className="text-base font-semibold">{phoneNumber}</p>
@@ -147,7 +147,7 @@ const Profile = () => {
                 </span>
               </div>
               <div className="flex-1">
-                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">
+                <p className="text-xs text-gray-300 dark:text-gray-400 uppercase font-bold tracking-wider">
                   Address
                 </p>
                 <p className="text-base font-semibold">{fullAddress}</p>

@@ -135,7 +135,7 @@ mb-4 text-center font-extrabold">
             <h2> Returns & Refunds Policy</h2>
           </div>
 
-          <p className="text-xl text-slate-600 dark:text-slate-400">
+          <p className="text-xl text-slate-300 dark:text-slate-300">
             We want you to be completely satisfied with your purchase. If you're
             not happy, we make returns easy.
           </p>
@@ -152,23 +152,23 @@ mb-4 text-center font-extrabold">
         <section className="grid md:grid-cols-4 gap-6 mb-16">
           <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-md text-center">
             <p className="text-4xl font-bold text-secondary mb-2">30 Days</p>
-            <p className="text-slate-600 dark:text-slate-400">Return Window</p>
+            <p className="text-slate-300 dark:text-slate-300">Return Window</p>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-md text-center">
             <p className="text-4xl font-bold text-secondary mb-2">FREE</p>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-slate-300 dark:text-slate-300">
               Return Shipping
             </p>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-md text-center">
             <p className="text-4xl font-bold text-secondary mb-2">100%</p>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-slate-300 dark:text-slate-300">
               Refund Guarantee
             </p>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-md text-center">
             <p className="text-4xl font-bold text-secondary mb-2">5 Steps</p>
-            <p className="text-slate-600 dark:text-slate-400">Simple Process</p>
+            <p className="text-slate-300 dark:text-slate-300">Simple Process</p>
           </div>
         </section>
 
@@ -189,7 +189,7 @@ mb-4 text-center font-extrabold">
                   <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">
                     {process.title}
                   </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  <p className="text-sm text-slate-300 dark:text-slate-300 leading-relaxed">
                     {process.description}
                   </p>
                 </div>
@@ -217,7 +217,7 @@ mb-4 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
                 ✅ Returnable Items
               </h3>
-              <ul className="space-y-3 text-slate-600 dark:text-slate-400">
+              <ul className="space-y-3 text-slate-300 dark:text-slate-300">
                 <li className="flex gap-3">
                   <span className="text-secondary font-bold">✓</span>
                   <span>
@@ -256,7 +256,7 @@ mb-4 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
                 ❌ Non-Returnable Items
               </h3>
-              <ul className="space-y-3 text-slate-600 dark:text-slate-400">
+              <ul className="space-y-3 text-slate-300 dark:text-slate-300">
                 <li className="flex gap-3">
                   <span className="text-red-500 font-bold">✗</span>
                   <span>Undergarments & intimates (bras, underwear)</span>
@@ -306,7 +306,7 @@ mb-4 text-center font-extrabold">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
                   ✅ What We Accept
                 </h3>
-                <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+                <ul className="space-y-2 text-slate-300 dark:text-slate-300">
                   <li>
                     • Items with original price tags attached and not removed
                   </li>
@@ -322,7 +322,7 @@ mb-4 text-center font-extrabold">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
                   ⚠️ Items Subject to Restocking Fee (10-20%)
                 </h3>
-                <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+                <ul className="space-y-2 text-slate-300 dark:text-slate-300">
                   <li>• Items with tags removed but unworn</li>
                   <li>• Items with minor wear or damage (customer fault)</li>
                   <li>• Items with missing original packaging</li>
@@ -334,7 +334,7 @@ mb-4 text-center font-extrabold">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
                   ❌ We Don't Accept
                 </h3>
-                <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+                <ul className="space-y-2 text-slate-300 dark:text-slate-300">
                   <li>• Worn items showing signs of use</li>
                   <li>• Washed or wet items</li>
                   <li>• Stained, torn, or heavily damaged items</li>
@@ -365,11 +365,11 @@ mb-4 text-center font-extrabold">
                   <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-1">
                     Return Request Approved
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  <p className="text-slate-300 dark:text-slate-300 text-sm">
                     <strong>Timeframe:</strong> Immediately after you submit
                     your return request
                   </p>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  <p className="text-slate-300 dark:text-slate-300 text-sm">
                     You'll receive your prepaid shipping label via email.
                   </p>
                 </div>
@@ -385,11 +385,11 @@ mb-4 text-center font-extrabold">
                   <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-1">
                     Package In Transit
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  <p className="text-slate-300 dark:text-slate-300 text-sm">
                     <strong>Timeframe:</strong> 2-5 business days (depending on
                     your location)
                   </p>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  <p className="text-slate-300 dark:text-slate-300 text-sm">
                     Track your return package using the tracking number
                     provided.
                   </p>
@@ -406,11 +406,11 @@ mb-4 text-center font-extrabold">
                   <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-1">
                     Package Received & Inspected
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  <p className="text-slate-300 dark:text-slate-300 text-sm">
                     <strong>Timeframe:</strong> 5-7 business days after we
                     receive it
                   </p>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  <p className="text-slate-300 dark:text-slate-300 text-sm">
                     We'll examine the items to ensure they meet return
                     conditions. You'll receive an email update.
                   </p>
@@ -427,10 +427,10 @@ mb-4 text-center font-extrabold">
                   <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-1">
                     Refund Processed
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  <p className="text-slate-300 dark:text-slate-300 text-sm">
                     <strong>Timeframe:</strong> 5-7 business days after approval
                   </p>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  <p className="text-slate-300 dark:text-slate-300 text-sm">
                     The refund is sent to your original payment method.
                     Depending on your bank, it may take 3-5 additional business
                     days to appear in your account.
@@ -461,7 +461,7 @@ mb-4 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
                 🎁 Gifts & Returns
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-3">
                 If you received an item as a gift, you can still return it
                 within 30 days of delivery. You'll receive a refund or store
                 credit equal to the original purchase price. You don't need the
@@ -475,7 +475,7 @@ mb-4 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
                 💳 Returns for Promotional/Discount Orders
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-3">
                 If you used a promo code or discount, your refund will be for
                 the discounted amount you paid, not the original price. For
                 example, if you paid €30 for an item originally €50 (with a 40%
@@ -488,7 +488,7 @@ mb-4 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
                 🏷️ Defective Items & Warranty
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-3">
                 Items with manufacturing defects are covered under our warranty.
                 If your item is defective, you can return it free of charge
                 within 1 year of purchase. Contact us with photos of the defect
@@ -506,7 +506,7 @@ mb-4 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
                 📦 Partial Returns (Mixed Items)
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-3">
                 If you ordered multiple items and only want to return some,
                 that's fine! You can select which items to return during the
                 return request process. We'll refund only the returned items and
@@ -519,7 +519,7 @@ mb-4 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
                 🌍 International Returns
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-3">
                 International orders (outside EU) have the same 30-day return
                 window. We'll provide a prepaid international return label, but
                 if the return shipping exceeds our standard costs, we may deduct
@@ -537,7 +537,7 @@ mb-4 text-center font-extrabold">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
                 💰 Refund for Cancelled Orders
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-3">
                 If you cancel your order before it ships, you'll receive a full
                 refund immediately. If the order has already shipped, you can
                 still refuse the delivery, and we'll refund your money once we
@@ -591,7 +591,7 @@ mb-4 text-center font-extrabold">
           </h2>
 
           <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-md">
-            <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+            <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-4">
               We want returns to be easy, which is why we don't charge
               restocking fees on most returns. However, in specific cases where
               items don't meet our return conditions, we may apply a restocking
@@ -607,7 +607,7 @@ mb-4 text-center font-extrabold">
                   <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-1">
                     No Fee (Full Refund)
                   </h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  <p className="text-sm text-slate-300 dark:text-slate-300">
                     Items unused, unwashed, with tags attached, in original
                     packaging
                   </p>
@@ -622,7 +622,7 @@ mb-4 text-center font-extrabold">
                   <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-1">
                     10% Restocking Fee
                   </h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  <p className="text-sm text-slate-300 dark:text-slate-300">
                     Tags removed but item is clearly unworn; minor packaging
                     damage
                   </p>
@@ -637,7 +637,7 @@ mb-4 text-center font-extrabold">
                   <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-1">
                     20% Restocking Fee
                   </h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  <p className="text-sm text-slate-300 dark:text-slate-300">
                     Signs of wear; minor stains or odors; altered packaging
                   </p>
                 </div>
@@ -651,7 +651,7 @@ mb-4 text-center font-extrabold">
                   <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-1">
                     Return Refused
                   </h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  <p className="text-sm text-slate-300 dark:text-slate-300">
                     Worn, washed, heavily stained, or significantly damaged
                     items. These will be returned to you.
                   </p>
@@ -691,7 +691,7 @@ mb-4 text-center font-extrabold">
           </h2>
 
           <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-md">
-            <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+            <p className="text-slate-300 dark:text-slate-300 leading-relaxed mb-6">
               Our customer support team is here to help with any questions about
               returns, refunds, or exchanges. We typically respond within 24
               hours.
@@ -712,7 +712,7 @@ mb-4 text-center font-extrabold">
                 <h3 className="font-bold text-slate-900 dark:text-slate-100 mb-2">
                   Live Chat
                 </h3>
-                <p className="text-slate-600 dark:text-slate-400">
+                <p className="text-slate-300 dark:text-slate-300">
                   Available Monday-Friday, 9 AM - 6 PM EST
                 </p>
               </div>
@@ -725,7 +725,7 @@ mb-4 text-center font-extrabold">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             Your Satisfaction is Our Guarantee
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-lg mb-6 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-slate-300 dark:text-slate-300 text-lg mb-6 leading-relaxed max-w-2xl mx-auto">
             We stand behind our products. If you're not completely satisfied
             with your purchase for any reason, we'll make it right. Our easy
             returns process ensures you can shop with confidence.
@@ -733,19 +733,19 @@ mb-4 text-center font-extrabold">
           <div className="flex flex-wrap justify-center gap-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl">✓</span>
-              <span className="text-slate-600 dark:text-slate-400">
+              <span className="text-slate-300 dark:text-slate-300">
                 30-Day Returns
               </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-2xl">✓</span>
-              <span className="text-slate-600 dark:text-slate-400">
+              <span className="text-slate-300 dark:text-slate-300">
                 Free Return Shipping
               </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-2xl">✓</span>
-              <span className="text-slate-600 dark:text-slate-400">
+              <span className="text-slate-300 dark:text-slate-300">
                 Full Refunds
               </span>
             </div>

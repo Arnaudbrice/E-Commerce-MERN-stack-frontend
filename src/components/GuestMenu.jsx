@@ -43,8 +43,8 @@ const GuestMenu = () => {
                 <NavLink
                   className={({
                     isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
+        ${isActive ? "bg-black text-white" : "text-black "}`}
                   to="/"
                   onClick={handleLinkClicked}>
                   Home
@@ -55,8 +55,8 @@ const GuestMenu = () => {
                 <NavLink
                   className={({
                     isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
+        ${isActive ? "bg-black text-white" : "text-black "}`}
                   to="/login">
                   Login
                 </NavLink>
@@ -66,8 +66,8 @@ const GuestMenu = () => {
                 <NavLink
                   className={({
                     isActive,
-                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
+                  }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
+        ${isActive ? "bg-black text-white" : "text-black "}`}
                   to="/signup">
                   Sign Up
                 </NavLink>
@@ -86,8 +86,8 @@ const GuestMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
+        ${isActive ? "bg-black text-white" : "text-black "}`}
               to="/">
               Home
             </NavLink>
@@ -97,8 +97,8 @@ const GuestMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
+        ${isActive ? "bg-black text-white" : "text-black "}`}
               to="/login">
               Login
             </NavLink>
@@ -108,8 +108,8 @@ const GuestMenu = () => {
             <NavLink
               className={({
                 isActive,
-              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-orange-500
-        ${isActive ? "bg-black text-white" : "text-white "}`}
+              }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
+        ${isActive ? "bg-black text-white" : "text-black "}`}
               to="/register">
               Register
             </NavLink>

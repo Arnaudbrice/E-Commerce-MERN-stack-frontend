@@ -24,15 +24,15 @@ const Footer = () => {
         <div className="mx-auto px-4 pt-12 @container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-12 mb-12 justify-items-center">
             {/* Logo */}
-            <div className="flex flex-col items-center  gap-4 p-4 ">
-              <div className="w-fit bg-secondary p-2 rounded-xl">
-                <span className="material-symbols-outlined text-background-dark font-bold">
-                  {/* <img src={logo} alt="logo" className="h-16" /> */}
-                </span>
-                <img src={logo} alt="logo" className="h-8 " />
+            <div className="flex flex-col items-center md:items-start  gap-4 p-4 ">
+              <div className="btn btn-secondary rounded-xl">
+                {/* <span className="material-symbols-outlined text-background-dark font-bold">
+
+                </span> */}
+                <img src={logo} alt="logo" />
               </div>
 
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-center">
+              <p className="text-slate-300 dark:text-slate-300 leading-relaxed  text-center md:text-left">
                 Your premium destination for curated fashion and lifestyle
                 essentials. Quality meets elegance in every piece.
               </p>
@@ -47,7 +47,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/"
-                    className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                    className="text-slate-300 dark:text-slate-300 hover:text-secondary transition-colors flex items-center gap-2">
                     {" "}
                     Home
                   </Link>
@@ -55,7 +55,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/cart"
-                    className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                    className="text-slate-300 dark:text-slate-300 hover:text-secondary transition-colors flex items-center gap-2">
                     {" "}
                     Cart
                   </Link>
@@ -63,7 +63,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/about-us"
-                    className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                    className="text-slate-300 dark:text-slate-300 hover:text-secondary transition-colors flex items-center gap-2">
                     {" "}
                     About Us
                   </Link>
@@ -72,7 +72,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/faq"
-                    className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                    className="text-slate-300 dark:text-slate-300 hover:text-secondary transition-colors flex items-center gap-2">
                     FAQ
                   </Link>
                 </li>
@@ -80,7 +80,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/contact-us"
-                    className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                    className="text-slate-300 dark:text-slate-300 hover:text-secondary transition-colors flex items-center gap-2">
                     Contact
                   </Link>
                 </li>
@@ -98,7 +98,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/shipping-policy"
-                    className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                    className="text-slate-300 dark:text-slate-300 hover:text-secondary transition-colors flex items-center gap-2">
                     <MdLocalShipping />
                     Shipping Policy
                   </Link>
@@ -106,14 +106,14 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/returns-refunds"
-                    className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                    className="text-slate-300 dark:text-slate-300 hover:text-secondary transition-colors flex items-center gap-2">
                     <MdAssignmentReturn /> Returns &amp; Refunds
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/privacy-policy"
-                    className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                    className="text-slate-300 dark:text-slate-300 hover:text-secondary transition-colors flex items-center gap-2">
                     <FaShieldAlt />
                     Privacy Policy
                   </Link>
@@ -121,7 +121,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/terms-of-service"
-                    className="text-slate-600 dark:text-slate-400 hover:text-secondary transition-colors flex items-center gap-2">
+                    className="text-slate-300 dark:text-slate-300 hover:text-secondary transition-colors flex items-center gap-2">
                     <FaGavel /> Terms of Service
                   </Link>
                 </li>
@@ -136,16 +136,16 @@ const Footer = () => {
                 Contact Us
               </h4>
               <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                <div className="flex items-center gap-3 text-slate-300 dark:text-slate-300">
                   <CiMail className="text-secondary" />
 
                   <span>hello@bonmarche.com</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                <div className="flex items-center gap-3 text-slate-300 dark:text-slate-300">
                   <IoCallOutline className="text-secondary" />
                   <span>+49 4202 / 49 4203 / 49 4204</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                <div className="flex items-center gap-3 text-slate-300 dark:text-slate-300">
                   <CiLocationOn className="text-secondary" />
                   <span>
                     Bon Marché GmbH, bonmarchestrasse 24, 28832 Achim,

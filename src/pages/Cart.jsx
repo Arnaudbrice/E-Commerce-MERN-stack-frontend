@@ -581,13 +581,13 @@ const Cart = () => {
             </div>
 
             <div className="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-2xl space-y-4">
-              <div className="flex justify-between items-center text-gray-500">
+              <div className="flex justify-between items-center text-gray-300">
                 <span className="text-md">Subtotal</span>
                 <span className="font-semibold">
                   {cartAmount.toFixed(2)} {" €"}
                 </span>
               </div>
-              <div className="flex justify-between items-center text-gray-500">
+              <div className="flex justify-between items-center text-gray-300">
                 <span className="text-md">Shipping Costs</span>
                 <span className="font-semibold">
                   {shippingCosts.toFixed(2)} €

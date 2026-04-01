@@ -99,7 +99,20 @@ const Home = () => {
   } */
 
   return (
-    <>
+    <div>
+      {/* [box-shadow:none] is generated with higher specificity by Tailwind and therefore wins  */}
+      <div className="hero py-4 [box-shadow:none] ">
+        <div className="hero-content text-center">
+          <div className="max-w-md">
+            <h1 className="text-5xl font-bold"> Welcome to Bon Marché </h1>
+            <p className="py-6">
+              Discover the best deals on a wide range of products. Shop now and
+              save big with our unbeatable prices!
+            </p>
+            {/* <button className="btn btn-primary">Get Started</button> */}
+          </div>
+        </div>
+      </div>
       {/* Kategorie-Navigation */}
       <section
         className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full sm:max-w-xl  my-2 gap-2  mr-auto p-2"
@@ -148,7 +161,7 @@ const Home = () => {
           <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             Need Help?
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 mb-6">
+          <p className="text-slate-300 dark:text-slate-300 mb-6">
             Our support team is here to assist with any shipping questions or
             concerns.
           </p>
@@ -159,7 +172,7 @@ const Home = () => {
           </button>
         </section>
       )}
-    </>
+    </div>
   );
 };
 
