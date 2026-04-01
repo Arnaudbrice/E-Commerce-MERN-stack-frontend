@@ -13,7 +13,8 @@ const MainLayout = () => {
     <div
       className="min-h-screen w-full grid grid-rows-[auto_1fr_auto]
         font-['Outfit'] overflow-x-hidden ">
-      <div>
+      {/* header, main and footer for semantic html */}
+      <header>
         <NavBar />
         <ToastContainer
           className="mt-16  text-lg "
@@ -30,12 +31,14 @@ const MainLayout = () => {
           limit={2}
           transition={Bounce}
         />
-      </div>
+      </header>
       <main>
         <Outlet />
       </main>
 
-      <Footer />
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 };

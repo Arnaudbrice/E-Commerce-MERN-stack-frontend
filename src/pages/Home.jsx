@@ -99,16 +99,21 @@ const Home = () => {
   } */
 
   return (
-    <main>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full sm:max-w-xl  my-2 gap-2  mr-auto p-2">
+    <>
+      {/* Kategorie-Navigation */}
+      <section
+        className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] w-full sm:max-w-xl  my-2 gap-2  mr-auto p-2"
+        aria-label="Product categories">
         {categories?.map((category) => {
           return <Button key={category} category={category} />;
         })}
-      </div>
+      </section>
 
       {/* ----------------search bar-------------------- */}
       <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      <Cards />
+      <section aria-label="list of products">
+        <Cards />
+      </section>
 
       {/* chatbot */}
 
@@ -116,7 +121,8 @@ const Home = () => {
         <div className=" fixed bottom-[1.2em] right-[1em] z-[99] cursor-pointer rounded-full shadow-modal">
           <button
             onClick={handleChatModalOpen}
-            className=" floating-effect floating-shadow  ">
+            className=" floating-effect floating-shadow"
+            aria-label="open chat">
             {" "}
             <img
               src={ChatBotImage}
@@ -138,7 +144,7 @@ const Home = () => {
       {/* CTA */}
 
       {user && (
-        <div className="bg-secondary/10 dark:bg-secondary/5 rounded-xl p-8 text-center space-y-12">
+        <section className="bg-secondary/10 dark:bg-secondary/5 rounded-xl p-8 text-center space-y-12">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             Need Help?
           </h2>
@@ -151,9 +157,9 @@ const Home = () => {
             className=" bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-8 rounded-lg transition-all btn btn-lg ">
             Contact Support
           </button>
-        </div>
+        </section>
       )}
-    </main>
+    </>
   );
 };
 

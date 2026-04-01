@@ -365,10 +365,10 @@ const Order = () => {
   }); */
 
   return (
-    <div>
-      <div className="w-2/3 mx-auto my-8 text-3xl font-bold text-center divider divider-secondary">
+    <section>
+      <h2 className="w-2/3 mx-auto my-8 text-3xl font-bold text-center divider divider-secondary">
         {user.role === "admin" ? "Order Management" : "Orders"}
-      </div>
+      </h2>
       {/* ----------------search bar-------------------- */}
       <Searchbar
         searchTerm={orderSearchTerm}
@@ -642,7 +642,7 @@ const Order = () => {
           onStatusUpdate={handleStatusUpdate}
         />
       )}
-    </div>
+    </section>
   );
 };
 
