@@ -133,6 +133,7 @@ const Register = () => {
         </div>
 
         <button
+          type="submit"
           disabled={isClicked}
           className={`btn btn-secondary btn-lg w-full rounded-lg ${isClicked ? "btn-secondary btn-orange-500" : "btn-secondary"}`}>
           {isClicked ? "Registering..." : "Register"}
