@@ -89,8 +89,9 @@ const Card = ({
   //********** add to cart list **********
   const handleAddToCartList = async (e, id) => {
     e.stopPropagation(); // <--- Stop event propagation here
+    console.log(quantity, stock);
 
-    if (quantity === stock) {
+    if (Number(quantity) === Number(stock) || stock === 0) {
       toast.error("Product is out of stock");
       return;
     }
