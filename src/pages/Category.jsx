@@ -5,6 +5,7 @@ import ProductContext from "../context/ProductContext.jsx";
 import useProducts from "../hooks/useProducts.jsx";
 import Card from "../components/Card";
 import NotFound from "./NotFound.jsx";
+import useAuth from "../hooks/useAuth.jsx";
 const Category = () => {
   /* const { products, setProducts } = useContext(ProductContext);
    */
@@ -12,6 +13,8 @@ const Category = () => {
   const navigate = useNavigate();
   const { products, setProducts, searchTerm, setSearchTerm, isLoading } =
     useProducts();
+
+  const { favoriteProducts } = useAuth();
   const { category } = useParams();
   const filteredProductsByCategory = products.filter(
     (product) => product.category === category,
@@ -84,7 +87,13 @@ const Category = () => {
 
       <div className="grid min-h-full  gap-6 mx-0 my-8 text-gray-400  grid-cols-1 md:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] place-content-center sm:mx-6 auto-rows-min ">
         {filteredProductsByCategory.map((product) => {
-          return <Card key={product.id} {...product} />;
+          return (
+            <Card
+              key={product.id}
+              {...product}
+              isFavorite={favoriteProducts.some((p) => p._id === product._id)}
+            />
+          );
         })}
       </div>
     </div>
