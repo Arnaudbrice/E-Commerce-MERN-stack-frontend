@@ -44,7 +44,7 @@ const GuestMenu = () => {
                   className={({
                     isActive,
                   }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white" : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
                   to="/"
                   onClick={handleLinkClicked}>
                   Home
@@ -56,7 +56,7 @@ const GuestMenu = () => {
                   className={({
                     isActive,
                   }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white" : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
                   to="/login">
                   Login
                 </NavLink>
@@ -67,7 +67,7 @@ const GuestMenu = () => {
                   className={({
                     isActive,
                   }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white" : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
                   to="/signup">
                   Sign Up
                 </NavLink>
@@ -87,7 +87,7 @@ const GuestMenu = () => {
               className={({
                 isActive,
               }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white" : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
               to="/">
               Home
             </NavLink>
@@ -98,7 +98,7 @@ const GuestMenu = () => {
               className={({
                 isActive,
               }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white" : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
               to="/login">
               Login
             </NavLink>
@@ -109,7 +109,7 @@ const GuestMenu = () => {
               className={({
                 isActive,
               }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white" : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
               to="/register">
               Register
             </NavLink>

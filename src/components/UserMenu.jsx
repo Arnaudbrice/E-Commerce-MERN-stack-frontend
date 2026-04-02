@@ -226,7 +226,7 @@ const UserMenu = () => {
               className={({
                 isActive,
               }) => `  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white" : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
               to="/">
               Home
             </NavLink>
@@ -239,7 +239,7 @@ const UserMenu = () => {
                   className={({
                     isActive,
                   }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-          ${isActive ? "bg-black text-white" : "text-black "}`}
+          ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
                   to="/add-product">
                   Add Product
                 </NavLink>
@@ -250,7 +250,7 @@ const UserMenu = () => {
                   className={({
                     isActive,
                   }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-          ${isActive ? "bg-black text-white" : "text-black "}`}
+          ${isActive ? "bg-black text-white hover:text-black " : "text-black "}`}
                   to="/admin/products">
                   Admin Products
                 </NavLink>
@@ -262,7 +262,7 @@ const UserMenu = () => {
                   className={({
                     isActive,
                   }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-                      ${isActive ? "bg-black text-white" : "text-black "}`}
+                      ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
                   to="/admin/dashboard"
                   onClick={handleLinkClicked}>
                   Dashboard
@@ -278,7 +278,7 @@ const UserMenu = () => {
               className={({
                 isActive,
               }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white " : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black " : "text-black "}`}
               to="/wishlist">
               <div className="flex  top-1.5 indicator ">
                 <MdFavoriteBorder className="size-5 " />
@@ -295,7 +295,7 @@ const UserMenu = () => {
                 className={({
                   isActive,
                 }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white" : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
                 to="/orders">
                 Orders
               </NavLink>
@@ -308,7 +308,7 @@ const UserMenu = () => {
               className={({
                 isActive,
               }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white " : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black " : "text-black "}`}
               to="/cart">
               <div className="flex  top-1.5 indicator ">
                 <svg
@@ -339,7 +339,7 @@ const UserMenu = () => {
               className={({
                 isActive,
               }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
-        ${isActive ? "bg-black text-white" : "text-black "}`}
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
               to="/profile"
               onClick={handleLinkClicked}>
               <img
