@@ -200,14 +200,18 @@ const UserMenu = () => {
             </li>
 
             <li className=" text-lg block px-4 py-2  rounded text-black hover:bg-white">
-              <button
-                className=" h-full p-0 bg-none text-lg"
+              <NavLink
+                className={({
+                  isActive,
+                }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
+        ${isActive ? "bg-black text-white" : "text-black "}`}
                 onClick={() => {
                   handleLinkClicked();
                   handleLogout();
-                }}>
+                }}
+                to="/login">
                 Logout
-              </button>
+              </NavLink>
             </li>
           </ul>
         </div>
@@ -350,12 +354,19 @@ const UserMenu = () => {
             </NavLink>
           </li>
 
-          <li className="text-lg  block px-4 py-2  rounded text-black hover:bg-white">
-            <button
-              onClick={handleLogout}
-              className=" h-full p-0 bg-none text-lg">
+          <li
+            onClick={() => {
+              handleLinkClicked();
+              handleLogout();
+            }}>
+            <NavLink
+              className={({
+                isActive,
+              }) => `  block px-4 py-2 h-full rounded hover:bg-white
+        ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
+              to="/login">
               Logout
-            </button>
+            </NavLink>
           </li>
         </ul>
       </div>
