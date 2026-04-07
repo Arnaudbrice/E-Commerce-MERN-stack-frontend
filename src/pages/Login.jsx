@@ -41,7 +41,14 @@ const Login = () => {
       !location.state?.fromLogout &&
       !shownRef.current
     ) {
-      toast.error("You must be logged in to access this page ➞ Redirecting...");
+      toast.error(
+        <div>
+          <p>Not authenticated.</p> <p>Please Login First.</p>
+        </div>,
+        {
+          autoClose: 5000,
+        },
+      );
       shownRef.current = true; // Mark as shown to prevent duplicate toasts in StrictMode
 
       //IMPORTANT: We are removing the 'from' state so that the toast does not reappear when the page is reloaded or other navigation is performed.
