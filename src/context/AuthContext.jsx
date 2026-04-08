@@ -129,11 +129,9 @@ export const AuthContextProvider = ({ children }) => {
   const logout = async () => {
     try {
       const response = await fetch(`${baseUrl}/auth/logout`, {
-        method: "Delete",
+        method: "DELETE",
         credentials: "include",
       });
-
-      setUser(null);
 
       if (!response.ok) {
         const { message: validationError } = await response.json();
@@ -141,7 +139,10 @@ export const AuthContextProvider = ({ children }) => {
         return;
       }
 
-      toast.info("Logged out successfully");
+      const { message } = await response.json();
+      setUser(null); // ✅ clear user state first
+
+      toast.info(message);
       // redirect to the login page with a state to show a message on the login page
       navigate("/login", { state: { fromLogout: true } });
     } catch (error) {
