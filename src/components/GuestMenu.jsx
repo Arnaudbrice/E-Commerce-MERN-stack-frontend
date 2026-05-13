@@ -68,7 +68,7 @@ const GuestMenu = () => {
                     isActive,
                   }) => `text-lg  block px-4 py-2 h-full rounded hover:bg-white
         ${isActive ? "bg-black text-white hover:text-black" : "text-black "}`}
-                  to="/signup">
+                  to="/register">
                   Sign Up
                 </NavLink>
               </li>

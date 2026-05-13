@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { customErrorMessage } from "../../utils/customErrorMessage.js";
+import { useRef } from "react";
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
@@ -24,6 +25,7 @@ export const AuthContextProvider = ({ children }) => {
   const [favoriteProducts, setFavoriteProducts] = useState([]);
   const [numberOfFavoriteProducts, setNumberOfFavoriteProducts] = useState(0);
 
+  const isFirstMount = useRef(true);
   //********** register **********
 
   const register = async (formState) => {
@@ -175,17 +177,22 @@ export const AuthContextProvider = ({ children }) => {
           console.log("Auth check failed:", validationError);
           console.log(window.location.pathname);
 
-          // Only show the toast if not on the login/register/reset pages
-          if (
-            ![
-              "/login",
-              "/register",
-              "/mail-reset-password",
-              "/reset-password",
-            ].includes(window.location.pathname)
-          ) {
+          // don't display the "not user authenticated" toast if user is on the login/register/reset pages
+          const isExcludedPage = [
+            "/login",
+            "/register",
+            "/mail-reset-password",
+            "/reset-password",
+          ].includes(window.location.pathname);
+          // suppress the toast(user not authenticate) on the first load of the home page ("/") because it's expected to not have a user authenticated and we don't want to show an error toast in that case
+          const isSuppressedOnFirstLoad =
+            isFirstMount.current && window.location.pathname === "/";
+
+          if (!isExcludedPage && !isSuppressedOnFirstLoad) {
             await customErrorMessage(validationError, 5000);
           }
+
+          isFirstMount.current = false;
           return;
         }
         const userData = await response.json();
@@ -208,6 +215,7 @@ export const AuthContextProvider = ({ children }) => {
       } finally {
         // setIsLoadingAuth(false);
         if (isMounted) {
+          isFirstMount.current = false;
           setIsLoadingAuth(false);
         }
       }
