@@ -1,0 +1,31 @@
+name: Frontend CI-Pipeline
+# Die Pipeline startet bei jedem Push oder Pull Request auf dem Main-Branch
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+jobs:
+  build-and-test:
+    # GitHub stellt uns einen virtuellen Ubuntu-Server gratis zur Verfügung
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Den Code aus deinem Repository auf den Server herunterladen
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      # 2. Node.js installieren (Version 20 ist aktuell und stabil)
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      # 3. Alle Projektabhängigkeiten installieren (wie auf deinem PC)
+      - name: Node-Module installieren
+        run: npm ci
+
+      # 4. Prüfen, ob das React-Projekt ohne Fehler kompiliert / baut
+      - name: Projekt bauen
+        run: npm run build
