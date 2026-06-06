@@ -103,7 +103,7 @@ const Cart = () => {
 
       console.log("orderMade fetched", orderMade);
 
-      setOrder({ ...orderMade });
+      setOrder(orderMade);
       // handleReset();
       console.log("orderMade", orderMade);
       return orderMade;
@@ -116,7 +116,7 @@ const Cart = () => {
       toast.error(msg);
       return null; //return null on failure
     }
-  }, [baseUrl, user, shippingCosts]);
+  }, [baseUrl, user?.addresses, shippingCosts]);
 
   //********** reset cart **********
   const handleReset = useCallback(async () => {
@@ -238,8 +238,7 @@ const Cart = () => {
     const queryParams = new URLSearchParams(window.location.search);
     const success = queryParams.get("success");
     const canceled = queryParams.get("canceled");
-
-    // Guard clauses to exit early if not needed
+    const sessionId = queryParams.get("session_id"); // Guard clauses to exit early if not needed
     if (!success && !canceled) return;
     if (redirectHandledRef.current) return;
     if (isLoadingAuth || isLoadingCart) return; // Wait until user and cart are loaded
@@ -248,8 +247,26 @@ const Cart = () => {
       redirectHandledRef.current = true; // Prevent this logic from running again
 
       if (success === "true") {
+        // Clean the URL immediately so a refresh won't re-trigger this
+        navigate("/cart", { replace: true });
         setRedirecting(true); // Show a loading/processing state
         toast.success("Payment successful! Finalizing your order...");
+
+        if (!sessionId) {
+          toast.error("Missing Stripe session id.");
+          setRedirecting(false);
+          navigate("/cart", { replace: true });
+          return;
+        }
+
+        const processedKey = "stripe_session_processed_" + sessionId;
+        if (sessionStorage.getItem(processedKey) === "1") {
+          const destination =
+            user?.role === "admin" ? "/admin/dashboard/orders" : "/orders";
+          navigate(destination, { replace: true });
+          return;
+        }
+        sessionStorage.setItem(processedKey, "1");
 
         try {
           // 1. Create the order. The createOrder function  needs to RETURN the order.
@@ -259,6 +276,8 @@ const Cart = () => {
             // createOrder function should return null/undefined on failure
 
             toast.error("Order creation failed. Please contact support.");
+            setRedirecting(false);
+            return;
           }
 
           // 2. Send the confirmation email with the newly created order data.
