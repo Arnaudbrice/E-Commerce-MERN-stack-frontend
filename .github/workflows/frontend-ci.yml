@@ -20,12 +20,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
+          cache: "npm" # Aktiviert automatisches Caching für schnellere Testläufe
 
       # 3. Alle Projektabhängigkeiten installieren (wie auf deinem PC)
       - name: Node-Module installieren
-        run: npm ci
+        run: npm ci # 'npm ci' ist sauberer und schneller als 'npm install' in Pipelines
 
       # 4. Prüfen, ob das React-Projekt ohne Fehler kompiliert / baut
       - name: Projekt bauen
         run: npm run build
+
+      # 5. Optional: TypeScript-Typen prüfen (falls wir TypeScript verwenden)
+      - name: TypeScript Typen prüfen
+        run: npm run tsc -- --noEmit # Verhindert, dass fehlerhafte Typen überhaupt getestet werden
+
+      # 6. Die automatisierten Tests ausführen (falls du welche hast)
+      #Ohne den watchAll Parameter würde der GitHub Actions Server unendlich lange auf Änderungen warten. Der Workflow würde niemals fertiggestellt werden („hängenbleiben“), bis er nach Stunden das Zeitlimit überschreitet.
+      - name: Tests ausführen
+        run: npm test -- --watchAll=false
