@@ -168,7 +168,7 @@ src/
 
 **Brice Arnaud Habenicht**
 
-- 🌐 [Portfolio](https://brice-arnaud-habenicht-portfolio.netlify.app/)
+- 🌐 [Portfolio](https://dev-with-arnaud.work/)
 - 💼 [LinkedIn](https://www.linkedin.com/in/brice-arnaud-habenicht/)
 - 🐙 [GitHub](https://github.com/Arnaudbrice)
 
