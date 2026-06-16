@@ -13,13 +13,13 @@ jobs:
     steps:
       # 1. Den Code aus deinem Repository auf den Server herunterladen
       - name: Code auschecken
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # 2. Node.js installieren (Version 20 ist aktuell und stabil)
       - name: Node.js einrichten
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
           cache: "npm" # Aktiviert automatisches Caching für schnellere Testläufe
 
       # 3. Alle Projektabhängigkeiten installieren (wie auf deinem PC)
