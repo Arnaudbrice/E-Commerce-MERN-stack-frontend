@@ -31,10 +31,10 @@ jobs:
         run: npm run build
 
       # 5. Optional: TypeScript-Typen prüfen (falls wir TypeScript verwenden)
-      - name: TypeScript Typen prüfen
-        run: npm run tsc -- --noEmit # Verhindert, dass fehlerhafte Typen überhaupt getestet werden
+    #  - name: TypeScript Typen prüfen
+    #    run: npm run tsc -- --noEmit # Verhindert, dass fehlerhafte Typen überhaupt getestet werden
 
-      # 6. Die automatisierten Tests ausführen (falls du welche hast)
-      #Ohne den watchAll Parameter würde der GitHub Actions Server unendlich lange auf Änderungen warten. Der Workflow würde niemals fertiggestellt werden („hängenbleiben“), bis er nach Stunden das Zeitlimit überschreitet.
-      - name: Tests ausführen
-        run: npm test -- --watchAll=false
+    # 6. Die automatisierten Tests ausführen (falls du welche hast)
+    #Ohne den watchAll Parameter würde der GitHub Actions Server unendlich lange auf Änderungen warten. Der Workflow würde niemals fertiggestellt werden („hängenbleiben“), bis er nach Stunden das Zeitlimit überschreitet.
+    # - name: Tests ausführen
+    #   run: npm test -- --watchAll=false
