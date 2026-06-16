@@ -49,7 +49,13 @@ const Cart = () => {
   // const [cartQuantity, setCartQuantity] = useState(0);
   const [order, setOrder] = useState({});
 
-  const [userAddress, setUserAddress] = useState(null);
+  const [userAddress, setUserAddress] = useState(
+    user?.addresses?.find((address) => address.label === "Home") ||
+      [...(user?.addresses || [])]
+        .reverse()
+        .find((address) => address.label === "shippingAddress") ||
+      null,
+  );
 
   const [shippingCosts, setShippingCosts] = useState(0);
   const [cartAmount, setCartAmount] = useState(0);
@@ -64,59 +70,64 @@ const Cart = () => {
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-  const createOrder = useCallback(async () => {
-    //! check if the user has a home address or shipping address before creating an order
-    const userAddress = user?.addresses?.find(
+  const createOrder = useCallback(
+    async (chosenAddress) => {
+      //! check if the user has a home address or shipping address before creating an order
+      /*   const userAddress = user?.addresses?.find(
       (address) =>
         address.label === "Home" || address.label === "shippingAddress",
-    );
-    // if there is no address
-    if (
-      !userAddress?.streetAddress ||
-      !userAddress?.city ||
-      !userAddress?.state ||
-      !userAddress?.zipCode ||
-      !userAddress?.country
-    ) {
-      toast.error("Please add an address before making an order.", {
-        autoClose: 5000,
-      });
-      // return;
-      return null; //return null on failure
-    }
-    try {
-      const response = await fetch(`${baseUrl}/users/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ shippingAddress: userAddress, shippingCosts }),
-        credentials: "include",
-      });
-      if (!response.ok) {
-        const { message: errorMessage } = await response.json();
-        customErrorMessage(errorMessage, 5000);
+    ); */
+      // if there is no address
+      console.log("chosenAddress before creating order", chosenAddress);
+      if (
+        !chosenAddress?.streetAddress ||
+        !chosenAddress?.city ||
+        !chosenAddress?.state ||
+        !chosenAddress?.zipCode ||
+        !chosenAddress?.country
+      ) {
+        toast.error("Please add an address before making an order.", {
+          autoClose: 5000,
+        });
         // return;
         return null; //return null on failure
       }
-      const orderMade = await response.json();
+      try {
+        const response = await fetch(`${baseUrl}/users/orders`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          /*       body: JSON.stringify({ shippingAddress: userAddress, shippingCosts }), */
+          body: JSON.stringify({ shippingAddress: chosenAddress }), //shipping costs should be calculated based on the shipping address backend side to avoid manipulation from the frontend
+          credentials: "include",
+        });
+        if (!response.ok) {
+          const { message: errorMessage } = await response.json();
+          customErrorMessage(errorMessage, 5000);
+          // return;
+          return null; //return null on failure
+        }
+        const orderMade = await response.json();
 
-      console.log("orderMade fetched", orderMade);
+        console.log("orderMade fetched", orderMade);
 
-      setOrder(orderMade);
-      // handleReset();
-      console.log("orderMade", orderMade);
-      return orderMade;
-    } catch (error) {
-      // normalize to a readable string and avoid "[object Object]"
-      const msg =
-        error?.message ??
-        (typeof error === "string" ? error : String(error)) ??
-        "Something went wrong";
-      toast.error(msg);
-      return null; //return null on failure
-    }
-  }, [baseUrl, user?.addresses, shippingCosts]);
+        setOrder(orderMade);
+        // handleReset();
+        console.log("orderMade", orderMade);
+        return orderMade;
+      } catch (error) {
+        // normalize to a readable string and avoid "[object Object]"
+        const msg =
+          error?.message ??
+          (typeof error === "string" ? error : String(error)) ??
+          "Something went wrong";
+        toast.error(msg);
+        return null; //return null on failure
+      }
+    },
+    [baseUrl],
+  );
 
   //********** reset cart **********
   const handleReset = useCallback(async () => {
@@ -166,18 +177,19 @@ const Cart = () => {
     [baseUrl],
   );
 
-  useEffect(() => {
-    /*  Find the user's home address added in the profile page
-     or take the last shipping address added from the user if no home address is found (note: reverse mutates the original array, so we should use it on a shallow copy of the array) */
-    const userAddress =
-      user?.addresses?.find((address) => address.label === "Home") ||
-      [...(user?.addresses || [])]
-        .reverse()
-        .find((address) => address.label === "shippingAddress");
+  // useEffect(() => {
+  //   /*  Find the user's home address added in the profile page
+  //    or take the last shipping address added from the user if no home address is found (note: reverse mutates the original array, so we should use it on a shallow copy of the array) */
 
-    setUserAddress(userAddress || null);
-    console.log("userAddress from cart", userAddress);
-  }, [user]);
+  //   const userAddress =
+  //     user?.addresses?.find((address) => address.label === "Home") ||
+  //     [...(user?.addresses || [])]
+  //       .reverse()
+  //       .find((address) => address.label === "shippingAddress");
+
+  //   setUserAddress(userAddress || null);
+  //   console.log("userAddress from cart", userAddress);
+  // }, [user?.addresses]);
 
   // console.log("cartList", cartList);
   useEffect(() => {
@@ -210,7 +222,11 @@ const Cart = () => {
           }
         } catch (error) {
           // console.error("Could not fetch user location from frontend.");
-          toast.error("something went wrong");
+
+          const msg =
+            error?.message ??
+            (typeof error === "string" ? error : "Something went wrong");
+          toast.error(msg);
         }
       }
 
@@ -239,6 +255,16 @@ const Cart = () => {
     const success = queryParams.get("success");
     const canceled = queryParams.get("canceled");
     const sessionId = queryParams.get("session_id"); // Guard clauses to exit early if not needed
+
+    const addressId = queryParams.get("addressId");
+
+    const chosenAddress =
+      user?.addresses?.find((a) => a._id === addressId) ||
+      user?.addresses?.find((a) => a.label === "Home") ||
+      [...(user?.addresses || [])]
+        .reverse()
+        .find((a) => a.label === "shippingAddress") ||
+      null;
     if (!success && !canceled) return;
     if (redirectHandledRef.current) return;
     if (isLoadingAuth || isLoadingCart) return; // Wait until user and cart are loaded
@@ -271,7 +297,9 @@ const Cart = () => {
         try {
           // 1. Create the order. The createOrder function  needs to RETURN the order.
           // We need to modify the createOrder function slightly.
-          const createdOrder = await createOrder();
+          const createdOrder = await createOrder(chosenAddress); // Pass the chosen address to createOrder
+
+          console.log("created order", createdOrder);
           if (!createdOrder) {
             // createOrder function should return null/undefined on failure
 
@@ -343,12 +371,38 @@ const Cart = () => {
 
   //********** payment **********
   const handleCheckout = async () => {
-    if (!userAddress) {
+    console.log("userAddress handleCheckout", userAddress);
+
+    const requiredFields = [
+      "streetAddress",
+      "city",
+      "state",
+      "zipCode",
+      "country",
+    ];
+
+    const missingFields = requiredFields.filter(
+      (field) => !userAddress?.[field],
+    );
+
+    if (missingFields.length > 0) {
+      toast.error(
+        `Please add your address details first:→  ${missingFields.join(", ")}`,
+      );
+      return null;
+    }
+    /*  if (
+      !userAddress?.streetAddress ||
+      !userAddress?.city ||
+      !userAddress?.state ||
+      !userAddress?.zipCode ||
+      !userAddress?.country
+    ) {
       toast.error("Please add an address before making an order.", {
         autoClose: 5000,
       });
       return;
-    }
+    } */
     try {
       const response = await fetch(
         `${baseUrl}/users/cart/create-checkout-session`,
@@ -359,7 +413,8 @@ const Cart = () => {
           },
           body: JSON.stringify({
             cartList,
-            shippingCosts: shippingCosts.toFixed(2),
+            // shippingCosts: shippingCosts.toFixed(2),
+            shippingAddress: userAddress, //shipping costs should be calculated based on the shipping address backend side to avoid manipulation from the frontend
           }),
           credentials: "include",
         },
