@@ -1,5 +1,7 @@
 # 🛍️ Bon Marché — E-Commerce Platform (Frontend)
 
+[![Frontend CI-Pipeline](https://github.com/Arnaudbrice/E-Commerce-MERN-stack-frontend/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/Arnaudbrice/E-Commerce-MERN-stack-frontend/actions/workflows/frontend-ci.yml)
+
 This is the frontend for **Bon Marché**, a modern, full-featured E-Commerce web application built with React and the MERN stack. It delivers a premium, responsive shopping experience with an AI-powered shopping assistant, secure payments via Stripe, and a comprehensive admin dashboard.
 
 ![React](https://img.shields.io/badge/React-18+-blue?logo=react)
